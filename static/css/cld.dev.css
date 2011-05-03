@@ -1,0 +1,49 @@
+/* @group reset */
+html {color: #000; background: #FFF;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td {margin: 0; padding: 0;}
+table {border-collapse: collapse; border-spacing: 0;}
+fieldset,img {border: 0;}
+address,caption,cite,code,dfn,em,strong,th,var {font-style: normal; font-weight: normal;}
+li {list-style: none;}
+caption,th {text-align: left;}
+h1,h2,h3,h4,h5,h6 {font-size: 100%; font-weight: normal;}
+q:before,q:after {content: '';}
+abbr,acronym {border: 0; font-variant: normal;}
+sup {vertical-align: text-top;}
+sub {vertical-align: text-bottom;}
+input,textarea,select {font-family: inherit; font-size: inherit; font-weight: inherit;}
+input,textarea,select {*font-size: 100%;}
+legend {color: #000;}
+del,ins {text-decoration: none;}
+/* @end */
+/* @group layout */
+body, td, input, textarea, select,button {font-family: arial,sans-serif;}
+body,html {overflow: hidden; background-color: transparent;}
+a img {border-width: 0;}
+fieldset, img {border: 0 none;}
+body {font-size: 12px;}
+.hidden {display: none}
+em {font-weight: bold;}
+/* @end */
+/* @group common.css */
+.goog-inline-block {position: relative; display: -moz-inline-box;display: inline-block;}
+* html .goog-inline-block {display: inline;}
+*:first-child+html .goog-inline-block {display: inline;}
+/* @end */
+/* @group gb */
+#gb {margin: 3px 8px;}
+#gbar, #guser {font-size: 13px; padding-top: 1px !important;}
+#gbar {float: left; height: 22px;}
+#gbar .active {text-decoration: none; font-weight: bold; color: #000 !important;}
+.gb1 {margin-right: 0.5em;}
+#gb a {color: #2200CC !important;}
+#guser {padding-bottom: 7px !important; text-align: right;}
+.gbh, .gbd {border-top: 1px solid #C9D7F1; font-size: 1px;}
+.gbh {height: 0; position: absolute; top: 24px; width: 100%;}
+/* @end */
+/* @group header */
+#logo {cursor: pointer; width: 180px; height: 59px; position: absolute; top: 27px; left: 10px; text-indent: -5000px; background-image: url("//calendar.google.com/googlecalendar/images/calendar_logo_sm_en-GB.gif"); background-position: left top; background-repeat: no-repeat;}
+#search {left: 230px; position: absolute; top: 38px;}
+#search-input {margin: 1px 0; padding: 4px 1px 4px 4px; border-color: #666666 #CCCCCC #CCCCCC; border-style: solid; border-width: 1px;}
+#search-input:focus {margin: 1px 0; padding: 3px 0 3px 3px; border: 2px solid #73a6ff; outline: 0 none;}
+/* @end */

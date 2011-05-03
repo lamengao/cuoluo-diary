@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Cuoluo Diary</title>
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link href="{{ '/css/cld.dev.css'|addfilemtime }}" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="{{ '/images/favicon.ico'|addfilemtime }}" />
+  <!--<link rel="shortcut icon" href="/images/favicon.ico" />-->
+</head>
+<body>
+
+<div id="gb">
+	<div id="gbar">
+		<a class="gb1" href="//diary.cuoluo.com/" target="_blank">Home</a>
+		<a class="gb1 active" href="/">Diary</a>
+		<a class="gb1" href="//groups.google.com/group/cuoluo-diary" target="_blank">Discuss</a>
+		<a class="gb1" href="//diary.cuoluo.com/help" target="_blank">Help</a>
+		<a class="gb1" href="https://spreadsheets.google.com/viewform?formkey=dEZnZkZPM2RLYWlRaXlCTDItVGpsUUE6MQ" target="_blank">Feedback</a>
+	</div>
+	<div id="ghead">
+		<div id="guser">
+				<b>Lamengao@gmail.com</b> | <a href="/settings">Settings</a> | <a href="{{ logout_url }}">Sign out</a>
+		</div>
+		<div style="left:0" class="gbh"></div><div style="right:0" class="gbh"></div>
+	</div>
+</div>
+
+<div id="header">
+  <h1 id="logo">Cuoluo Diary</h1>
+	<form id="search" class="vh" action="//www.google.com/search" target="_blank">
+		<input type="hidden" name="client" value="diary">
+		<input type="text" id="search-input" name="q" autocomplete="off" maxlength="2048" size="40" tabindex="0" aria-haspopup="true"/>
+		<input type="submit" value="Search Diary and Notes" id="search_submit" />
+		<input type="submit" value="Search the Web" id="search_web_submit" />
+	</form>
+</div>
+
+</body>
+</html>

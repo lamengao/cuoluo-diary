@@ -1,0 +1,59 @@
+application: cuoluodiary
+version: newyear
+runtime: python
+api_version: 1
+
+default_expiration: "500d"
+
+derived_file_type:
+- python_precompiled
+
+handlers:
+- url: /favicon.ico
+  static_files: static/images/favicon.ico
+  upload: static/images/favicon.ico
+  mime_type: image/x-icon
+
+- url: /images
+  static_dir: static/images
+
+- url: /js/(.*)/(.*)\.js
+  static_files: static/js/\2.js
+  upload: static/js/.*\.js
+
+- url: /css/(.*)/(.*)\.css
+  static_files: static/css/\2.css
+  upload: static/css/.*\.css
+
+- url: /static
+  static_dir: static
+
+- url: /api/.*
+  script: api.py
+  #login: required
+
+- url: /settings
+  script: settings.py
+  
+
+- url: /test
+  script: test.py
+  #login: required
+
+- url: .*
+  script: main.py
+
+
+skip_files:
+  - ^static/.*\.jar
+  - ^static\/js\/(?!cld-min\.js).*
+  - ^static/closurelibrary/.*
+  - ^static/images/.*Thumbs\.db
+  - ^tools/.*
+  - ^(.*/)?.*\.py[co]
+  - ^(.*/)?.*\.sw[po]
+  - ^(.*/)?\.svn/.*
+  
+
+builtins:
+- datastore_admin: on
