@@ -37,6 +37,7 @@ class User(db.Model):
 
 	@property
 	def id(self):
+		# id is a string
 		return self.key().name()
 
 	@staticmethod
@@ -214,7 +215,7 @@ class Note(db.Model):
 
 	def to_json(self, only_meta=False):
 		note = {}
-		note['id'] = self.id
+		note['id'] = int(self.id)
 		note['title'] = self.title
 		note['created'] = self.created.isoformat()
 		note['last_modified'] = self.last_modified.isoformat()
@@ -231,11 +232,12 @@ class Note(db.Model):
 		"""if parent_id is valid, 
 		auto set the parent_id and parents fields
 		"""
-		if not str(parent_id).isdigit():
+		parent_id = str(parent_id)
+		if not parent_id.isdigit():
 			return False
-		if self.id == int(parent_id):
+		if self.id == parent_id:
 			return False
-		key_name = self.owner.id + '.' + str(parent_id)
+		key_name = self.owner.id + '.' + parent_id
 		parent_note = Note.get_by_key_name(key_name)
 		if parent_note is None or parent_note.status == 'trashed':
 			return False
