@@ -11,13 +11,24 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
 from google.appengine.api import users
 
-template.register_template_library('templatetags.filters')                      
+from models import User
+
+template.register_template_library('templatetags.filters')
+
 
 class MainHandler(webapp.RequestHandler):
 	def get(self):
+		user = User.get_current_user()
+		if user is None:
+			self.redirect(users.create_login_url("/"))
+			return
 		path = os.path.join(os.path.dirname(__file__), 
 				            'templates', 'main.html')
 		template_values = {}
+		template_values['user'] = {}
+		template_values['user']['email'] = user.email
+		template_values['logout_url'] = users.create_logout_url(
+											'http://diary.cuoluo.com')
 		self.response.out.write(template.render(path, template_values))
 	
 
