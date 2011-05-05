@@ -40,6 +40,10 @@ class User(db.Model):
 		# id is a string
 		return self.key().name()
 
+	@property
+	def email(self):
+		return self.GAccount.email()
+
 	@staticmethod
 	def get_current_user():
 		user = users.get_current_user()
@@ -133,8 +137,8 @@ class Diary(db.Model):
 		diary['created'] = self.created.isoformat()
 		diary['last_modified'] = self.last_modified.isoformat()
 		diary['user'] = {}
-		diary['user']['id'] = int(self.owner.GAccount.user_id())
-		diary['user']['email'] = self.owner.GAccount.email()
+		diary['user']['id'] = int(self.owner.id)
+		diary['user']['email'] = self.owner.email
 		diary['status'] = self.status
 		if not only_meta:
 			diary['content'] = self.content.html
