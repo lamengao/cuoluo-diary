@@ -41,12 +41,7 @@ class DiaryListHandler(webapp.RequestHandler):
 	def get(self):
 		'''List all diary'''
 		self.response.headers['Content-type'] = 'application/json'
-		if not self.user.is_saved():
-			# new user
-			self.response.out.write('[]')
-			return
-		diary_json_list = [diary.to_json(True) for diary in self.user.diary]
-		self.response.out.write('[' + ','.join(diary_json_list) + ']')
+		self.response.out.write(self.user.get_diary_list())
 
 
 def diary_validated(handler_method):
@@ -135,13 +130,7 @@ class NotesListHandler(webapp.RequestHandler):
 	def get(self):
 		'''List all notes'''
 		self.response.headers['Content-type'] = 'application/json'
-		if not self.user.is_saved():
-			# new user
-			self.response.out.write('[]')
-			return
-		notes_json_list = [note.to_json(True) for note in self.user.notes]
-		self.response.out.write('[' + ','.join(notes_json_list) + ']')
-	
+		self.response.out.write(self.user.get_notes_list())
 
 	@json_verified
 	@login_required

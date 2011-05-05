@@ -80,6 +80,22 @@ class User(db.Model):
 			return None
 		for content in self.contents:
 			pass
+	
+	def get_diary_list(self):
+		"""return diary list json data"""
+		if not self.is_saved():
+			# new user
+			return '[]'
+		diary_json_list = [diary.to_json(True) for diary in self.diary]
+		return '[' + ','.join(diary_json_list) + ']'
+
+	def get_notes_list(self):
+		"""return notes list json data"""
+		if not self.is_saved():
+			# new user
+			return '[]'
+		notes_json_list = [note.to_json(True) for note in self.notes]
+		return '[' + ','.join(notes_json_list) + ']'
 
 
 class Content(db.Model):
@@ -136,9 +152,6 @@ class Diary(db.Model):
 		diary['title'] = self.title
 		diary['created'] = self.created.isoformat()
 		diary['last_modified'] = self.last_modified.isoformat()
-		diary['user'] = {}
-		diary['user']['id'] = int(self.owner.id)
-		diary['user']['email'] = self.owner.email
 		diary['status'] = self.status
 		if not only_meta:
 			diary['content'] = self.content.html
@@ -223,9 +236,6 @@ class Note(db.Model):
 		note['title'] = self.title
 		note['created'] = self.created.isoformat()
 		note['last_modified'] = self.last_modified.isoformat()
-		note['user'] = {}
-		note['user']['id'] = int(self.owner.GAccount.user_id())
-		note['user']['email'] = self.owner.GAccount.email()
 		note['parent_id'] = self.parent_id
 		note['status'] = self.status
 		if not only_meta:

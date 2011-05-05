@@ -20,7 +20,7 @@
 	</div>
 	<div id="ghead">
 		<div id="guser">
-      <b>{{ user.email }}</b> | <a href="/settings">Settings</a> | <a href="{{ logout_url }}">Sign out</a>
+      <b>{{ user.email }}</b> | <a href="/settings">Settings</a> | <a href="/logout">Sign out</a>
 		</div>
 		<div style="left:0" class="gbh"></div><div style="right:0" class="gbh"></div>
 	</div>
@@ -34,5 +34,10 @@
 		<input type="submit" value="Search the Web" id="search_web_submit" />
 	</form>
 </div>
+<script type="text/javascript">
+var _USER_ID = "{{ user.id }}", _USER_EMAIL = "{{ user.email }}";
+var _DIARY_LIST = {{ diary_list|safe }};
+var _NOTES_LIST = {{ notes_list|safe }};
+</script>
 </body>
 </html>

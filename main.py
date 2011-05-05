@@ -26,9 +26,10 @@ class MainHandler(webapp.RequestHandler):
 				            'templates', 'main.html')
 		template_values = {}
 		template_values['user'] = {}
+		template_values['user']['id'] = user.id
 		template_values['user']['email'] = user.email
-		template_values['logout_url'] = users.create_logout_url(
-											'http://diary.cuoluo.com')
+		template_values['diary_list'] = user.get_diary_list()
+		template_values['notes_list'] = user.get_notes_list()
 		self.response.out.write(template.render(path, template_values))
 	
 
@@ -36,9 +37,9 @@ class LogoutHandler(webapp.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
 		if user:
-			self.redirect(users.create_logout_url("/"))
+			self.redirect(users.create_logout_url("http://diary.cuoluo.com/"))
 		else:
-			self.redirect('/')
+			self.redirect('http://diary.cuoluo.com/')
 
 
 class LoginHandler(webapp.RequestHandler):
