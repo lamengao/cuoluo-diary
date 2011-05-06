@@ -35,11 +35,43 @@
 	</form>
 </div>
 <div class="goog-splitpane deepbg" id="main">
-  <div class="goog-splitpane-first-container" id="left-container">
-    Left Frame
+  <div class="goog-splitpane-first-container" id="navpane">
+    <div id="contentcreationpane" class="lightbg"></div>
+    <ul id="navpanelist">
+      <li>Diary</li>
+      <li>Notes</li>
+      <li>Trash</li>
+      <li>Tasks</li>
+    </ul>
+    <div id="diary-tree" class="zippy">
+      <h2 id="diary-tree-header" class="header">
+        <span class="caption">Diary</span>
+        <span class="zippy-menubutton zippy-button">&nbsp;</span>
+        <span class="zippy-arrow zippy-button">&nbsp;</span>
+      </h2>
+      <div id="diary-tree-content" class="content">
+      </div>
+    </div>
+    <div id="notes-tree" class="zippy">
+      <h2 id="notes-tree-header" class="header">
+        <span class="caption">Notes</span>
+        <span class="zippy-menubutton zippy-button">&nbsp;</span>
+        <span class="zippy-arrow zippy-button">&nbsp;</span>
+      </h2>
+      <div id="notes-tree-content" class="content">
+      </div>
+    </div>
   </div>
-  <div class="goog-splitpane-second-container" id="right-container">
-    Right Frame
+  <div class="goog-splitpane-second-container" id="viewpane">
+    <div id="main-header">
+      main header
+    </div>
+    <div id="main-container">
+      viewer container
+    </div>
+    <div id="main-footer">
+      main footer
+    </div>
   </div>
   <div class="goog-splitpane-handle" id="splitpane-handle"></div>
 </div>

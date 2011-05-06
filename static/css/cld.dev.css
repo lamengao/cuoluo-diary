@@ -18,11 +18,11 @@ del,ins {text-decoration: none;}
 /* @end */
 
 /* @group layout */
-body, td, input, textarea, select,button {font-family: arial,sans-serif;}
+body, td, input, textarea, select,button {font-family: Arial,Sans-serif;}
 body,html {overflow: hidden; background-color: transparent;}
 a img {border-width: 0;}
 fieldset, img {border: 0 none;}
-body {font-size: 12px;}
+body {font-size: 13px;}
 .hidden {display: none}
 .deepbg{background: #BCF;}
 .lightbg{background: #e3e9ff;}
@@ -36,12 +36,12 @@ em {font-weight: bold;}
 /* @end */
 
 /* @group loading area */
-.loadingstatusbox { font-size: 13px; font-family: arial, sans-serif; font-weight: bold; position: absolute; z-index: 1100; padding: 3px; left: 50%; margin-left: -16px; background-color: #fff1a8; color: #000; border: 2px solid #fff1a8; border-top: 0px; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; -moz-border-radius-bottomleft: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-left-radius: 4px; -webkit-border-bottom-right-radius: 4px;top: 0;}
+.loadingstatusbox {font-family: arial, sans-serif; font-weight: bold; position: absolute; z-index: 1100; padding: 3px; left: 50%; margin-left: -16px; background-color: #fff1a8; color: #000; border: 2px solid #fff1a8; border-top: 0px; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; -moz-border-radius-bottomleft: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-left-radius: 4px; -webkit-border-bottom-right-radius: 4px;top: 0;}
 /* @end */
 
 /* @group gb */
 #gb {margin: 3px 8px;}
-#gbar, #guser {font-size: 13px; padding-top: 1px !important;}
+#gbar, #guser {padding-top: 1px !important;}
 #gbar {float: left; height: 22px;}
 #gbar .active {text-decoration: none; font-weight: bold; color: #000 !important;}
 .gb1 {margin-right: 0.5em;}
@@ -62,7 +62,34 @@ em {font-weight: bold;}
 #main{width: 100%; position: absolute; top: 96px;bottom:0}
 /*#main>div{position:absolute;height:100%;}*/
 #main>div{position:absolute;top:0;bottom:0}
-#left-container{width:230px}
-#right-container{left:238px;right:0}
-#splitpane-handle{width:8px;left:230px}
+#navpane{width:230px;background-color:#FFF;}
+#splitpane-handle{width:5px;left:230px;cursor: col-resize;}
+#viewpane{left:235px;right:0}
+/* @end */
+
+/* @group navpane */
+#navpane{position: relative; overflow: hidden;}
+/* @end */
+
+/* @group contentcreationpane */
+#contentcreationpane{height:30px;}
+/* @end */
+
+/* @group navpanelist */
+#navpanelist{margin:8px 0 4px 0}
+#navpanelist li{line-height: 20px;padding-left:10px;cursor: pointer;}
+#navpanelist li:hover{background-color:#e3e9ff}
+/* @end */
+
+/* @group tree */
+.zippy h2{line-height: 20px;height:20px;font-weight:bold;padding-left:10px;border-top: solid 1px #BCF; overflow: hidden; position: relative;cursor:pointer}
+.zippy-button{float:right;width:12px;height:12px;background:url(/images/1225119760-lhn-sprite.png) no-repeat}
+.zippy-arrow{background-position: 0 -28px;margin:4px 3px 0 0 }
+.zippy-menubutton{background-position: 0 -40px;margin:4px 4px 0 0 }
+/* @end */
+
+/* @group main */
+#main-header{height:30px;}
+#main-footer{height:30px;position:absolute;bottom:0;width:100%}
+#main-container{background-color:#FFF;position:absolute;top:30px;bottom:30px;width:100%}
 /* @end */
