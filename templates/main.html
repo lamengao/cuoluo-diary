@@ -34,6 +34,15 @@
 		<input type="submit" value="Search the Web" id="search_web_submit" />
 	</form>
 </div>
+<div class="goog-splitpane deepbg" id="main">
+  <div class="goog-splitpane-first-container" id="left-container">
+    Left Frame
+  </div>
+  <div class="goog-splitpane-second-container" id="right-container">
+    Right Frame
+  </div>
+  <div class="goog-splitpane-handle" id="splitpane-handle"></div>
+</div>
 <script type="text/javascript">
 var _USER_ID = "{{ user.id }}", _USER_EMAIL = "{{ user.email }}";
 var _DIARY_LIST = {{ diary_list|safe }};

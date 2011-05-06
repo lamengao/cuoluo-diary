@@ -3,7 +3,7 @@ version: newyear
 runtime: python
 api_version: 1
 
-default_expiration: "500d"
+default_expiration: "3650d"
 
 derived_file_type:
 - python_precompiled
@@ -42,6 +42,7 @@ handlers:
 
 - url: .*
   script: main.py
+  secure: always
 
 
 skip_files:
