@@ -76,9 +76,14 @@ em {font-weight: bold;}
 /* @end */
 
 /* @group navpanelist */
-#navpanelist{margin:8px 0 4px 0}
-#navpanelist li{line-height: 20px;padding-left:10px;cursor: pointer;}
+#navpanelist{margin-top:4px}
+#navpanelist li,#tasks{line-height: 21px;padding-left:10px;cursor: pointer;overflow:hidden}
 #navpanelist li:hover{background-color:#e3e9ff}
+#tasks{margin:2px 0}
+#navpanelist .text, #tasks .text{float:left}
+#navpanelist .icon, #tasks .icon { margin: 2px 0 0 3px; width: 16px; height: 16px; float: left;}
+/*#navpanelist .trash .icon{background:url("/images/icons_13.png") no-repeat;background-position: -96px 0;}*/
+#tasks .icon{background:url(/images/1304729777-tasks.png) no-repeat;}
 /* @end */
 
 /* @group tree */
@@ -89,7 +94,11 @@ em {font-weight: bold;}
 /* @end */
 
 /* @group main */
-#main-header{height:30px;}
+#main-header{height:30px;position:relative}
 #main-footer{height:30px;position:absolute;bottom:0;width:100%}
 #main-container{background-color:#FFF;position:absolute;top:30px;bottom:30px;width:100%}
+/* @end */
+
+/* @group main header */
+#header-title{line-height:30px;font-weight:bold;}
 /* @end */

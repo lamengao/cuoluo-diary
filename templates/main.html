@@ -37,12 +37,12 @@
 <div class="goog-splitpane deepbg" id="main">
   <div class="goog-splitpane-first-container" id="navpane">
     <div id="contentcreationpane" class="lightbg"></div>
-    <ul id="navpanelist">
-      <li>Diary</li>
-      <li>Notes</li>
-      <li>Trash</li>
-      <li>Tasks</li>
-    </ul>
+    <!--<ul id="navpanelist">-->
+      <!--<li>Diary</li>-->
+      <!--<li>Notes</li>-->
+      <!--<li class="trash"><span class="text">Trash</span><div class="icon"></div></li>-->
+    <!--</ul>-->
+    <div id="tasks"><span class="text">Tasks</span><div class="icon"></div></div>
     <div id="diary-tree" class="zippy">
       <h2 id="diary-tree-header" class="header">
         <span class="caption">Diary</span>
@@ -64,13 +64,14 @@
   </div>
   <div class="goog-splitpane-second-container" id="viewpane">
     <div id="main-header">
-      main header
+      <h1 id="header-title">
+        <span class="path"></span>
+        <span class="text">Loading...</span>
+      </h1>
     </div>
     <div id="main-container">
-      viewer container
     </div>
     <div id="main-footer">
-      main footer
     </div>
   </div>
   <div class="goog-splitpane-handle" id="splitpane-handle"></div>
