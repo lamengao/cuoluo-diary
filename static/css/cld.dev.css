@@ -52,7 +52,8 @@ em {font-weight: bold;}
 /* @end */
 
 /* @group header */
-#logo {cursor: pointer; width: 180px; height: 59px; position: absolute; top: 27px; left: 10px; text-indent: -5000px; background-image: url("//calendar.google.com/googlecalendar/images/calendar_logo_sm_en-GB.gif"); background-position: left top; background-repeat: no-repeat;}
+#logo {cursor: pointer; width: 180px; height: 59px; position: absolute; top: 34px; left: 10px; background: url("/images/cldiarylogo.png") no-repeat; background-position: left top}
+#logo span{position:relative;color:#CCC;left:150px;font-size:15px;font-weight:bold}
 #search {left: 230px; position: absolute; top: 38px;}
 #search-input {margin: 1px 0; padding: 4px 1px 4px 4px; border-color: #666666 #CCCCCC #CCCCCC; border-style: solid; border-width: 1px;}
 #search-input:focus {margin: 1px 0; padding: 3px 0 3px 3px; border: 2px solid #73a6ff; outline: 0 none;}
