@@ -17,6 +17,33 @@ legend {color: #000;}
 del,ins {text-decoration: none;}
 /* @end */
 
+/* @group font face */
+@font-face {
+  font-family: 'Vollkorn';
+  font-style: italic;
+  font-weight: bold;
+  src: local('Vollkorn Bold Italic'), local('Vollkorn-BoldItalic'), url('http://themes.googleusercontent.com/font?kit=KNiAlx6phRqXCwnZZG51JKtyUVIKlQBJdfjufOujkg0&text') format('woff');
+}
+@font-face {
+  font-family: 'Vollkorn';
+  font-style: italic;
+  font-weight: normal;
+  src: local('Vollkorn Italic'), local('Vollkorn-Italic'), url('http://themes.googleusercontent.com/font?kit=Oiz0tNwvC-Nd29SBQWfWTH24HHLNtlTrI02aO9A8tK8&text') format('woff');
+}
+@font-face {
+  font-family: 'Vollkorn';
+  font-style: normal;
+  font-weight: bold;
+  src: local('Vollkorn Bold'), local('Vollkorn-Bold'), url('http://themes.googleusercontent.com/font?kit=wMZpbUtcCo9GUabw9JODeuVGu2aPe47OCGXGXP4W9sc&text') format('woff');
+}
+@font-face {
+  font-family: 'Vollkorn';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Vollkorn Regular'), local('Vollkorn-Regular'), url('http://themes.googleusercontent.com/font?kit=BCFBp4rt5gxxFrX6F12DKiD4i3kEMkPDRbZVAX_DCSs&text') format('woff');
+}
+/* @end */
+
 /* @group layout */
 body, td, input, textarea, select,button {font-family: Arial,Sans-serif;}
 body,html {overflow: hidden; background-color: transparent;}
@@ -52,8 +79,15 @@ em {font-weight: bold;}
 /* @end */
 
 /* @group header */
-#logo {cursor: pointer; width: 180px; height: 59px; position: absolute; top: 34px; left: 10px; background: url("/images/cldiarylogo.png") no-repeat; background-position: left top}
-#logo span{position:relative;color:#CCC;left:150px;font-size:15px;font-weight:bold}
+#logo {cursor: pointer; position: absolute; top: 28px; left: 10px; }
+.cuoluo{font-size:28px;font-weight:bold;text-shadow: 2px 2px 2px #aaa;margin-right:8px;font-family: 'Vollkorn', serif;}
+.cuoluo .c{color:#1851ce}
+.cuoluo .o{color:#c61800}
+.cuoluo .u{color:#efba00}
+.cuoluo .l{color:#1ba823}
+.diary{color:#2b4bc5;font-size:20px;font-weight:bold}
+.beta{color:#CCC;position:relative;left:2px;top:-2px;}
+/*#logo span{position:relative;color:#CCC;left:150px;font-size:15px;font-weight:bold}*/
 #search {left: 230px; position: absolute; top: 38px;}
 #search-input {margin: 1px 0; padding: 4px 1px 4px 4px; border-color: #666666 #CCCCCC #CCCCCC; border-style: solid; border-width: 1px;}
 #search-input:focus {margin: 1px 0; padding: 3px 0 3px 3px; border: 2px solid #73a6ff; outline: 0 none;}
