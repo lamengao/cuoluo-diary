@@ -22,6 +22,11 @@ class MainHandler(webapp.RequestHandler):
 		if user is None:
 			self.redirect(users.create_login_url("/"))
 			return
+		try:
+			is_dev = os.environ['SERVER_SOFTWARE'].startswith('Dev')
+		except:
+			is_dev = False
+		is_prod = not(is_dev)
 		path = os.path.join(os.path.dirname(__file__), 
 				            'templates', 'main.html')
 		template_values = {}
@@ -30,6 +35,12 @@ class MainHandler(webapp.RequestHandler):
 		template_values['user']['email'] = user.email
 		template_values['diary_list'] = user.get_diary_list()
 		template_values['notes_list'] = user.get_notes_list()
+		if is_prod:
+			template_values['debug'] = False
+		elif self.request.get("dev") == 'true':
+			template_values['debug'] = True
+		else:
+			template_values['debug'] = False
 		self.response.out.write(template.render(path, template_values))
 	
 

@@ -32,6 +32,9 @@ handlers:
 - url: /static
   static_dir: static
 
+- url: /closure-library
+  static_dir: closure-library
+
 - url: /api/.*
   script: api.py
   #login: required
@@ -39,7 +42,6 @@ handlers:
 - url: /settings
   script: settings.py
   
-
 - url: /test
   script: test.py
   #login: required
@@ -51,13 +53,16 @@ handlers:
 
 skip_files:
   - ^static/.*\.jar
-  - ^static\/js\/(?!cld-min\.js).*
+  - ^static\/js\/(?!cld\.min\.js).*
   - ^static/closurelibrary/.*
   - ^static/images/.*Thumbs\.db
   - ^tools/.*
+  - ^closure-library
+  - ^closure-library/.*
   - ^(.*/)?.*\.py[co]
   - ^(.*/)?.*\.sw[po]
   - ^(.*/)?\.svn/.*
+  - ^(.*/)?\.git/.*
   
 
 builtins:

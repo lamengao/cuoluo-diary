@@ -81,5 +81,21 @@ var _USER_ID = "{{ user.id }}", _USER_EMAIL = "{{ user.email }}";
 var _DIARY_LIST = {{ diary_list|safe }};
 var _NOTES_LIST = {{ notes_list|safe }};
 </script>
+{% if debug %}
+<script src="/closure-library/closure/goog/base.js"></script>
+<script type="text/javascript" src="{{ '/js/cld.splitpane.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/cld.diarytree.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/cld.notestree.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/cld.editor.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/cld.doc.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/cld.doclist.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/cld.createnew.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/cld.today.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/cld.search.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/cld.tasks.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/cld.js'|addfilemtime }}"></script>
+{% else %}
+<script type="text/javascript" src="{{ '/js/cld.min.js'|addfilemtime }}"></script>
+{% endif %}
 </body>
 </html>
