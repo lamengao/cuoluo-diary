@@ -21,8 +21,8 @@ cld.App = function() {
  * Run app, assume all file were loaded.
  */
 cld.App.prototype.init = function() {
-  goog.events.listen(window, goog.events.EventType.RESIZE,
-    this.handleResize_, this);
+  goog.events.listen(this.dom_.getWindow(), goog.events.EventType.RESIZE,
+    goog.bind(this.handleResize_, this));
 };
 
 /**
@@ -31,8 +31,7 @@ cld.App.prototype.init = function() {
  * @private
  */
 cld.App.prototype.handleResize_ = function(e) {
-  //this.splitpane.handleResize(this.vsm.getSize());
-  alert('yes');
+  this.splitpane.fitSize();
 };
 
 cuoluoDiary = new cld.App();
