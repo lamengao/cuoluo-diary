@@ -53,6 +53,7 @@ body {font-size: 13px;}
 .hidden {display: none}
 .deepbg{background: #BCF;}
 .lightbg{background: #e3e9ff;}
+.vh{visibility:hidden}
 em {font-weight: bold;}
 /* @end */
 
@@ -122,9 +123,13 @@ em {font-weight: bold;}
 /* @end */
 
 /* @group tree */
-.zippy h2{line-height: 20px;height:20px;font-weight:bold;padding-left:10px;border-top: solid 1px #BCF; overflow: hidden; position: relative;cursor:pointer}
+.zippy h2{line-height: 20px;height:20px;font-weight:bold;padding-left:10px;border-top: solid 1px #BCF; overflow: hidden; position: relative;cursor:pointer;outline:0 none;}
+.zippy .content{overflow-x: hidden;overflow-y: auto;}
 .zippy-button{float:right;width:12px;height:12px;background:url(/images/1225119760-lhn-sprite.png) no-repeat}
 .zippy-arrow{background-position: 0 -28px;margin:4px 3px 0 0 }
+.zippy-arrow:hover{background-position: -12px -28px}
+.goog-zippy-expanded .zippy-arrow{background-position: 0 -16px;}
+.goog-zippy-expanded .zippy-arrow:hover{background-position: -12px -16px;}
 .zippy-menubutton{background-position: 0 -40px;margin:4px 4px 0 0 }
 /* @end */
 

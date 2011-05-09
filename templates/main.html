@@ -34,7 +34,7 @@
 		<input type="submit" value="Search the Web" id="search_web_submit" />
 	</form>
 </div>
-<div class="goog-splitpane deepbg" id="main">
+<div class="goog-splitpane deepbg vh" id="main">
   <div class="goog-splitpane-first-container" id="navpane">
     <div id="contentcreationpane" class="lightbg"></div>
     <!--<ul id="navpanelist">-->
@@ -50,6 +50,15 @@
         <span class="zippy-arrow zippy-button">&nbsp;</span>
       </h2>
       <div id="diary-tree-content" class="content">
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas commodo
+        convallis nisi. Cras rhoncus elit non dolor. Vivamus gravida ultricies arcu.
+        Praesent ipsum erat, vehicula et, ultrices at, dignissim at, ipsum. Aenean
+        venenatis. Fusce blandit laoreet urna. Aliquam et pede condimentum lorem
+        posuere molestie. Pellentesque habitant morbi tristique senectus et netus et
+        malesuada fames ac turpis egestas. Fusce euismod, justo in feugiat feugiat,
+        urna metus sagittis felis, in varius neque mauris vitae dui. Nunc vel sapien
+        in diam laoreet euismod. Mauris quis felis ut ipsum auctor feugiat. Nulla
+        facilisi. Proin vitae urna. Quisque dignissim commodo nisl. Curabitur
       </div>
     </div>
     <div id="notes-tree" class="zippy">
@@ -59,6 +68,15 @@
         <span class="zippy-arrow zippy-button">&nbsp;</span>
       </h2>
       <div id="notes-tree-content" class="content">
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas commodo
+        convallis nisi. Cras rhoncus elit non dolor. Vivamus gravida ultricies arcu.
+        Praesent ipsum erat, vehicula et, ultrices at, dignissim at, ipsum. Aenean
+        venenatis. Fusce blandit laoreet urna. Aliquam et pede condimentum lorem
+        posuere molestie. Pellentesque habitant morbi tristique senectus et netus et
+        malesuada fames ac turpis egestas. Fusce euismod, justo in feugiat feugiat,
+        urna metus sagittis felis, in varius neque mauris vitae dui. Nunc vel sapien
+        in diam laoreet euismod. Mauris quis felis ut ipsum auctor feugiat. Nulla
+        facilisi. Proin vitae urna. Quisque dignissim commodo nisl. Curabitur
       </div>
     </div>
   </div>
@@ -84,6 +102,7 @@ var _NOTES_LIST = {{ notes_list|safe }};
 {% if debug %}
 <script src="/closure-library/closure/goog/base.js"></script>
 <script type="text/javascript" src="{{ '/js/splitpane.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/zippy.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/diarytree.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/notestree.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/editor.js'|addfilemtime }}"></script>

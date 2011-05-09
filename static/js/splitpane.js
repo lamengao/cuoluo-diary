@@ -58,10 +58,10 @@ cld.SplitPane.prototype.fitSize = function() {
 
 /**
  * get cur window fit size for split pane
- * @return {goog.math.Size} the size for set to split pane
+ * @return {goog.math.Size} the size for set to split pane.
+ * @private
  */
 cld.SplitPane.prototype.getSplitPaneFitSize_ = function() {
-  var viewportElement = goog.style.getClientViewportElement();
   var viewportSize = this.dom_.getViewportSize();
   var height = viewportSize.height - 96;
   return new goog.math.Size(viewportSize.width, height);
