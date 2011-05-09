@@ -112,7 +112,7 @@ em {font-weight: bold;}
 
 /* @group navpanelist */
 #navpanelist{margin-top:4px}
-#navpanelist li,#tasks{line-height: 21px;padding-left:10px;cursor: pointer;overflow:hidden}
+#navpanelist li,#tasks{line-height: 21px;padding-left:10px;cursor: pointer;overflow:hidden;white-space: nowrap;}
 #navpanelist li:hover{background-color:#e3e9ff}
 #tasks{margin:2px 0}
 #navpanelist .text, #tasks .text{float:left}
