@@ -54,6 +54,7 @@ body {font-size: 13px;}
 .deepbg{background: #BCF;}
 .lightbg{background: #e3e9ff;}
 .vh{visibility:hidden}
+.mt4{margin-top:4px}
 em {font-weight: bold;}
 /* @end */
 
@@ -112,11 +113,9 @@ em {font-weight: bold;}
 /* @end */
 
 /* @group navpanelist */
-#navpanelist{margin-top:4px}
-#navpanelist li,#tasks{line-height: 21px;padding-left:10px;cursor: pointer;overflow:hidden;white-space: nowrap;}
+#navpanelist li{line-height: 21px;padding-left:10px;cursor: pointer;overflow:hidden;white-space: nowrap;}
 #navpanelist li:hover{background-color:#e3e9ff}
-#tasks{margin:2px 0}
-#navpanelist .text, #tasks .text{float:left}
+#navpanelist .text, #tasks .caption{float:left}
 #navpanelist .icon, #tasks .icon { margin: 2px 0 0 3px; width: 16px; height: 16px; float: left;}
 /*#navpanelist .trash .icon{background:url("/images/icons_13.png") no-repeat;background-position: -96px 0;}*/
 #tasks .icon{background:url(/images/1304729777-tasks.png) no-repeat;}
@@ -124,13 +123,21 @@ em {font-weight: bold;}
 
 /* @group tree */
 .zippy h2{line-height: 20px;height:20px;font-weight:bold;padding-left:10px;border-top: solid 1px #BCF; overflow: hidden; position: relative;cursor:pointer;outline:0 none;}
-.zippy .content{overflow-x: hidden;overflow-y: auto;}
+.zippy .content{overflow-x: hidden;overflow-y: auto;position:relative}
 .zippy-button{float:right;width:12px;height:12px;background:url(/images/1225119760-lhn-sprite.png) no-repeat}
 .zippy-arrow{background-position: 0 -28px;margin:4px 3px 0 0 }
 .zippy-arrow:hover{background-position: -12px -28px}
 .goog-zippy-expanded .zippy-arrow{background-position: 0 -16px;}
 .goog-zippy-expanded .zippy-arrow:hover{background-position: -12px -16px;}
 .zippy-menubutton{background-position: 0 -40px;margin:4px 4px 0 0 }
+/* @end */
+
+/* @group tasks */
+#tasks-container{overflow:hidden}
+#tasks .loading{padding-left:10px;margin-top:15px;color:#666}
+#relogin{position:relative;padding-left:10px;top:-20px;background-color:#FFF;}
+#relogin p{font-weight:bold;margin-bottom:10px}
+#tasksiframe {position:absolute;height:100%;width:100%;top:0;background-color:#FFF}
 /* @end */
 
 /* @group main */

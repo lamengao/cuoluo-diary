@@ -1,5 +1,5 @@
 /**
- * @fileoverview 程序初始化和主要入口.
+ * @fileoverview App.
  *
  * @author lamengao@gmail.com (Lamengao)
  */
@@ -21,7 +21,10 @@ cld.App = function() {
   /** @type {cld.Zippy} */
   this.notesZippy = new cld.Zippy('notes-tree-header',
                                   'notes-tree-content', this.dom_);
-
+  /** @type {cld.Zippy} */
+  this.tasksZippy = new cld.Zippy('tasks-title',
+                                  'tasks-container', this.dom_);
+  this.tasks = new cld.Tasks(this.dom_);
 };
 
 /**

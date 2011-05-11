@@ -56,8 +56,23 @@ cld.Zippy.prototype.resetContentHeight = function() {
  * @private
  */
 cld.Zippy.prototype.getFitHeight_ = function() {
-  var splitpaneHeight = this.dom_.getViewportSize().height - 96;
-  return splitpaneHeight - 30 - 25 - 21 - 21;
+  var splitpaneHeight = this.getHeight('main');
+  var zippyCount = this.dom_.getElementsByTagNameAndClass('div', 'zippy',
+                     this.dom_.getElement('navpane')).length;
+  var height = splitpaneHeight -
+    this.getHeight('contentcreationpane') -
+    this.getHeight('navpanelist') -
+    goog.style.getSize(this.elHeader).height * zippyCount;
+  return height;
+};
+
+/**
+ * Get element height by element id.
+ * @param {string} id the element id.
+ * @return {number} height.
+ */
+cld.Zippy.prototype.getHeight = function(id) {
+  return goog.style.getSize(this.dom_.getElement(id)).height;
 };
 
 /**

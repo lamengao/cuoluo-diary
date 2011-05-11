@@ -37,12 +37,12 @@
 <div class="goog-splitpane deepbg vh" id="main">
   <div class="goog-splitpane-first-container" id="navpane">
     <div id="contentcreationpane" class="lightbg"></div>
-    <!--<ul id="navpanelist">-->
+    <ul id="navpanelist" class="">
       <!--<li>Diary</li>-->
       <!--<li>Notes</li>-->
       <!--<li class="trash"><span class="text">Trash</span><div class="icon"></div></li>-->
-    <!--</ul>-->
-    <div id="tasks"><span class="text">Tasks</span><div class="icon"></div></div>
+    </ul>
+    <!--<div id="tasks"><span class="text">Tasks</span><div class="icon"></div></div>-->
     <div id="diary-tree" class="zippy">
       <h2 id="diary-tree-header" class="header">
         <span class="caption">Diary</span>
@@ -77,6 +77,22 @@
         urna metus sagittis felis, in varius neque mauris vitae dui. Nunc vel sapien
         in diam laoreet euismod. Mauris quis felis ut ipsum auctor feugiat. Nulla
         facilisi. Proin vitae urna. Quisque dignissim commodo nisl. Curabitur
+      </div>
+    </div>
+    <div id="tasks" class="zippy">
+      <h2 id="tasks-title" class="header">
+        <span class="caption">Tasks</span>
+        <span class="icon"></span>
+        <span class="zippy-menubutton zippy-button">&nbsp;</span>
+        <span class="zippy-arrow zippy-button">&nbsp;</span>
+      </h2>
+      <div id="tasks-container" class="content">
+        <p class="loading"><span>Loading...</span></p>
+        <div id="relogin" class="hidden">
+          <p>You need re-login to use tasks.</p>
+          <a href="/login">« Re-login now</a>
+        </div>
+        <!--<iframe class="hidden" id="tasksiframe" name="tasksiframe" frameborder="0" src="https://mail.google.com/tasks/ig?pli=1"></iframe>-->
       </div>
     </div>
   </div>
