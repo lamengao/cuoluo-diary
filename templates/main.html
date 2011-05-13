@@ -5,6 +5,7 @@
   <title>Cuoluo Diary</title>
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
   <link href="{{ '/css/cld.dev.css'|addfilemtime }}" rel="stylesheet" type="text/css" />
+  <link href="{{ '/css/closureui.css'|addfilemtime }}" rel="stylesheet" type="text/css" />
   <link rel="shortcut icon" href="{{ '/images/favicon.ico'|addfilemtime }}" />
   <!--<link rel="shortcut icon" href="/images/favicon.ico" />-->
 </head>
@@ -36,13 +37,15 @@
 </div>
 <div class="goog-splitpane deepbg vh" id="main">
   <div class="goog-splitpane-first-container" id="navpane">
-    <div id="contentcreationpane" class="lightbg"></div>
+    <div id="contentcreationpane" class="lightbg">
+      <div id="createnew" class="toolbarbutton"></div>
+      <div id="today" class="toolbarbutton"></div>
+    </div>
     <ul id="navpanelist" class="">
       <!--<li>Diary</li>-->
       <!--<li>Notes</li>-->
       <!--<li class="trash"><span class="text">Trash</span><div class="icon"></div></li>-->
     </ul>
-    <!--<div id="tasks"><span class="text">Tasks</span><div class="icon"></div></div>-->
     <div id="diary-tree" class="zippy">
       <h2 id="diary-tree-header" class="header">
         <span class="caption">Diary</span>
@@ -92,7 +95,6 @@
           <p>You need re-login to use tasks.</p>
           <a href="/login">« Re-login now</a>
         </div>
-        <!--<iframe class="hidden" id="tasksiframe" name="tasksiframe" frameborder="0" src="https://mail.google.com/tasks/ig?pli=1"></iframe>-->
       </div>
     </div>
   </div>
@@ -124,7 +126,7 @@ var _NOTES_LIST = {{ notes_list|safe }};
 <script type="text/javascript" src="{{ '/js/editor.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/doc.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/doclist.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/create.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/creation.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/today.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/search.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/tasks.js'|addfilemtime }}"></script>

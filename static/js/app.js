@@ -6,13 +6,25 @@
 
 goog.provide('cld.App');
 
+goog.require('goog.events');
+goog.require('goog.events.EventHandler');
+goog.require('goog.events.EventTarget');
 goog.require('goog.ui.Zippy');
 
 /**
  * @constructor
+ * @extends {goog.events.EventTarget}
  */
 cld.App = function() {
+  goog.events.EventTarget.call(this);
+
   this.dom_ = goog.dom.getDomHelper();
+
+  /**
+   * @type {!goog.events.EventHandler}
+   * @protected
+   */
+  this.handle = new goog.events.EventHandler(this);
   /** @type {cld.SplitPane} */
   this.splitpane = new cld.SplitPane(this.dom_);
   /** @type {cld.Zippy} */
@@ -25,12 +37,26 @@ cld.App = function() {
   this.tasksZippy = new cld.Zippy('tasks-title',
                                   'tasks-container', this.dom_);
   this.tasks = new cld.Tasks(this.dom_);
+
 };
+goog.inherits(cld.App, goog.events.EventTarget);
+goog.addSingletonGetter(cld.App);
 
 /**
  * Run app, assume all file were loaded.
  */
 cld.App.prototype.init = function() {
+  var app = cld.App.getInstance();
+  this.createNew = new cld.Creation(app, this.dom_);
+  this.today = new cld.Today(app, this.dom_);
+
+  this.loaded();
+};
+
+/**
+ * When all component loaded change the UI
+ */
+cld.App.prototype.loaded = function() {
   goog.events.listen(this.dom_.getWindow(), goog.events.EventType.RESIZE,
     goog.bind(this.handleResize_, this));
 
@@ -51,5 +77,5 @@ cld.App.prototype.handleResize_ = function(e) {
   });
 };
 
-cuoluoDiary = new cld.App();
+cuoluoDiary = cld.App.getInstance();
 cuoluoDiary.init();

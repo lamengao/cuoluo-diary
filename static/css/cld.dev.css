@@ -109,7 +109,8 @@ em {font-weight: bold;}
 /* @end */
 
 /* @group contentcreationpane */
-#contentcreationpane{height:30px;}
+#contentcreationpane{min-height:30px;padding-left:5px}
+div.toolbarbutton{margin:4px}
 /* @end */
 
 /* @group navpanelist */
