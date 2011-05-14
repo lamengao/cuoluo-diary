@@ -30,9 +30,9 @@
   <h1 id="logo"><span class="cuoluo"><span class="c">C</span><span class="u">u</span><span class="o">o</span><span class="l">l</span><span class="u">u</span><span class="o">o</span></span><span class="diary">Diary</span><sup class="beta">beta</sup></h1>
 	<form id="search" class="vh" action="//www.google.com/search" target="_blank">
 		<input type="hidden" name="client" value="diary">
-		<input type="text" id="search-input" name="q" autocomplete="off" maxlength="2048" size="40" tabindex="0" aria-haspopup="true"/>
-		<input type="submit" value="Search Diary and Notes" id="search_submit" />
-		<input type="submit" value="Search the Web" id="search_web_submit" />
+    <input type="text" id="search-input" name="q" autocomplete="off" maxlength="2048" size="40" tabindex="0" aria-haspopup="true"/
+    ><div id="search-diary-button"></div>
+    <div id="search-web-button"></div>
 	</form>
 </div>
 <div class="goog-splitpane deepbg vh" id="main">
@@ -53,15 +53,6 @@
         <span class="zippy-arrow zippy-button">&nbsp;</span>
       </h2>
       <div id="diary-tree-content" class="content">
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas commodo
-        convallis nisi. Cras rhoncus elit non dolor. Vivamus gravida ultricies arcu.
-        Praesent ipsum erat, vehicula et, ultrices at, dignissim at, ipsum. Aenean
-        venenatis. Fusce blandit laoreet urna. Aliquam et pede condimentum lorem
-        posuere molestie. Pellentesque habitant morbi tristique senectus et netus et
-        malesuada fames ac turpis egestas. Fusce euismod, justo in feugiat feugiat,
-        urna metus sagittis felis, in varius neque mauris vitae dui. Nunc vel sapien
-        in diam laoreet euismod. Mauris quis felis ut ipsum auctor feugiat. Nulla
-        facilisi. Proin vitae urna. Quisque dignissim commodo nisl. Curabitur
       </div>
     </div>
     <div id="notes-tree" class="zippy">
@@ -71,15 +62,6 @@
         <span class="zippy-arrow zippy-button">&nbsp;</span>
       </h2>
       <div id="notes-tree-content" class="content">
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas commodo
-        convallis nisi. Cras rhoncus elit non dolor. Vivamus gravida ultricies arcu.
-        Praesent ipsum erat, vehicula et, ultrices at, dignissim at, ipsum. Aenean
-        venenatis. Fusce blandit laoreet urna. Aliquam et pede condimentum lorem
-        posuere molestie. Pellentesque habitant morbi tristique senectus et netus et
-        malesuada fames ac turpis egestas. Fusce euismod, justo in feugiat feugiat,
-        urna metus sagittis felis, in varius neque mauris vitae dui. Nunc vel sapien
-        in diam laoreet euismod. Mauris quis felis ut ipsum auctor feugiat. Nulla
-        facilisi. Proin vitae urna. Quisque dignissim commodo nisl. Curabitur
       </div>
     </div>
     <div id="tasks" class="zippy">
@@ -119,7 +101,7 @@ var _NOTES_LIST = {{ notes_list|safe }};
 </script>
 {% if debug %}
 <script src="/closure-library/closure/goog/base.js"></script>
-<script type="text/javascript" src="{{ '/js/ui/ui.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/ui/utils.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/splitpane.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/zippy.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/diarytree.js'|addfilemtime }}"></script>

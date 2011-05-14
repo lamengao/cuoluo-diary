@@ -11,7 +11,6 @@ goog.require('goog.events.EventTarget');
 goog.require('goog.ui.Css3ButtonRenderer');
 goog.require('goog.ui.CustomButton');
 goog.require('goog.ui.ImagelessButtonRenderer');
-goog.require('goog.userAgent');
 
 /**
  * Today button.
@@ -29,7 +28,7 @@ cld.Today = function(app, opt_domHelper) {
   this.elContainer = this.dom_.getElement('today');
 
   this.button = new goog.ui.CustomButton(null,
-    cld.Today.getRightButtonRenderer());
+    cld.ui.utils.getButtonRenderer());
   this.button.decorate(this.elContainer);
   this.button.setCaption('Today');
 
@@ -44,17 +43,4 @@ goog.inherits(cld.Today, goog.events.EventTarget);
  */
 cld.Today.prototype.goToday = function(e) {
   alert('today');
-};
-
-/**
- * Get right button renderer.
- * If css3 support return Css3ButtonRenderer, else return CustomButtonRenderer.
- * @return {goog.ui.ButtonRenderer} renderer.
- */
-cld.Today.getRightButtonRenderer = function() {
-  if (cld.ui.canUseCSS3Button()) {
-    return goog.ui.Css3ButtonRenderer.getInstance();
-  } else {
-    return goog.ui.ImagelessButtonRenderer.getInstance();
-  }
 };

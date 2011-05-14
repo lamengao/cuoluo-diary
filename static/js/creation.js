@@ -16,7 +16,6 @@ goog.require('goog.ui.Menu');
 goog.require('goog.ui.MenuButton');
 goog.require('goog.ui.MenuItem');
 goog.require('goog.ui.Separator');
-goog.require('goog.userAgent');
 
 /**
  * Create new.
@@ -73,7 +72,8 @@ cld.Creation.prototype.createMenu_ = function() {
   var el = this.menu.getElement();
   el.id = 'createnewmenu';
 
-  goog.events.listen(this.menu, 'action', function(e) {
+  goog.events.listen(this.menu, goog.ui.Component.EventType.ACTION,
+    function(e) {
       var id = e.target.getId();
       if (id === 'diarymenuitem') {
         this.createNewDiary();
@@ -95,21 +95,8 @@ cld.Creation.prototype.createMenu_ = function() {
  */
 cld.Creation.prototype.createMenuButton_ = function() {
   this.menuButton = new goog.ui.MenuButton('Create new', this.menu,
-    cld.Creation.getRightMenuButtonRenderer());
+    cld.ui.utils.getButtonRenderer(true));
   this.menuButton.render(this.dom_.getElement('createnew'));
-};
-
-/**
- * Get right button renderer.
- * If css3 support return Css3ButtonRenderer, else return CustomButtonRenderer.
- * @return {goog.ui.ButtonRenderer} renderer.
- */
-cld.Creation.getRightMenuButtonRenderer = function() {
-  if (cld.ui.canUseCSS3Button()) {
-    return goog.ui.Css3MenuButtonRenderer.getInstance();
-  } else {
-    return goog.ui.ImagelessMenuButtonRenderer.getInstance();
-  }
 };
 
 /**

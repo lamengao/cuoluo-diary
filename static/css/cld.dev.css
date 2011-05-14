@@ -91,8 +91,11 @@ em {font-weight: bold;}
 .beta{color:#CCC;position:relative;left:2px;top:-2px;}
 /*#logo span{position:relative;color:#CCC;left:150px;font-size:15px;font-weight:bold}*/
 #search {left: 230px; position: absolute; top: 38px;}
-#search-input {margin: 1px 0; padding: 4px 1px 4px 4px; border-color: #666666 #CCCCCC #CCCCCC; border-style: solid; border-width: 1px;}
+#search-input {margin: 1px 0; padding: 4px 1px 4px 4px; border-color: #666666 #CCCCCC #CCCCCC; border-style: solid; border-width: 1px;position:relative;top:2px;}
 #search-input:focus {margin: 1px 0; padding: 3px 0 3px 3px; border: 2px solid #73a6ff; outline: 0 none;}
+#search .goog-css3-button{padding:4px 8px}
+#search .goog-imageless-button-content{line-height:23px}
+#search .goog-imageless-button{top:2px;left:-2px}
 /* @end */
 
 /* @group main */

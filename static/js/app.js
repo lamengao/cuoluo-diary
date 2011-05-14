@@ -49,6 +49,7 @@ cld.App.prototype.init = function() {
   var app = cld.App.getInstance();
   this.createNew = new cld.Creation(app, this.dom_);
   this.today = new cld.Today(app, this.dom_);
+  this.search = new cld.Search(app, this.dom_);
 
   this.loaded();
 };
