@@ -38,7 +38,7 @@
 <div class="goog-splitpane deepbg vh" id="main">
   <div class="goog-splitpane-first-container" id="navpane">
     <div id="contentcreationpane" class="lightbg">
-      <div id="createnew" class="toolbarbutton"></div>
+      <div id="createnew" class="toolbarbutton goog-inline-block"></div>
       <div id="today" class="toolbarbutton"></div>
     </div>
     <ul id="navpanelist" class="">
@@ -119,6 +119,7 @@ var _NOTES_LIST = {{ notes_list|safe }};
 </script>
 {% if debug %}
 <script src="/closure-library/closure/goog/base.js"></script>
+<script type="text/javascript" src="{{ '/js/ui/ui.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/splitpane.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/zippy.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/diarytree.js'|addfilemtime }}"></script>

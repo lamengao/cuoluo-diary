@@ -1,4 +1,5 @@
 *.pyc
 *.sw[op]
 .DS_Store
+static/.DS_Store
 closure-library

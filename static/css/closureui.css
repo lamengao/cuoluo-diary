@@ -6,7 +6,7 @@
   font-family: Arial, sans-serif;
   color: #000;
   /* Client apps may override the URL at which they serve the image. */
-  background: #ddd url(https://ssl.gstatic.com/editor/button-bg.png) repeat-x top left;
+  background: #ddd url(/images/button-bg.png) repeat-x top left;
   text-decoration: none;
   list-style: none;
   vertical-align: middle;
@@ -157,7 +157,7 @@
 /* Imageless button styles. */
 .goog-css3-button {
   margin: 0 2px;
-  padding: 3px 6px;
+  padding: 2px 8px;
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
@@ -168,11 +168,13 @@
   border: 1px solid #bbb;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
+  border-radius: 3px;
   /* TODO(eae): Change this to -webkit-linear-gradient once
                 https://bugs.webkit.org/show_bug.cgi?id=28152 is resolved. */
   background: -webkit-gradient(linear, 0% 40%, 0% 70%, from(#f9f9f9),
       to(#e3e3e3));
   background: -moz-linear-gradient(top, #f9f9f9, #e3e3e3);
+  background-image: -o-linear-gradient(top, #f9f9f9 40%, #e3e3e3 70%);
 }
 
 
@@ -190,6 +192,7 @@
   background: -webkit-gradient(linear, 0% 40%, 0% 70%, from(#e3e3e3),
       to(#f9f9f9));
   background: -moz-linear-gradient(top, #e3e3e3, #f9f9f9);
+  background-image: -o-linear-gradient(top, #e3e3e3 40%, #f9f9f9 70%);
 }
 
 .goog-css3-button-disabled {
@@ -211,6 +214,8 @@
   -webkit-border-bottom-right-radius: 0px;
   -moz-border-radius-topright: 0px;
   -moz-border-radius-bottomright: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius:0px;
 }
 
 .goog-css3-button-collapse-left {
@@ -220,5 +225,447 @@
   -webkit-border-bottom-left-radius: 0px;
   -moz-border-radius-topleft: 0px;
   -moz-border-radius-bottomleft: 0px;
+  border-top-left-radius:0px;
+  border-bottom-left-radius:0px;
 }
 /* @end */
+
+/* @group goog.ui.ImagelessButtonRenderer */
+/* Imageless button styles. */
+
+/* The base element of the button. */
+.goog-imageless-button {
+  /* Set the background color at the outermost level. */
+  background: #e3e3e3;
+  /* Place a top and bottom border.  Do it on this outermost div so that
+   * it is easier to make pill buttons work properly. */
+  border-color: #bbb;
+  border-style: solid;
+  border-width: 1px 0;
+  color: #222; /* Text content color. */
+  cursor: default;
+  font-family: Arial, sans-serif;
+  line-height: 0; /* For Opera and old WebKit. */
+  list-style: none;
+  /* Built-in margin for the component.  Because of the negative margins
+   * used to simulate corner rounding, the effective left and right margin is
+   * actually only 1px. */
+  margin: 2px;
+  outline: none;
+  padding: 0;
+  text-decoration: none;
+  vertical-align: middle;
+}
+
+/*
+ * Pseudo-rounded corners.  Works by pulling the left and right sides slightly
+ * outside of the parent bounding box before drawing the left and right
+ * borders.
+ */
+.goog-imageless-button-outer-box {
+  /* Left and right border that protrude outside the parent. */
+  border-color: #bbb;
+  border-style: solid;
+  border-width: 0 1px;
+  /* Same as margin: 0 -1px, except works better cross browser.  These are
+   * intended to be RTL flipped to work better in IE7. */
+  left: -1px;
+  margin-right: -2px;
+}
+
+/*
+ * A div to give the light and medium shades of the button that takes up no
+ * vertical space.
+ */
+.goog-imageless-button-top-shadow {
+  /* Light top color in the content. */
+  background: #f9f9f9;
+  /* Thin medium shade. */
+  border-bottom: 3px solid #eee;
+  /* Control height with line-height, since height: will trigger hasLayout.
+   * Specified in pixels, as a compromise to avoid rounding errors. */
+  line-height: 9px;
+  /* Undo all space this takes up. */
+  margin-bottom: -12px;
+}
+
+/* Actual content area for the button. */
+.goog-imageless-button-content {
+  line-height: 1.5em;
+  padding: 0px 8px;
+  text-align: center;
+}
+
+
+/* Pill (collapsed border) styles. */
+.goog-imageless-button-collapse-right {
+  /* Draw a border on the root element to square the button off.  The border
+   * on the outer-box element remains, but gets obscured by the next button. */
+  border-right-width: 1px;
+  margin-right: -2px; /* Undoes the margins between the two buttons. */
+}
+
+.goog-imageless-button-collapse-left .goog-imageless-button-outer-box {
+  /* Don't bleed to the left -- keep the border self contained in the box. */
+  border-left-color: #eee;
+  left: 0;
+  margin-right: -1px; /* Versus the default of -2px. */
+}
+
+
+/* Disabled styles. */
+.goog-imageless-button-disabled,
+.goog-imageless-button-disabled .goog-imageless-button-outer-box {
+  background: #eee;
+  border-color: #ccc;
+  color: #666; /* For text */
+}
+
+.goog-imageless-button-disabled .goog-imageless-button-top-shadow {
+  /* Just hide the shadow instead of setting individual colors. */
+  visibility: hidden;
+}
+
+
+/*
+ * Active and checked styles.
+ * Identical except for text color according to GUIG.
+ */
+.goog-imageless-button-active, .goog-imageless-button-checked {
+  background: #f9f9f9;
+}
+
+.goog-imageless-button-active .goog-imageless-button-top-shadow,
+.goog-imageless-button-checked .goog-imageless-button-top-shadow {
+  background: #e3e3e3;
+}
+
+.goog-imageless-button-active {
+  color: #000;
+}
+
+
+/* Hover styles. Higher priority to override other border styles. */
+.goog-imageless-button-hover,
+.goog-imageless-button-hover .goog-imageless-button-outer-box,
+.goog-imageless-button-focused,
+.goog-imageless-button-focused .goog-imageless-button-outer-box {
+  border-color: #000;
+}
+
+
+/* IE6 hacks.  This is the only place inner-box is used. */
+* html .goog-imageless-button-inner-box {
+  /* Give the element inline-block behavior so that the shadow appears.
+   * The main requirement is to give the element layout without having the side
+   * effect of taking up a full line. */
+  display: inline;
+  /* Allow the shadow to show through, overriding position:relative from the
+   * goog-inline-block styles. */
+  position: static;
+  zoom: 1;
+}
+
+* html .goog-imageless-button-outer-box {
+  /* In RTL mode, IE is off by one pixel.  To fix, override the left: -1px
+   * (which was flipped to right) without having any effect on LTR mode
+   * (where IE ignores right when left is specified). */
+  /* @noflip */ right: 0;
+}
+/* @end */
+
+/* @group menu.css */
+.goog-menu {
+  background: #fff;
+  border-color: #ccc #666 #666 #ccc;
+  border-style: solid;
+  border-width: 1px;
+  cursor: default;
+  font: normal 13px Arial, sans-serif;
+  margin: 0;
+  outline: none;
+  padding: 4px 0;
+  position: absolute;
+  z-index: 20000; /* Arbitrary, but some apps depend on it... */
+}
+
+/* @end */
+
+/* @group menuitem.css */
+/* State: resting. */
+.goog-menuitem {
+  color: #000;
+  font: normal 12px Arial, sans-serif;
+  list-style: none;
+  margin: 0;
+  /* 28px on the left for icon or checkbox; 7em on the right for shortcut. */
+  padding: 4px 7em 4px 28px;
+  white-space: nowrap;
+}
+
+/* If a menu doesn't have checkable items or items with icons, remove padding. */
+.goog-menu-nocheckbox .goog-menuitem,
+.goog-menu-noicon .goog-menuitem {
+  padding-left: 12px;
+}
+
+/*
+ * If a menu doesn't have items with shortcuts, leave just enough room for
+ * submenu arrows, if they are rendered.
+ */
+.goog-menu-noaccel .goog-menuitem {
+  padding-right: 20px;
+}
+
+.goog-menuitem-content {
+  color: #000;
+  font: normal 13px Arial, sans-serif;
+}
+
+/* State: disabled. */
+.goog-menuitem-disabled .goog-menuitem-accel,
+.goog-menuitem-disabled .goog-menuitem-content {
+  color: #ccc !important;
+}
+.goog-menuitem-disabled .goog-menuitem-icon {
+  opacity: 0.3;
+  -moz-opacity: 0.3;
+  filter: alpha(opacity=30);
+}
+
+/* State: hover. */
+.goog-menuitem-highlight,
+.goog-menuitem-hover {
+  background-color: #bcf;
+  /* Use an explicit top and bottom border so that the selection is visible
+   * in high contrast mode. */
+  border-color: #d6e9f8;
+  border-style: dotted;
+  border-width: 1px 0;
+  padding-bottom: 3px;
+  padding-top: 3px;
+}
+
+/* State: selected/checked. */
+.goog-menuitem-checkbox,
+.goog-menuitem-icon {
+  background-repeat: no-repeat;
+  height: 16px;
+  left: 6px;
+  position: absolute;
+  right: auto;
+  vertical-align: middle;
+  width: 16px;
+}
+.goog-option-selected .goog-menuitem-checkbox,
+.goog-option-selected .goog-menuitem-icon {
+  /* Client apps may override the URL at which they serve the sprite. */
+  background: url(/images/editortoolbar.png) no-repeat -512px 0;
+}
+
+/* Keyboard shortcut ("accelerator") style. */
+.goog-menuitem-accel {
+  color: #999;
+  /* Keyboard shortcuts are untranslated; always left-to-right. */
+  /* @noflip */ direction: ltr;
+  left: auto;
+  padding: 0 6px;
+  position: absolute;
+  right: 0;
+  text-align: right;
+}
+/* @end */
+
+/* @group menuseparator.css */
+.goog-menuseparator {
+  border-top: 1px solid #ccc;
+  margin: 4px 0;
+  padding: 0;
+}
+
+/* @end */
+
+/* @group menubutton.css */
+
+/* State: resting. */
+.goog-menu-button {
+  /* Client apps may override the URL at which they serve the image. */
+  background: #ddd url(/images/button-bg.png) repeat-x top left;
+  border: 0;
+  color: #000;
+  cursor: pointer;
+  list-style: none;
+  margin: 2px;
+  outline: none;
+  padding: 0;
+  text-decoration: none;
+  vertical-align: middle;
+}
+
+/* Pseudo-rounded corners. */
+.goog-menu-button-outer-box,
+.goog-menu-button-inner-box {
+  border-style: solid;
+  border-color: #aaa;
+  vertical-align: top;
+}
+.goog-menu-button-outer-box {
+  margin: 0;
+  border-width: 1px 0;
+  padding: 0;
+}
+.goog-menu-button-inner-box {
+  margin: 0 -1px;
+  border-width: 0 1px;
+  padding: 3px 4px;
+}
+
+/* Pre-IE7 IE hack; ignored by IE7 and all non-IE browsers. */
+* html .goog-menu-button-inner-box {
+  /* IE6 needs to have the box shifted to make the borders line up. */
+  left: -1px;
+}
+
+/* Pre-IE7 BiDi fixes. */
+* html .goog-menu-button-rtl .goog-menu-button-outer-box {
+  /* @noflip */ left: -1px;
+  /* @noflip */ right: auto;
+}
+* html .goog-menu-button-rtl .goog-menu-button-inner-box {
+  /* @noflip */ right: auto;
+}
+
+/* IE7-only hack; ignored by all other browsers. */
+*:first-child+html .goog-menu-button-inner-box {
+  /* IE7 needs to have the box shifted to make the borders line up. */
+  left: -1px;
+}
+/* IE7 BiDi fix. */
+*:first-child+html .goog-menu-button-rtl .goog-menu-button-inner-box {
+  /* @noflip */ left: 1px;
+  /* @noflip */ right: auto;
+}
+
+/* Safari-only hacks. */
+::root .goog-menu-button,
+::root .goog-menu-button-outer-box,
+::root .goog-menu-button-inner-box {
+  /* Required to make pseudo-rounded corners work on Safari. */
+  line-height: 0;
+}
+::root .goog-menu-button-caption,
+::root .goog-menu-button-dropdown {
+  /* Required to make pseudo-rounded corners work on Safari. */
+  line-height: normal;
+}
+
+/* State: disabled. */
+.goog-menu-button-disabled {
+  background-image: none !important;
+  opacity: 0.3;
+  -moz-opacity: 0.3;
+  filter: alpha(opacity=30);
+}
+.goog-menu-button-disabled .goog-menu-button-outer-box,
+.goog-menu-button-disabled .goog-menu-button-inner-box,
+.goog-menu-button-disabled .goog-menu-button-caption,
+.goog-menu-button-disabled .goog-menu-button-dropdown {
+  color: #333 !important;
+  border-color: #999 !important;
+}
+
+/* Pre-IE7 IE hack; ignored by IE7 and all non-IE browsers. */
+* html .goog-menu-button-disabled {
+  margin: 2px 1px !important;
+  padding: 0 1px !important;
+}
+
+/* IE7-only hack; ignored by all other browsers. */
+*:first-child+html .goog-menu-button-disabled {
+  margin: 2px 1px !important;
+  padding: 0 1px !important;
+}
+
+/* State: hover. */
+.goog-menu-button-hover .goog-menu-button-outer-box,
+.goog-menu-button-hover .goog-menu-button-inner-box {
+  border-color: #9cf #69e #69e #7af !important; /* Hover border wins. */
+}
+
+/* State: active, open. */
+.goog-menu-button-active,
+.goog-menu-button-open {
+  background-color: #bbb;
+  background-position: bottom left;
+}
+
+/* State: focused. */
+.goog-menu-button-focused .goog-menu-button-outer-box,
+.goog-menu-button-focused .goog-menu-button-inner-box {
+  border-color: orange;
+}
+
+/* Caption style. */
+.goog-menu-button-caption {
+  padding: 0 4px 0 0;
+  vertical-align: top;
+}
+
+/* Dropdown arrow style. */
+.goog-menu-button-dropdown {
+  height: 15px;
+  width: 7px;
+  /* Client apps may override the URL at which they serve the sprite. */
+  background: url(/images/editortoolbar.png) no-repeat -388px 0;
+  vertical-align: top;
+}
+
+/* Pill (collapsed border) styles. */
+/* TODO(gboyer): Remove specific menu button styles and have any button support being a menu button. */
+.goog-menu-button-collapse-right,
+.goog-menu-button-collapse-right .goog-menu-button-outer-box,
+.goog-menu-button-collapse-right .goog-menu-button-inner-box {
+  margin-right: 0;
+}
+
+.goog-menu-button-collapse-left,
+.goog-menu-button-collapse-left .goog-menu-button-outer-box,
+.goog-menu-button-collapse-left .goog-menu-button-inner-box {
+  margin-left: 0;
+}
+
+.goog-menu-button-collapse-left .goog-menu-button-inner-box  {
+  border-left: 1px solid #fff;
+}
+
+.goog-menu-button-collapse-left.goog-menu-button-checked
+.goog-menu-button-inner-box {
+  border-left: 1px solid #ddd;
+}
+/* @end */
+
+/* @group css3menubutton.css */
+/* Dropdown arrow style. */
+.goog-css3-button-dropdown {
+  height: 16px;
+  width: 7px;
+  /* Client apps may override the URL at which they serve the sprite. */
+  background: url(/images/editortoolbar.png) no-repeat -388px 0;
+  vertical-align: top;
+  margin-left: 3px;
+}
+/* @end */
+
+/* @group imagelessmenubutton.css */
+/* Dropdown arrow style. */
+.goog-imageless-button-dropdown {
+  height: 16px;
+  width: 7px;
+  /* Client apps may override the URL at which they serve the sprite. */
+  background: url(/images/editortoolbar.png) no-repeat -388px 0;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+/* @end */
+
+

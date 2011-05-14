@@ -14,18 +14,25 @@ handlers:
   upload: static/images/favicon.ico
   mime_type: image/x-icon
 
-- url: /images/(.*)/(.*)
+- url: /images/date
+  static_dir: static/images/date
+
+- url: /images/(\d+)/(.*)
   static_files: static/images/\2
-  upload: static/js/.*
+  upload: static/images/.*
 
 - url: /images
   static_dir: static/images
 
-- url: /js/(.*)/(.*)\.js
+- url: /js/ui/(\d+)/(.*)\.js
+  static_files: static/js/ui/\2.js
+  upload: static/js/ui/.*\.js
+
+- url: /js/(\d+)/(.*)\.js
   static_files: static/js/\2.js
   upload: static/js/.*\.js
 
-- url: /css/(.*)/(.*)\.css
+- url: /css/(\d+)/(.*)\.css
   static_files: static/css/\2.css
   upload: static/css/.*\.css
 
