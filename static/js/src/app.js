@@ -6,6 +6,14 @@
 
 goog.provide('cld.App');
 
+goog.require('cld.Creation');
+goog.require('cld.Search');
+goog.require('cld.SplitPane');
+goog.require('cld.Tasks');
+goog.require('cld.Today');
+goog.require('cld.Zippy');
+goog.require('cld.ui.utils');
+
 goog.require('goog.events');
 goog.require('goog.events.EventHandler');
 goog.require('goog.events.EventTarget');

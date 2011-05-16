@@ -24,9 +24,13 @@ handlers:
 - url: /images
   static_dir: static/images
 
-- url: /js/ui/(\d+)/(.*)\.js
-  static_files: static/js/ui/\2.js
-  upload: static/js/ui/.*\.js
+- url: /js/src/(\d+)/(.*)\.js
+  static_files: static/js/src/\2.js
+  upload: static/js/src/.*\.js
+
+- url: /js/src/ui/(\d+)/(.*)\.js
+  static_files: static/js/src/ui/\2.js
+  upload: static/js/src/ui/.*\.js
 
 - url: /js/(\d+)/(.*)\.js
   static_files: static/js/\2.js
@@ -60,7 +64,8 @@ handlers:
 
 skip_files:
   - ^static/.*\.jar
-  - ^static\/js\/(?!cld\.min\.js).*
+  #- ^static\/js\/(?!cld\.min\.js).*
+  - ^static\/js\/src\/.*
   - ^static/closurelibrary/.*
   - ^static/images/.*Thumbs\.db
   - ^tools/.*

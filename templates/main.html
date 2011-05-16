@@ -99,23 +99,34 @@ var _USER_ID = "{{ user.id }}", _USER_EMAIL = "{{ user.email }}";
 var _DIARY_LIST = {{ diary_list|safe }};
 var _NOTES_LIST = {{ notes_list|safe }};
 </script>
-{% if debug %}
+{% if develop %}
 <script src="/closure-library/closure/goog/base.js"></script>
-<script type="text/javascript" src="{{ '/js/ui/utils.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/splitpane.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/zippy.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/diarytree.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/notestree.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/editor.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/doc.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/doclist.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/creation.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/today.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/search.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/tasks.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/app.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/src/ui/utils.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/src/splitpane.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/src/zippy.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/src/diarytree.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/src/notestree.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/src/editor.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/src/doc.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/src/doclist.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/src/creation.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/src/today.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/src/search.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/src/tasks.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/src/app.js'|addfilemtime }}"></script>
 {% else %}
+{% ifequal browser.name 'unknown' %}
 <script type="text/javascript" src="{{ '/js/cld.min.js'|addfilemtime }}"></script>
+{% else %}
+{% ifequal browser.name 'Internet Explorer' %}<script type="text/javascript" src="{{ '/js/cld.ie.min.js'|addfilemtime }}"></script>{% endifequal %}
+{% ifequal browser.name 'Chrome' %}<script type="text/javascript" src="{{ '/js/cld.webkit.min.js'|addfilemtime }}"></script>{% endifequal %}
+{% ifequal browser.name 'Safari' %}<script type="text/javascript" src="{{ '/js/cld.webkit.min.js'|addfilemtime }}"></script>{% endifequal %}
+{% ifequal browser.name 'WebKit' %}<script type="text/javascript" src="{{ '/js/cld.webkit.min.js'|addfilemtime }}"></script>{% endifequal %}
+{% ifequal browser.name 'Mozilla' %}<script type="text/javascript" src="{{ '/js/cld.gecko.min.js'|addfilemtime }}"></script>{% endifequal %}
+{% ifequal browser.name 'Firefox' %}<script type="text/javascript" src="{{ '/js/cld.gecko.min.js'|addfilemtime }}"></script>{% endifequal %}
+{% ifequal browser.name 'Konqueror' %}<script type="text/javascript" src="{{ '/js/cld.min.js'|addfilemtime }}"></script>{% endifequal %}
+{% ifequal browser.name 'Opera' %}<script type="text/javascript" src="{{ '/js/cld.opera.min.js'|addfilemtime }}"></script>{% endifequal %}
+{% endifequal %}
 {% endif %}
 </body>
 </html>
