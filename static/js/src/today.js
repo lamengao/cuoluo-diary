@@ -39,7 +39,7 @@ goog.inherits(cld.Today, goog.events.EventTarget);
 
 /**
  * Go to the diary of today.
- * @param {goog.events.Event}} e toggle event.
+ * @param {goog.events.Event} e toggle event.
  */
 cld.Today.prototype.goToday = function(e) {
   alert('today');

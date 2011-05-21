@@ -149,7 +149,7 @@ class Diary(db.Model):
 
 	def to_json(self, only_meta=False):
 		diary = {}
-		diary['title'] = self.title
+		diary['date'] = self.title[0:4] + '/' + self.title[4:6] + '/' + self.title[6:8]
 		diary['created'] = self.created.isoformat()
 		diary['last_modified'] = self.last_modified.isoformat()
 		diary['status'] = self.status

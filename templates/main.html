@@ -4,10 +4,9 @@
   <meta charset="utf-8" />
   <title>Cuoluo Diary</title>
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <link href="{{ '/css/cld.dev.css'|addfilemtime }}" rel="stylesheet" type="text/css" />
   <link href="{{ '/css/closureui.css'|addfilemtime }}" rel="stylesheet" type="text/css" />
+  <link href="{{ '/css/cld.dev.css'|addfilemtime }}" rel="stylesheet" type="text/css" />
   <link rel="shortcut icon" href="{{ '/images/favicon.ico'|addfilemtime }}" />
-  <!--<link rel="shortcut icon" href="/images/favicon.ico" />-->
 </head>
 <body>
 <div class="loadingstatusbox" id="loadingStatus">Loading...</div>
@@ -53,6 +52,10 @@
         <span class="zippy-arrow zippy-button">&nbsp;</span>
       </h2>
       <div id="diary-tree-content" class="content">
+        <div class="empty">
+          <p class="msg">You haven't created any diary yet.</p>
+          <div id="create1stdiary">Create new diary now</div>
+        </div>
       </div>
     </div>
     <div id="notes-tree" class="zippy">
@@ -62,6 +65,10 @@
         <span class="zippy-arrow zippy-button">&nbsp;</span>
       </h2>
       <div id="notes-tree-content" class="content">
+        <div class="empty">
+          <p class="msg">You haven't created any notes yet.</p>
+          <div id="create1stnote">Create new note now</div>
+        </div>
       </div>
     </div>
     <div id="tasks" class="zippy">
@@ -101,7 +108,10 @@ var _NOTES_LIST = {{ notes_list|safe }};
 </script>
 {% if develop %}
 <script src="/closure-library/closure/goog/base.js"></script>
+<script type="text/javascript" src="{{ '/js/src/deps.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/src/ui/utils.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/src/ui/treecontrol.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="{{ '/js/src/ui/diarytreecontrol.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/src/splitpane.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/src/zippy.js'|addfilemtime }}"></script>
 <script type="text/javascript" src="{{ '/js/src/diarytree.js'|addfilemtime }}"></script>

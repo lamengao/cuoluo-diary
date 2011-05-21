@@ -143,6 +143,51 @@ div.toolbarbutton{margin:4px}
 .goog-zippy-expanded .zippy-arrow{background-position: 0 -16px;}
 .goog-zippy-expanded .zippy-arrow:hover{background-position: -12px -16px;}
 .zippy-menubutton{background-position: 0 -40px;margin:4px 4px 0 0 }
+.content .empty{color:#666;width:100%;margin-top:20%;text-align:center;font-size:12px;position:absolute;z-index:5}
+.empty .msg{margin-bottom:10px}
+.goog-tree-root{width:100%;position:absolute;top:0;left:0;}
+.goog-tree-root>.goog-tree-children{background-color:#FFF;}
+.goog-tree-row:hover {background: #e3e9ff;cursor: pointer;}
+.goog-tree-item .selected { background-color: #BBCCFF !important; }
+img.goog-tree-icon{margin-left:8px}
+.goog-tree-item-label{padding:0}
+.goog-tree-row img{position:relative;top:-2px}
+/* @end */
+
+/* @group diary tree */
+.doctree-icon{height: 16px; vertical-align: middle; width: 16px;}
+.year-icon, .month-icon{background-image:url(/images/icon_calendar.gif)}
+.day-icon-01{background-image:url(/images/date/favicon_v2010_1.ico)}
+.day-icon-02{background-image:url(/images/date/favicon_v2010_2.ico)}
+.day-icon-03{background-image:url(/images/date/favicon_v2010_3.ico)}
+.day-icon-04{background-image:url(/images/date/favicon_v2010_4.ico)}
+.day-icon-05{background-image:url(/images/date/favicon_v2010_5.ico)}
+.day-icon-06{background-image:url(/images/date/favicon_v2010_6.ico)}
+.day-icon-07{background-image:url(/images/date/favicon_v2010_7.ico)}
+.day-icon-08{background-image:url(/images/date/favicon_v2010_8.ico)}
+.day-icon-09{background-image:url(/images/date/favicon_v2010_9.ico)}
+.day-icon-10{background-image:url(/images/date/favicon_v2010_10.ico)}
+.day-icon-11{background-image:url(/images/date/favicon_v2010_11.ico)}
+.day-icon-12{background-image:url(/images/date/favicon_v2010_12.ico)}
+.day-icon-13{background-image:url(/images/date/favicon_v2010_13.ico)}
+.day-icon-14{background-image:url(/images/date/favicon_v2010_14.ico)}
+.day-icon-15{background-image:url(/images/date/favicon_v2010_15.ico)}
+.day-icon-16{background-image:url(/images/date/favicon_v2010_16.ico)}
+.day-icon-17{background-image:url(/images/date/favicon_v2010_17.ico)}
+.day-icon-18{background-image:url(/images/date/favicon_v2010_18.ico)}
+.day-icon-19{background-image:url(/images/date/favicon_v2010_19.ico)}
+.day-icon-20{background-image:url(/images/date/favicon_v2010_20.ico)}
+.day-icon-21{background-image:url(/images/date/favicon_v2010_21.ico)}
+.day-icon-22{background-image:url(/images/date/favicon_v2010_22.ico)}
+.day-icon-23{background-image:url(/images/date/favicon_v2010_23.ico)}
+.day-icon-24{background-image:url(/images/date/favicon_v2010_24.ico)}
+.day-icon-25{background-image:url(/images/date/favicon_v2010_25.ico)}
+.day-icon-26{background-image:url(/images/date/favicon_v2010_26.ico)}
+.day-icon-27{background-image:url(/images/date/favicon_v2010_27.ico)}
+.day-icon-28{background-image:url(/images/date/favicon_v2010_28.ico)}
+.day-icon-29{background-image:url(/images/date/favicon_v2010_29.ico)}
+.day-icon-30{background-image:url(/images/date/favicon_v2010_30.ico)}
+.day-icon-31{background-image:url(/images/date/favicon_v2010_31.ico)}
 /* @end */
 
 /* @group tasks */

@@ -48,7 +48,7 @@ cld.Search.prototype.createSearchDiaryButton = function() {
     cld.ui.utils.getButtonRenderer());
   this.searchDiaryButton.decorate(this.elSearchDiary);
   this.searchDiaryButton.setCaption('Search Diary and Notes');
-  this.searchDiaryButton.setCollapsed(goog.ui.Button.Side.START);
+  this.searchDiaryButton.setCollapsed(goog.ui.ButtonSide.START);
   goog.events.listen(this.searchDiaryButton,
     goog.ui.Component.EventType.ACTION,
     goog.bind(this.searchDiary, this));

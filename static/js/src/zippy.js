@@ -30,7 +30,7 @@ cld.Zippy = function(header, content, opt_domHelper) {
     this.handleZippyToggle_, false, this);
 };
 
-/** @type {Array.<goog.ui.Zippy>} */
+/** @type {Array.<cld.Zippy>} */
 cld.Zippy.list = [];
 
 /**
@@ -77,7 +77,7 @@ cld.Zippy.prototype.getHeight = function(id) {
 
 /**
  * Only one zippy can expande.
- * @param {goog.events.Event}} e toggle event.
+ * @param {goog.events.Event} e toggle event.
  * @private
  */
 cld.Zippy.prototype.handleZippyToggle_ = function(e) {

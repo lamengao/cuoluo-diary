@@ -45,6 +45,7 @@ handlers:
 
 - url: /closure-library
   static_dir: closure-library
+  expiration: "10s"
 
 - url: /api/.*
   script: api.py

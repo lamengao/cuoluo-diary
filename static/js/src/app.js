@@ -7,6 +7,8 @@
 goog.provide('cld.App');
 
 goog.require('cld.Creation');
+goog.require('cld.DiaryTree');
+goog.require('cld.DiaryTreeItem');
 goog.require('cld.Search');
 goog.require('cld.SplitPane');
 goog.require('cld.Tasks');
@@ -44,23 +46,12 @@ cld.App = function() {
   /** @type {cld.Zippy} */
   this.tasksZippy = new cld.Zippy('tasks-title',
                                   'tasks-container', this.dom_);
-  this.tasks = new cld.Tasks(this.dom_);
+  //this.tasks = new cld.Tasks(this.dom_);
+
 
 };
 goog.inherits(cld.App, goog.events.EventTarget);
 goog.addSingletonGetter(cld.App);
-
-/**
- * Run app, assume all file were loaded.
- */
-cld.App.prototype.init = function() {
-  var app = cld.App.getInstance();
-  this.createNew = new cld.Creation(app, this.dom_);
-  this.today = new cld.Today(app, this.dom_);
-  this.search = new cld.Search(app, this.dom_);
-
-  this.loaded();
-};
 
 /**
  * When all component loaded change the UI
@@ -86,5 +77,17 @@ cld.App.prototype.handleResize_ = function(e) {
   });
 };
 
-cuoluoDiary = cld.App.getInstance();
-cuoluoDiary.init();
+/**
+ * Run app, assume all file were loaded.
+ */
+cld.App.prototype.install = function() {
+  var app = cld.App.getInstance();
+  this.createNew = new cld.Creation(app, this.dom_);
+  this.today = new cld.Today(app, this.dom_);
+  this.search = new cld.Search(app, this.dom_);
+  this.diaryTree = new cld.DiaryTree(app, this.dom_);
+
+  this.loaded();
+};
+
+cld.App.getInstance().install();

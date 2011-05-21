@@ -15,7 +15,8 @@ goog.require('goog.net.ImageLoader');
 cld.Tasks = function(opt_domHelper) {
   this.dom_ = opt_domHelper || goog.dom.getDomHelper();
   this.elHeader = this.dom_.getElement('tasks-title');
-  this.elContainer = this.dom_.getElement('tasks-container');
+  this.elContainer = 
+    /** @type {Element} */ (this.dom_.getElement('tasks-container'));
 
   this.loginTester();
 };
