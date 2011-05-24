@@ -18,7 +18,7 @@ del,ins {text-decoration: none;}
 /* @end */
 
 /* @group font face */
-@font-face {
+/*@font-face {
   font-family: 'Vollkorn';
   font-style: italic;
   font-weight: bold;
@@ -41,7 +41,7 @@ del,ins {text-decoration: none;}
   font-style: normal;
   font-weight: normal;
   src: local('Vollkorn Regular'), local('Vollkorn-Regular'), url('http://themes.googleusercontent.com/font?kit=BCFBp4rt5gxxFrX6F12DKiD4i3kEMkPDRbZVAX_DCSs&text') format('woff');
-}
+}*/
 /* @end */
 
 /* @group layout */
@@ -149,7 +149,8 @@ div.toolbarbutton{margin:4px}
 .goog-tree-root>.goog-tree-children{background-color:#FFF;}
 .goog-tree-row:hover {background: #e3e9ff;cursor: pointer;}
 .goog-tree-item .selected { background-color: #BBCCFF !important; }
-img.goog-tree-icon{margin-left:8px}
+/*img.goog-tree-icon{margin-left:8px}*/
+.goog-tree-row img:first-child{margin-left:8px}
 .goog-tree-item-label{padding:0}
 .goog-tree-row img{position:relative;top:-2px}
 /* @end */

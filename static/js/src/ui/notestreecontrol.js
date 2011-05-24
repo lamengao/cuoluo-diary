@@ -20,6 +20,9 @@ goog.require('cld.ui.TreeControl');
  * @extends {cld.ui.TreeControl}
  */
 cld.ui.NotesTreeControl = function(html, opt_config, opt_domHelper) {
+  //var config = opt_config || goog.ui.tree.TreeControl.defaultConfig;
+  //config.cssTreeIcon = goog.getCssName('doctree-icon'),
+  //cld.ui.TreeControl.call(this, html, config, opt_domHelper);
   cld.ui.TreeControl.call(this, html, opt_config, opt_domHelper);
 };
 goog.inherits(cld.ui.NotesTreeControl, cld.ui.TreeControl);
@@ -37,7 +40,11 @@ cld.ui.NotesTreeControl.prototype.onMouseDown = function(e) {
     if (this.isUserCollapsible_) {
       this.toggle();
     }
-    return;
+    // expand icon
+    var type = el.getAttribute('type');
+    if (type == 'expand') {
+      return;
+    }
   }
 
   this.select();

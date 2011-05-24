@@ -712,7 +712,7 @@
 
 .goog-tree-children {
   background-repeat: repeat-y;
-  background-image: url("//ssl.gstatic.com/closure/tree/I.png") !important;
+  background-image: url("/images/tree/I.png") !important;
   background-position-y: 1px !important;	/* IE only */
   font: icon;
 }
@@ -722,7 +722,7 @@
 }
 
 .goog-tree-icon {
-  background-image: url("//ssl.gstatic.com/closure/tree/tree.png");
+  background-image: url("/images/tree/tree.png");
 }
 
 .goog-tree-expand-icon {
@@ -785,28 +785,35 @@
   vertical-align: middle;
   height: 16px;
   width: 16px;
-  background-position: -0px -24px;
+  /*background-position: -0px -24px;*/
+  background-image:url("/images/icons_13.png");
+  background-position: 0 0;
 }
 
 .goog-tree-expanded-folder-icon {
   vertical-align: middle;
   height: 16px;
   width: 16px;
-  background-position: -24px -24px;
+  /*background-position: -24px -24px;*/
+  background-image:url("/images/icons_13.png");
+  background-position: 0 0;
 }
 
 .goog-tree-file-icon {
   vertical-align: middle;
   height: 16px;
   width: 16px;
-  background-position: -48px -24px;
+  /*background-position: -48px -24px;*/
+  background-image:url("/images/icons_13.png");
+  background-position: -144px 0;
 }
 
 .goog-tree-item-label {
   margin-left: 3px;
   padding: 1px 2px 1px 2px;
   text-decoration: none;
-  color: WindowText;
+  /*color: WindowText;*/
+  font-size:12px
   /*cursor: default;*/
 }
 

@@ -7,6 +7,7 @@
 goog.provide('cld.DiaryTree');
 goog.provide('cld.DiaryTreeItem');
 
+goog.require('cld.DocsTree');
 goog.require('cld.ui.DiaryTreeControl');
 goog.require('goog.date');
 goog.require('goog.events.EventHandler');
@@ -28,65 +29,24 @@ cld.DiaryTreeItem;
 /**
  * Diary tree menu.
  * @param {cld.App} app the parent event target.
- * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
  * @constructor
- * @extends {goog.events.EventTarget}
+ * @extends {cld.DocsTree}
  */
-cld.DiaryTree = function(app, opt_domHelper) {
-  goog.events.EventTarget.call(this);
-  this.setParentEventTarget(app);
-  this.dom_ = opt_domHelper || goog.dom.getDomHelper();
-
-  /**
-   * @type {!goog.events.EventHandler}
-   * @protected
-   */
-  this.handle = new goog.events.EventHandler(this);
-  this.elTreeContent = this.dom_.getElement('diary-tree-content');
-  this.initCreateFistButton();
-
-  /**
-   * @type {Array.<cld.DiaryTreeItem>}
-   * @private
-   */
-  this.items_ = /** @type {Array} */
-    (goog.object.get(this.dom_.getWindow(), '_DIARY_LIST', []));
-
-  var tree = this.initTree();
-  tree.setShowRootNode(false);
-  tree.setShowLines(false);
-  tree.setSelectedItem(null);
-  goog.style.setUnselectable(tree.getElement(), true, true);
-
-  /** @type {goog.ui.tree.BaseNode} */
-  this.selectedDiary_ = null
-
-  this.handle.
-    listen(tree, goog.events.EventType.CHANGE, this.onSelectedChange_).
-    listen(tree, goog.ui.tree.BaseNode.EventType.BEFORE_EXPAND,
-      this.handlerBeforeExpand_).
-    listen(tree, goog.ui.tree.BaseNode.EventType.EXPAND,
-      this.handlerExpand_).
-    listen(tree, goog.ui.tree.BaseNode.EventType.BEFORE_COLLAPSE,
-      this.handlerBeforeCollapse_);
+cld.DiaryTree = function(app) {
+  goog.base(this, app, 'diary');
 };
-goog.inherits(cld.DiaryTree, goog.events.EventTarget);
+goog.inherits(cld.DiaryTree, cld.DocsTree);
 
-/**
- * Map of nodes in existence.
- * @type {Object}
- * @protected
- */
-cld.DiaryTree.allNodes = {};
 
 /**
  * Initial diary tree.
  * @return {cld.ui.DiaryTreeControl} the tree.
+ * @inheritDoc
  */
 cld.DiaryTree.prototype.initTree = function() {
-  this.tree = new cld.ui.DiaryTreeControl('root');
-  this.tree.render(this.elTreeContent);
-  cld.DiaryTree.allNodes['root'] = this.tree;
+  var tree = this.tree = new cld.ui.DiaryTreeControl('root');
+  tree.render(this.elTreeContent);
+  cld.DocsTree.allNodes['diary:root'] = tree;
 
   if (this.items_.length) {
     this.hiddenEmptyArea_();
@@ -99,46 +59,10 @@ cld.DiaryTree.prototype.initTree = function() {
   return this.tree;
 };
 
-/**
- * @return {Array.<cld.DiaryTreeItem>} All the item on the list.
- */
-cld.DiaryTree.prototype.getItems = function() {
-  return goog.array.clone(this.items_);
-};
-
-/**
- * Initial "create new diary now" link button.
- */
-cld.DiaryTree.prototype.initCreateFistButton = function() {
-  this.elEmpty = this.dom_.getElementsByTagNameAndClass('div',
-      'empty', this.elTreeContent)[0];
-  this.elCreate1st = this.dom_.getElement('create1stdiary');
-  this.create1st = new goog.ui.Button(null,
-    goog.ui.LinkButtonRenderer.getInstance());
-  this.create1st.decorate(this.elCreate1st);
-  this.handle.listen(this.create1st, goog.ui.Component.EventType.ACTION,
-    this.createNew);
-};
-
-/**
- * Show empty element.
- * @private
- */
-cld.DiaryTree.prototype.showEmptyArea_ = function() {
-    goog.dom.classes.remove(this.elEmpty, 'hidden');
-};
-
-/**
- * hidden empty element.
- * @private
- */
-cld.DiaryTree.prototype.hiddenEmptyArea_ = function() {
-    goog.dom.classes.add(this.elEmpty, 'hidden');
-};
 
 /**
  * Create new diary.
- * @param {goog.events.Event} e toggle event.
+ * @param {goog.events.Event} e The event.
  */
 cld.DiaryTree.prototype.createNew = function(e) {
   alert('create new diary now');
@@ -169,7 +93,7 @@ cld.DiaryTree.prototype.createTreeNodeByDate = function(date, opt_item) {
   }
   parentNode.add(node, this.getAfterNode_(node, parentNode));
   this.setIconClassForNode_(node);
-  cld.DiaryTree.allNodes[date] = node;
+  cld.DocsTree.allNodes['diary:' + date] = node;
   return node;
 };
 
@@ -180,7 +104,12 @@ cld.DiaryTree.prototype.createTreeNodeByDate = function(date, opt_item) {
  * @return {goog.ui.tree.BaseNode} The date node.
  */
 cld.DiaryTree.prototype.getTreeNodeByDate = function(date) {
-  return goog.object.get(cld.DiaryTree.allNodes, date, null);
+  var key = 'diary:' + date;
+  if (key in cld.DocsTree.allNodes) {
+    return cld.DocsTree.allNodes[key];
+  } else {
+    return null;
+  }
 };
 
 /**
@@ -300,6 +229,7 @@ cld.DiaryTree.prototype.onSelectedChange_ = function(e) {
  * Whether the node is day.
  * @param {goog.ui.tree.BaseNode} node will check.
  * @return {boolean} Whether is day node.
+ * @private
  */
 cld.DiaryTree.prototype.isDayNode_ = function(node) {
   var date = node.getModel()['date'];
@@ -308,17 +238,6 @@ cld.DiaryTree.prototype.isDayNode_ = function(node) {
   } else {
     return false;
   }
-};
-
-/**
- * handle for tree node before expand.
- * @param {goog.events.Event} e The event.
- * @private
- */
-cld.DiaryTree.prototype.handlerBeforeExpand_ = function(e) {
-  var node = e.target;
-  //alert(node.getText());
-  //e.preventDefault();
 };
 
 /**
@@ -335,13 +254,4 @@ cld.DiaryTree.prototype.handlerExpand_ = function(e) {
     }
     this.selectedDiary_.select();
   }
-};
-
-/**
- * handle for tree node before collapse.
- * @param {goog.events.Event} e The event.
- * @private
- */
-cld.DiaryTree.prototype.handlerBeforeCollapse_ = function(e) {
-  var node = e.target;
 };

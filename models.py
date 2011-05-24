@@ -236,7 +236,10 @@ class Note(db.Model):
 		note['title'] = self.title
 		note['created'] = self.created.isoformat()
 		note['last_modified'] = self.last_modified.isoformat()
-		note['parent_id'] = self.parent_id
+		if self.parent_id:
+			note['parent_id'] = self.parent_id
+		else:
+			note['parent_id'] = 0
 		note['status'] = self.status
 		if not only_meta:
 			note['content'] = self.content.html

@@ -15,15 +15,14 @@ goog.require('goog.ui.ImagelessButtonRenderer');
 /**
  * Today button.
  * @param {cld.App} app the parent event target.
- * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-cld.Today = function(app, opt_domHelper) {
+cld.Today = function(app) {
   goog.events.EventTarget.call(this);
   this.setParentEventTarget(app);
 
-  this.dom_ = opt_domHelper || goog.dom.getDomHelper();
+  this.dom_ = app.getDomHelper();
 
   this.elContainer = this.dom_.getElement('today');
 

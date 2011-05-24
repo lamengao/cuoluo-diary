@@ -15,14 +15,13 @@ goog.require('goog.ui.ImagelessButtonRenderer');
 /**
  * Search.
  * @param {cld.App} app the parent event target.
- * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-cld.Search = function(app, opt_domHelper) {
+cld.Search = function(app) {
   goog.events.EventTarget.call(this);
   this.setParentEventTarget(app);
-  this.dom_ = opt_domHelper || goog.dom.getDomHelper();
+  this.dom_ = app.getDomHelper();
 
   this.elSearchForm = this.dom_.getElement('search');
   this.elInput = this.dom_.getElement('search-input');

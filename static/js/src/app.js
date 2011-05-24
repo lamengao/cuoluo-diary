@@ -8,7 +8,7 @@ goog.provide('cld.App');
 
 goog.require('cld.Creation');
 goog.require('cld.DiaryTree');
-goog.require('cld.DiaryTreeItem');
+goog.require('cld.NotesTree');
 goog.require('cld.Search');
 goog.require('cld.SplitPane');
 goog.require('cld.Tasks');
@@ -54,6 +54,14 @@ goog.inherits(cld.App, goog.events.EventTarget);
 goog.addSingletonGetter(cld.App);
 
 /**
+ * Returns the dom helper that is being used on this component.
+ * @return {!goog.dom.DomHelper} The dom helper used on this component.
+ */
+cld.App.prototype.getDomHelper = function() {
+  return this.dom_;
+};
+
+/**
  * When all component loaded change the UI
  */
 cld.App.prototype.loaded = function() {
@@ -82,10 +90,11 @@ cld.App.prototype.handleResize_ = function(e) {
  */
 cld.App.prototype.install = function() {
   var app = cld.App.getInstance();
-  this.createNew = new cld.Creation(app, this.dom_);
-  this.today = new cld.Today(app, this.dom_);
-  this.search = new cld.Search(app, this.dom_);
-  this.diaryTree = new cld.DiaryTree(app, this.dom_);
+  this.createNew = new cld.Creation(app);
+  this.today = new cld.Today(app);
+  this.search = new cld.Search(app);
+  this.diaryTree = new cld.DiaryTree(app);
+  this.notesTree = new cld.NotesTree(app);
 
   this.loaded();
 };
