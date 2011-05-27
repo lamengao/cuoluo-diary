@@ -8,18 +8,11 @@ goog.provide('cld.ui.utils');
 
 goog.require('goog.userAgent');
 
-/**
- * If browser support CSS3 gradient return true, else return false.
- * @return {boolean} boolean.
- */
-cld.ui.utils.canUseCSS3Button = function() {
-  //if (goog.userAgent.GECKO || goog.userAgent.WEBKIT || goog.userAgent.OPERA) {
-  if (goog.userAgent.GECKO || goog.userAgent.WEBKIT) {
-    return true;
-  } else {
-    return false;
-  }
-};
+
+cld.ui.utils.HAS_CSS3_GRADIENT =
+  goog.userAgent.GECKO && goog.userAgent.isVersion('1.9.2') ||
+  goog.userAgent.OPERA && goog.userAgent.isVersion('11.10') ||
+  goog.userAgent.WEBKIT && goog.userAgent.isVersion('532.1');
 
 /**
  * Return the better button renderer.
@@ -27,7 +20,7 @@ cld.ui.utils.canUseCSS3Button = function() {
  * @return {goog.ui.ButtonRenderer} renderer.
  */
 cld.ui.utils.getButtonRenderer = function(isMenu) {
-  if (cld.ui.utils.canUseCSS3Button()) {
+  if (cld.ui.utils.HAS_CSS3_GRADIENT) {
     if (isMenu) {
       return goog.ui.Css3MenuButtonRenderer.getInstance();
     } else {

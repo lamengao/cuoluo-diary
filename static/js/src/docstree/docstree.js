@@ -5,8 +5,10 @@
  */
 
 goog.provide('cld.DocsTree');
+goog.provide('cld.DocsTree.EventType');
 
 goog.require('goog.date');
+goog.require('goog.events');
 goog.require('goog.events.EventHandler');
 goog.require('goog.events.EventTarget');
 goog.require('goog.object');
@@ -57,9 +59,8 @@ cld.DocsTree = function(app, type) {
   this.selectedDoc_ = null;
 
   this.handle.
-    listen(tree, goog.events.EventType.CHANGE, this.onSelectedChange_).
-    listen(tree, goog.ui.tree.BaseNode.EventType.EXPAND,
-      this.handlerExpand_);
+    listen(tree, goog.events.EventType.CHANGE, this.onSelectChange_).
+    listen(tree, goog.ui.tree.BaseNode.EventType.EXPAND, this.handlerExpand_);
 };
 goog.inherits(cld.DocsTree, goog.events.EventTarget);
 
@@ -128,11 +129,54 @@ cld.DocsTree.prototype.createNew = function(e) {
 };
 
 /**
- * handle for tree selected node changed.
+ * Get node's url token using node's model.
+ * @param {goog.ui.tree.BaseNode} node The node.
+ * @return {string} The token.
+ */
+cld.DocsTree.prototype.getTokenByNode = function(node) {
+  var model = node.getModel();
+  if ('date' in model) {
+    return 'diary/' + model['date'];
+  } else if ('id' in model) {
+    return 'notes/' + model['id'];
+  } else {
+    return '';
+  }
+};
+
+/**
+ * Select the give node and expand all parents.
+ * @param {!goog.ui.tree.BaseNode} node The node will be select.
+ */
+cld.DocsTree.prototype.selectNode = function(node) {
+  var parentNode = node.getParent();
+  while (parentNode) {
+    parentNode.expand();
+    parentNode = parentNode.getParent();
+  }
+  node.select();
+};
+
+/**
+ * Select node by doc key(allNodes key).
+ * @param {string} key The doc key.
+ */
+cld.DocsTree.prototype.selectByKey = function(key) {
+  if (key in cld.DocsTree.allNodes) {
+    this.selectNode(cld.DocsTree.allNodes[key]);
+  } else {
+    this.dispatchEvent(cld.DocsTree.EventType.NODE_NOT_FOUND);
+  }
+};
+
+/**
+ * handle for tree select node changed.
  * @param {goog.events.Event} e The event.
  * @private
  */
-cld.DocsTree.prototype.onSelectedChange_ = function(e) {};
+cld.DocsTree.prototype.onSelectChange_ = function(e) {
+  this.dispatchEvent(cld.DocsTree.EventType.SELECT_CHANGE);
+};
 
 /**
  * handle for tree node expand event.
@@ -140,3 +184,10 @@ cld.DocsTree.prototype.onSelectedChange_ = function(e) {};
  * @private
  */
 cld.DocsTree.prototype.handlerExpand_ = function(e) {};
+
+/** @enum {string} */
+cld.DocsTree.EventType = {
+  SELECT_CHANGE: goog.events.getUniqueId('select_change'),
+  NEW_DOC: goog.events.getUniqueId('new_doc'),
+  NODE_NOT_FOUND: goog.events.getUniqueId('node_not_found')
+};

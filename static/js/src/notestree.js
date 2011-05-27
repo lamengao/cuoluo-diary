@@ -8,6 +8,7 @@ goog.provide('cld.NotesTree');
 goog.provide('cld.NotesTreeItem');
 
 goog.require('cld.DocsTree');
+goog.require('cld.DocsTree.NewDocEvent');
 goog.require('cld.ui.NotesTreeControl');
 goog.require('goog.date');
 goog.require('goog.events.EventHandler');
@@ -114,6 +115,7 @@ cld.NotesTree.prototype.createTreeNodeByItem = function(item) {
   }
   var node = this.tree.createNode(item['title']);
   parentNode.add(node);
+  node.setModel(item);
   cld.DocsTree.allNodes['notes:' + id] = node;
   return node;
 };
@@ -123,8 +125,11 @@ cld.NotesTree.prototype.createTreeNodeByItem = function(item) {
  * @param {goog.events.Event} e The event.
  * @private
  */
-cld.NotesTree.prototype.onSelectedChange_ = function(e) {
+cld.NotesTree.prototype.onSelectChange_ = function(e) {
   var tree = e.target;
   var node = tree.getSelectedItem();
-  //alert(node.getText() + ' selected');
+  if (node == null) {
+    return;
+  }
+  this.dispatchEvent(cld.DocsTree.EventType.SELECT_CHANGE);
 };

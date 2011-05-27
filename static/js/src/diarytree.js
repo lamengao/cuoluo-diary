@@ -8,11 +8,13 @@ goog.provide('cld.DiaryTree');
 goog.provide('cld.DiaryTreeItem');
 
 goog.require('cld.DocsTree');
+goog.require('cld.DocsTree.NewDocEvent');
 goog.require('cld.ui.DiaryTreeControl');
 goog.require('goog.date');
 goog.require('goog.events.EventHandler');
 goog.require('goog.events.EventTarget');
 goog.require('goog.object');
+goog.require('goog.string');
 goog.require('goog.ui.Button');
 goog.require('goog.ui.LinkButtonRenderer');
 
@@ -34,6 +36,12 @@ cld.DiaryTreeItem;
  */
 cld.DiaryTree = function(app) {
   goog.base(this, app, 'diary');
+
+  /**
+   * today's date like '2011/05/25'
+   * @type {string}
+   */
+  this.today = cld.DiaryTree.getTodayDate();
 };
 goog.inherits(cld.DiaryTree, cld.DocsTree);
 
@@ -109,6 +117,54 @@ cld.DiaryTree.prototype.getTreeNodeByDate = function(date) {
     return cld.DocsTree.allNodes[key];
   } else {
     return null;
+  }
+};
+
+/**
+ * Return parent node by date.
+ * @param {string} date Child node's date.
+ * the date format like '2011/05/19' or '2011/05' or '2011'.
+ * @return {goog.ui.tree.BaseNode} The date node.
+ */
+cld.DiaryTree.prototype.getParentNodeByDate = function(date) {
+  var parentDate = this.getParentDate_(date);
+  return this.getTreeNodeByDate(parentDate);
+};
+
+/**
+ * Select today's diary node.
+ */
+cld.DiaryTree.prototype.selectTodayNode = function() {
+  this.selectNodeByDate(this.today);
+};
+
+/**
+ * Select diary node by date.
+ * @param {string} date The node's date.
+ */
+cld.DiaryTree.prototype.selectNodeByDate = function(date) {
+  date = cld.DiaryTree.getValidDate(date);
+  if (date == '') {
+    this.dispatchEvent(cld.DocsTree.EventType.NODE_NOT_FOUND);
+    return;
+  }
+  var node = this.getTreeNodeByDate(date);
+  if (node) {
+    this.selectNode(node);
+  } else {
+    var month = this.getParentDate_(date);
+    var year = this.getParentDate_(month);
+    var monthNode = this.getTreeNodeByDate(month);
+    var yearNode = this.getTreeNodeByDate(year);
+    if (monthNode) {
+      this.selectNode(monthNode);
+    } else if (yearNode) {
+      this.selectNode(yearNode);
+    } else {
+      this.tree.setSelectedItem(null);
+    }
+    alert('new diary lala, new doc event will be dispatch');
+    this.dispatchEvent(new cld.DocsTree.NewDocEvent('diary', date));
   }
 };
 
@@ -212,16 +268,18 @@ cld.DiaryTree.prototype.getTitleFromDate_ = function(date) {
  * @param {goog.events.Event} e The event.
  * @private
  */
-cld.DiaryTree.prototype.onSelectedChange_ = function(e) {
+cld.DiaryTree.prototype.onSelectChange_ = function(e) {
   var tree = e.target;
   var node = tree.getSelectedItem();
-  if (node === this.selectedDiary_) {
+  if (node === null) {
+    this.selectedDiary_ = null;
+    return;
+  } else if (node === this.selectedDiary_) {
     return;
   }
   if (this.isDayNode_(node)) {
     this.selectedDiary_ = node;
-    alert(node.getText() + ' selected');
-  } else {
+    this.dispatchEvent(cld.DocsTree.EventType.SELECT_CHANGE);
   }
 };
 
@@ -253,5 +311,60 @@ cld.DiaryTree.prototype.handlerExpand_ = function(e) {
       parentNode.expand();
     }
     this.selectedDiary_.select();
+  }
+};
+
+/**
+ * Static function for get the date string of today.
+ * @return {string} the date string ex. '2011/05/25'.
+ */
+cld.DiaryTree.getTodayDate = function() {
+  var date = new goog.date.Date();
+  var year = date.getFullYear();
+  var month = (date.getMonth() + 1).toString();
+  if (month.length === 1) {
+    month = '0' + month;
+  }
+  var day = date.getDate().toString();
+  if (day.length === 1) {
+    day = '0' + day;
+  }
+  var str = Array.prototype.join.call([year, month, day], '/');
+  return str;
+};
+
+/**
+ * Check date and return good format date.
+ * @param {string} date The date will be check.
+ * @return {string} If is a good date return good format date string,
+ * else return ''.
+ */
+cld.DiaryTree.getValidDate = function(date) {
+  // format YYYY/M(M)/D(D)
+  var dateFormat = /^\d{4}\/\d{1,2}\/\d{1,2}$/;
+  if (!dateFormat.test(date)) {
+    return '';
+  }
+  var tmp = date.split('/');
+  var y = parseInt(tmp[0], 10);
+  var m = parseInt(tmp[1], 10) - 1;
+  var d = parseInt(tmp[2], 10);
+  if (m > 11 || d > 31) {
+    return '';
+  }
+  var oDate = new Date(y, m, d);
+  if (oDate.getFullYear() == y && oDate.getMonth() == m &&
+      oDate.getDate() == d) {
+    var month = tmp[1].toString();
+    if (month.length === 1) {
+      month = '0' + month;
+    }
+    var day = tmp[2].toString();
+    if (day.length === 1) {
+      day = '0' + day;
+    }
+    return Array.prototype.join.call([y, month, day], '/');
+  } else {
+    return '';
   }
 };

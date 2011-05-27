@@ -108,24 +108,22 @@ var _NOTES_LIST = {{ notes_list|safe }};
 </script>
 {% if develop %}
 <script src="/closure-library/closure/goog/base.js"></script>
-<script type="text/javascript" src="{{ '/js/src/deps.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/ui/utils.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/ui/treecontrol.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/ui/diarytreecontrol.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/ui/notestreecontrol.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/docstree.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/splitpane.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/zippy.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/diarytree.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/notestree.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/editor.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/doc.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/doclist.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/creation.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/today.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/search.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/tasks.js'|addfilemtime }}"></script>
-<script type="text/javascript" src="{{ '/js/src/app.js'|addfilemtime }}"></script>
+<script type="text/javascript" src="/js/src/deps.js"></script>
+<script type="text/javascript" src="/js/src/ui/utils.js"></script>
+<script type="text/javascript" src="/js/src/ui/treecontrol.js"></script>
+<script type="text/javascript" src="/js/src/ui/diarytreecontrol.js"></script>
+<script type="text/javascript" src="/js/src/ui/notestreecontrol.js"></script>
+<script type="text/javascript" src="/js/src/docstree/docstree.js"></script>
+<script type="text/javascript" src="/js/src/docstree/newdocevent.js"></script>
+<script type="text/javascript" src="/js/src/splitpane.js"></script>
+<script type="text/javascript" src="/js/src/zippy.js"></script>
+<script type="text/javascript" src="/js/src/diarytree.js"></script>
+<script type="text/javascript" src="/js/src/notestree.js"></script>
+<script type="text/javascript" src="/js/src/creation.js"></script>
+<script type="text/javascript" src="/js/src/today.js"></script>
+<script type="text/javascript" src="/js/src/search.js"></script>
+<script type="text/javascript" src="/js/src/tasks.js"></script>
+<script type="text/javascript" src="/js/src/app.js"></script>
 {% else %}
 {% ifequal browser.name 'unknown' %}
 <script type="text/javascript" src="{{ '/js/cld.min.js'|addfilemtime }}"></script>
