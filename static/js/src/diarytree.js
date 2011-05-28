@@ -36,12 +36,6 @@ cld.DiaryTreeItem;
  */
 cld.DiaryTree = function(app) {
   goog.base(this, app, 'diary');
-
-  /**
-   * today's date like '2011/05/25'
-   * @type {string}
-   */
-  this.today = cld.DiaryTree.getTodayDate();
 };
 goog.inherits(cld.DiaryTree, cld.DocsTree);
 
@@ -135,7 +129,7 @@ cld.DiaryTree.prototype.getParentNodeByDate = function(date) {
  * Select today's diary node.
  */
 cld.DiaryTree.prototype.selectTodayNode = function() {
-  this.selectNodeByDate(this.today);
+  this.selectNodeByDate(cld.DiaryTree.getTodayDate());
 };
 
 /**

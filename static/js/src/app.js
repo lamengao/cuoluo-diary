@@ -16,8 +16,9 @@ goog.require('cld.SplitPane');
 goog.require('cld.Tasks');
 goog.require('cld.Today');
 goog.require('cld.Zippy');
-
+goog.require('cld.message');
 goog.require('cld.ui.utils');
+
 goog.require('goog.History');
 goog.require('goog.events');
 goog.require('goog.events.EventHandler');
@@ -71,13 +72,14 @@ cld.App.prototype.loaded = function() {
   // display main and search area and hidden loading message
   goog.dom.classes.remove(this.dom_.getElement('main'), 'vh');
   goog.dom.classes.remove(this.dom_.getElement('search'), 'vh');
-  goog.dom.classes.add(this.dom_.getElement('loadingStatus'), 'hidden');
+  cld.message.hiddenLoading();
 
   this.handle.
     listen(this.history, goog.history.EventType.NAVIGATE, this.navCallback_).
     listen(this, cld.DocsTree.EventType.SELECT_CHANGE, this.onDocSelected_).
     listen(this, cld.DocsTree.EventType.NEW_DOC, this.onNewDoc_).
     listen(this, cld.DocsTree.EventType.NODE_NOT_FOUND, this.onNodeNotFound_).
+    listen(this, cld.Today.EventType.GOTO_TODAY, this.onGotoToday_).
     listen(this.dom_.getWindow(), goog.events.EventType.RESIZE,
       goog.bind(this.handleResize_, this));
   this.history.setEnabled(true);
@@ -99,6 +101,12 @@ cld.App.prototype.handleResize_ = function(e) {
 cld.App.hashtagChanged = false;
 
 /**
+ * Last url hash tag.
+ * @type {string}
+ */
+cld.App.lastToken = '';
+
+/**
  * URL routing using hashtag.
  * @param {goog.events.Event} e The history event.
  * @private
@@ -112,14 +120,13 @@ cld.App.prototype.navCallback_ = function(e) {
     cld.App.hashtagChanged = true;
     if (token == '') {
       // home page redirect to today diary.
-      alert('redirect to today');
       this.diaryTree.selectTodayNode();
     } else {
       // request the url with hashtag.
-      alert('request the url with hashtag');
       this.controller(token);
     }
   }
+  cld.App.lastToken = this.history.getToken();
 };
 
 /**
@@ -131,11 +138,8 @@ cld.App.prototype.controller = function(token) {
   if (type === 'diary' && token.length > 6) {
     var date = cld.DiaryTree.getValidDate(token.substr(6));
     if (date && date != token.substr(6)) {
-      // force change the date to good format '2011/5/27' => '2011/05/27'
       this.history.replaceToken('diary/' + date);
-      return;
     }
-    // select the diary tree node.
     this.diaryTree.selectNodeByDate(date);
   } else if (type === 'notes' && token.length > 6) {
     var id = token.substr(6);
@@ -186,13 +190,28 @@ cld.App.prototype.onNewDoc_ = function(e) {
 };
 
 /**
+ * Handle goto today event, when click the today button.
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onGotoToday_ = function(e) {
+  this.diaryTree.selectTodayNode();
+};
+
+/**
  * Handle for node not found. Example when manual change the
  * URL hash tag.
  * @param {goog.events.Event} e The event.
  * @private
  */
 cld.App.prototype.onNodeNotFound_ = function(e) {
-  alert('the node not found');
+  if (cld.App.lastToken == '') {
+    this.history.replaceToken('diary/' + this.diaryTree.today);
+    this.diaryTree.selectTodayNode();
+  } else {
+    this.history.replaceToken(cld.App.lastToken);
+  }
+  cld.message.show(cld.message.TEXT.NODE_NOT_FOUND, 5);
 };
 
 /**

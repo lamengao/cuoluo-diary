@@ -114,6 +114,7 @@ cld.NotesTree.prototype.createTreeNodeByItem = function(item) {
     return null;
   }
   var node = this.tree.createNode(item['title']);
+  node.setToolTip(item['title']);
   parentNode.add(node);
   node.setModel(item);
   cld.DocsTree.allNodes['notes:' + id] = node;

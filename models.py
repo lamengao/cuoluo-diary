@@ -150,8 +150,8 @@ class Diary(db.Model):
 	def to_json(self, only_meta=False):
 		diary = {}
 		diary['date'] = self.title[0:4] + '/' + self.title[4:6] + '/' + self.title[6:8]
-		diary['created'] = self.created.isoformat()
-		diary['last_modified'] = self.last_modified.isoformat()
+		diary['created'] = self.created.isoformat() + '+00:00'
+		diary['last_modified'] = self.last_modified.isoformat() + '+00:00'
 		diary['status'] = self.status
 		if not only_meta:
 			diary['content'] = self.content.html
@@ -234,8 +234,8 @@ class Note(db.Model):
 		note = {}
 		note['id'] = int(self.id)
 		note['title'] = self.title
-		note['created'] = self.created.isoformat()
-		note['last_modified'] = self.last_modified.isoformat()
+		note['created'] = self.created.isoformat() + '+00:00'
+		note['last_modified'] = self.last_modified.isoformat() + '+00:00'
 		if self.parent_id:
 			note['parent_id'] = self.parent_id
 		else:

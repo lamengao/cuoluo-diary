@@ -9,7 +9,7 @@
   <link rel="shortcut icon" href="{{ '/images/favicon.ico'|addfilemtime }}" />
 </head>
 <body>
-<div class="loadingstatusbox" id="loadingStatus">Loading...</div>
+<div class="loadingstatusbox rdbl4 rdbr4 noticemsg" id="loadingStatus">Loading...</div>
 <div id="gb">
 	<div id="gbar">
 		<a class="gb1" href="//diary.cuoluo.com/" target="_blank">Home</a>
@@ -34,6 +34,7 @@
     <div id="search-web-button"></div>
 	</form>
 </div>
+<div id="mbox" class="rd3 noticemsg hidden"></div>
 <div class="goog-splitpane deepbg vh" id="main">
   <div class="goog-splitpane-first-container" id="navpane">
     <div id="contentcreationpane" class="lightbg">
@@ -109,6 +110,7 @@ var _NOTES_LIST = {{ notes_list|safe }};
 {% if develop %}
 <script src="/closure-library/closure/goog/base.js"></script>
 <script type="text/javascript" src="/js/src/deps.js"></script>
+<script type="text/javascript" src="/js/src/message.js"></script>
 <script type="text/javascript" src="/js/src/ui/utils.js"></script>
 <script type="text/javascript" src="/js/src/ui/treecontrol.js"></script>
 <script type="text/javascript" src="/js/src/ui/diarytreecontrol.js"></script>
