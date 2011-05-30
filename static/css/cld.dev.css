@@ -70,13 +70,13 @@ em {font-weight: bold;}
 /* @end */
 
 /* @group gb */
-#gb {margin: 3px 8px;}
+#gb {padding: 3px 8px;position:absolute;width:100%}
 #gbar, #guser {padding-top: 1px !important;}
 #gbar {float: left; height: 22px;}
 #gbar .active {text-decoration: none; font-weight: bold; color: #000 !important;}
 .gb1 {margin-right: 0.5em;}
 #gb a {color: #2200CC !important;}
-#guser {padding-bottom: 7px !important; text-align: right;}
+#guser {padding-bottom: 7px !important;position: absolute;right: 24px;}
 .gbh, .gbd {border-top: 1px solid #C9D7F1; font-size: 1px;}
 .gbh {height: 0; position: absolute; top: 24px; width: 100%;}
 /* @end */
