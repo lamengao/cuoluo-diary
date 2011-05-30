@@ -96,6 +96,9 @@ cld.App.prototype.handleResize_ = function(e) {
   goog.array.forEach(cld.Zippy.list, function(zippy) {
     zippy.resetContentHeight();
   });
+  if (this.doc) {
+    this.doc.setEditorAreaHeight();
+  }
 };
 
 /** @type {boolean} */
@@ -224,6 +227,7 @@ cld.App.prototype.onNodeNotFound_ = function(e) {
  */
 cld.App.prototype.install = function(opt_app) {
   var app = opt_app || cld.App.getInstance();
+
   this.createNew = new cld.Creation(app);
   this.today = new cld.Today(app);
   this.search = new cld.Search(app);

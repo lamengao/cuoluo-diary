@@ -1,3 +1,9 @@
+/* @group common.css */
+.goog-inline-block {position: relative; display: -moz-inline-box;display: inline-block;}
+* html .goog-inline-block {display: inline;}
+*:first-child+html .goog-inline-block {display: inline;}
+/* @end */
+
 /* @group button.css */
 .goog-button {
   color: #036;

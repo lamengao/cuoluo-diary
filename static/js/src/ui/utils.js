@@ -34,3 +34,14 @@ cld.ui.utils.getButtonRenderer = function(isMenu) {
     }
   }
 };
+
+/**
+ * Get element height by element id.
+ * @param {string} id the element id.
+ * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
+ * @return {number} height.
+ */
+cld.ui.utils.getHeight = function(id, opt_domHelper) {
+  var dom = opt_domHelper || goog.dom.getDomHelper();
+  return goog.style.getSize(dom.getElement(id)).height;
+};

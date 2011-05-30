@@ -62,11 +62,6 @@ body {font-size: 13px;}
 em {font-weight: bold;}
 /* @end */
 
-/* @group common.css */
-.goog-inline-block {position: relative; display: -moz-inline-box;display: inline-block;}
-* html .goog-inline-block {display: inline;}
-*:first-child+html .goog-inline-block {display: inline;}
-/* @end */
 
 /* @group message area */
 .loadingstatusbox, #mbox {font-family: arial, sans-serif; font-weight: bold; position: absolute; z-index: 1100; left: 50%; }
@@ -206,11 +201,10 @@ div.toolbarbutton{margin:4px}
 /* @end */
 
 /* @group main */
-#doc-header{height:30px;position:relative}
+#doc{position:absolute;width:100%;height:100%}
+#doc-header{height:30px;position:absolute;width:100%}
 #doc-footer{height:30px;position:absolute;bottom:0;width:100%}
-#doc-container{background-color:#FFF;position:absolute;top:30px;bottom:30px;width:100%}
-#container-table{width:100%;height:100%}
-/*#container-table td{height:100%}*/
+#doc-container{background-color:#FFF;position:absolute;top:30px;bottom:30px;width:100%;padding-top:30px}
 /* @end */
 
 /* @group doc header */
@@ -221,13 +215,19 @@ div.toolbarbutton{margin:4px}
 /* @end */
 
 /* @group doc container */
+#container-table{
+width:100%;height:100%;
+position: relative;
+}
+/*#container-table td{height:100%}*/
 #editortoolbar{
-/*width:100%;position:relative*/
+	position: absolute;
+	width: 100%;
+	top: 0;
 }
 #editorarea{
 	width:100%;
-	height:200px;
-	/*position:relative;*/
+	height:100%;
 }
 #savebutton{position: absolute; right: 8px; top: 4px;z-index: 5;}
 /* @end */

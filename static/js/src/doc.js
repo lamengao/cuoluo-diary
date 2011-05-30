@@ -7,6 +7,7 @@ goog.provide('cld.Doc');
 
 goog.require('goog.editor.Command');
 goog.require('goog.editor.Field');
+//goog.require('goog.editor.SeamlessField');
 goog.require('goog.editor.plugins.BasicTextFormatter');
 goog.require('goog.editor.plugins.EnterHandler');
 goog.require('goog.editor.plugins.HeaderFormatter');
@@ -69,6 +70,8 @@ goog.inherits(cld.Doc, goog.events.EventTarget);
  */
 cld.Doc.prototype.initEditor = function() {
   this.field = new goog.editor.Field('editorarea', this.dom_.getDocument());
+  //this.field = new goog.editor.SeamlessField('editorarea',
+    //this.dom_.getDocument());
 
   this.field.registerPlugin(new goog.editor.plugins.BasicTextFormatter());
   this.field.registerPlugin(new goog.editor.plugins.RemoveFormatting());
@@ -113,6 +116,8 @@ cld.Doc.prototype.initEditor = function() {
   // Hook the toolbar into the field.
   this.toolbarController =
     new goog.ui.editor.ToolbarController(this.field, this.toolbar);
+
+  this.setEditorAreaHeight();
 };
 
 /**
@@ -170,6 +175,16 @@ cld.Doc.prototype.createSaveButton = function() {
   //this.button.setCaption('Save');
   this.handle.listen(this.button, goog.ui.Component.EventType.ACTION,
       goog.bind(this.saveDoc, this));
+};
+
+/**
+ * Set editor area's height.
+ */
+cld.Doc.prototype.setEditorAreaHeight = function() {
+  var getHeight = cld.ui.utils.getHeight;
+  var el = this.dom_.getElement('doc-container');
+  var toolbarHeight = getHeight('editortoolbar', this.dom_);
+  el.style.paddingTop = toolbarHeight + 'px';
 };
 
 /**
