@@ -157,7 +157,6 @@ cld.DiaryTree.prototype.selectNodeByDate = function(date) {
     } else {
       this.tree.setSelectedItem(null);
     }
-    alert('new diary lala, new doc event will be dispatch');
     this.dispatchEvent(new cld.DocsTree.NewDocEvent('diary', date));
   }
 };

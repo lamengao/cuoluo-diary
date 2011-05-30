@@ -15,8 +15,7 @@ goog.require('goog.net.ImageLoader');
 cld.Tasks = function(opt_domHelper) {
   this.dom_ = opt_domHelper || goog.dom.getDomHelper();
   this.elHeader = this.dom_.getElement('tasks-title');
-  this.elContainer = 
-    /** @type {Element} */ (this.dom_.getElement('tasks-container'));
+  this.elContainer = this.dom_.getElement('tasks-container');
 
   this.loginTester();
 };
@@ -57,7 +56,7 @@ cld.Tasks.prototype.showTasksIframe_ = function() {
   var html = '<iframe id="tasksiframe" name="tasksiframe" frameborder="0"' +
              'src="' + cld.Tasks.URL + '"></iframe>';
   var df = this.dom_.htmlToDocumentFragment(html);
-  this.dom_.append(this.elContainer, df);
+  this.dom_.append(/** @type {!Node} */ (this.elContainer), df);
 };
 
 /**

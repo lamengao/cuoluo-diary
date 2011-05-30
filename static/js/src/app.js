@@ -8,6 +8,7 @@ goog.provide('cld.App');
 
 goog.require('cld.Creation');
 goog.require('cld.DiaryTree');
+goog.require('cld.Doc');
 goog.require('cld.DocsTree');
 goog.require('cld.DocsTree.EventType');
 goog.require('cld.NotesTree');
@@ -162,7 +163,10 @@ cld.App.prototype.onDocSelected_ = function(e) {
     this.diaryTree.tree.setSelectedItem(null);
   }
   var node = docsTree.tree.getSelectedItem();
-  //openDoc(node);
+
+  if (!this.doc) {
+    this.doc = new cld.Doc(cld.App.getInstance());
+  }
   var token = docsTree.getTokenByNode(node);
   if (token) {
     this.history.setToken(token);
