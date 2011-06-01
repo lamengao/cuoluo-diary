@@ -208,10 +208,20 @@ div.toolbarbutton{margin:4px}
 /* @end */
 
 /* @group doc header */
-#header-title{line-height:30px;font-weight:bold;}
+#header-title{line-height:30px;font-weight:bold;font-size:14px}
 #doc-actions{position:absolute;right:8px;top:4px}
 #actionsmenu .goog-menuitem {padding: 3px 4em 3px 18px;}
 #actionsmenu .goog-menuitem-highlight, #actionsmenu .goog-menuitem-hover { padding-bottom: 2px; padding-top: 2px; }
+#header-title .path{color: #112ABB;font-size:16px;}
+.path-arrow {
+	background-image: url("/images/icons_11.png");
+	background-position: -448px 2px;
+	background-repeat: no-repeat;
+	padding: 0 2px;
+	width: 10px;
+	position: relative;
+	top: 4px;
+}
 /* @end */
 
 /* @group doc container */
@@ -228,6 +238,8 @@ position: relative;
 #editorarea{
 	width:100%;
 	height:100%;
+	color:#666;
+	padding:8px;
 }
 #savebutton{position: absolute; right: 8px; top: 4px;z-index: 5;}
 /* @end */

@@ -93,8 +93,7 @@ cld.Creation.prototype.createMenu_ = function() {
  * @private
  */
 cld.Creation.prototype.createMenuButton_ = function() {
-  this.menuButton = new goog.ui.MenuButton('Create new', this.menu,
-    cld.ui.utils.getButtonRenderer(true));
+  this.menuButton = cld.ui.utils.newButton('Create new', this.menu);
   this.menuButton.render(this.dom_.getElement('createnew'));
 };
 

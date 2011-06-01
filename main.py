@@ -38,7 +38,7 @@ class MainHandler(webapp.RequestHandler):
 		template_values['notes_list'] = user.get_notes_list()
 		if is_prod:
 			template_values['develop'] = False
-		elif self.request.get("dev") == 'true':
+		elif self.request.get("d") == 'true':
 			template_values['develop'] = True
 		else:
 			template_values['develop'] = False

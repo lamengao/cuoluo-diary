@@ -87,7 +87,7 @@ cld.DiaryTree.prototype.createTreeNodeByDate = function(date, opt_item) {
   if (goog.isNull(parentNode)) {
     parentNode = this.createTreeNodeByDate(parentDate);
   }
-  node = this.tree.createNode(this.getTitleFromDate_(date));
+  node = this.tree.createNode(cld.DiaryTree.getNodeTitleFromDate(date));
   if (opt_item) {
     node.setModel(opt_item);
   } else {
@@ -236,9 +236,8 @@ cld.DiaryTree.prototype.getParentDate_ = function(date) {
  * @param {string} date The date format like '2011/05/19'
  * or '2011/05' or '2011'.
  * @return {string} the title.
- * @private
  */
-cld.DiaryTree.prototype.getTitleFromDate_ = function(date) {
+cld.DiaryTree.getNodeTitleFromDate = function(date) {
   var d = date.split('/');
   var title = '';
   switch (d.length) {
@@ -254,6 +253,19 @@ cld.DiaryTree.prototype.getTitleFromDate_ = function(date) {
       title = goog.i18n.DateTimeSymbols.WEEKDAYS[gDate.getWeekday()];
   }
   return title;
+};
+
+/**
+ * Static function for get diary title by date.
+ * @param {string} date The diary date '2011/05/31'.
+ * @return {string} The display title.
+ */
+cld.DiaryTree.getDocTitleByDate = function(date) {
+  var d = date.split('/');
+  var year = d[0];
+  var month = cld.DiaryTree.getNodeTitleFromDate(d[0] + '/' + d[1]);
+  var weekDay = cld.DiaryTree.getNodeTitleFromDate(date);
+  return goog.string.buildString(weekDay, ', ', month, ' ', d[2], ', ', year);
 };
 
 /**

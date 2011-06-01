@@ -28,8 +28,7 @@ cld.Today = function(app) {
 
   this.elContainer = this.dom_.getElement('today');
 
-  this.button = new goog.ui.CustomButton(null,
-    cld.ui.utils.getButtonRenderer());
+  this.button = cld.ui.utils.newButton(null);
   this.button.decorate(this.elContainer);
   this.button.setCaption('Today');
 

@@ -5,31 +5,20 @@
  */
 goog.provide('cld.Doc');
 
-goog.require('goog.editor.Command');
-goog.require('goog.editor.Field');
-//goog.require('goog.editor.SeamlessField');
-goog.require('goog.editor.plugins.BasicTextFormatter');
-goog.require('goog.editor.plugins.EnterHandler');
-goog.require('goog.editor.plugins.HeaderFormatter');
-goog.require('goog.editor.plugins.LinkBubble');
-goog.require('goog.editor.plugins.LinkDialogPlugin');
-goog.require('goog.editor.plugins.ListTabHandler');
-goog.require('goog.editor.plugins.LoremIpsum');
-goog.require('goog.editor.plugins.RemoveFormatting');
-goog.require('goog.editor.plugins.SpacesTabHandler');
-//goog.require('goog.editor.plugins.UndoRedo');
+goog.require('cld.api.Docs');
+goog.require('cld.api.Docs.EventType');
+goog.require('cld.api.Diary');
+goog.require('cld.api.Notes');
+goog.require('cld.DiaryTree');
+goog.require('cld.Editor');
+goog.require('cld.ui.utils');
+
 goog.require('goog.events');
 goog.require('goog.events.EventTarget');
-goog.require('goog.ui.Css3ButtonRenderer');
-goog.require('goog.ui.Css3MenuButtonRenderer');
-goog.require('goog.ui.CustomButton');
-goog.require('goog.ui.ImagelessMenuButtonRenderer');
 goog.require('goog.ui.Menu');
-goog.require('goog.ui.MenuButton');
 goog.require('goog.ui.MenuItem');
 goog.require('goog.ui.Separator');
-goog.require('goog.ui.editor.DefaultToolbar');
-goog.require('goog.ui.editor.ToolbarController');
+
 
 /**
  * Doc class for open diary or note.
@@ -48,77 +37,27 @@ cld.Doc = function(app) {
   this.handle = new goog.events.EventHandler(this);
 
   this.elHeader = this.dom_.getElement('doc-header');
-  this.elContainer = this.dom_.getElement('doc-container');
   this.elToolbar = /** @type {!Element} */
     (this.dom_.getElement('editortoolbar'));
-  this.elEditorArea = this.dom_.getElement('editorarea');
-  this.elFooter = this.dom_.getElement('doc-footer');
 
   this.createActionsMenu_();
   this.renameMenuItem.setEnabled(false);
   this.createActionsButton_();
   this.createSaveButton();
 
-  this.initEditor();
-  this.field.makeEditable();
+  this.editor = new cld.Editor('editortoolbar', 'editorarea');
+  //this.editor.field.makeEditable();
+  this.setEditorAreaHeight();
+
+  this.elTitle = this.dom_.getElement('header-title');
+  this.pathSpan = this.dom_.getElementByClass('path', this.elTitle);
+  this.titleTextSpan = this.dom_.getElementByClass('text', this.elTitle);
+
+  this.api = {};
+  this.api.diary = new cld.api.Diary(this);
+  this.api.notes = new cld.api.Notes(this);
 };
 goog.inherits(cld.Doc, goog.events.EventTarget);
-
-
-/**
- * Initial editor.
- */
-cld.Doc.prototype.initEditor = function() {
-  this.field = new goog.editor.Field('editorarea', this.dom_.getDocument());
-  //this.field = new goog.editor.SeamlessField('editorarea',
-    //this.dom_.getDocument());
-
-  this.field.registerPlugin(new goog.editor.plugins.BasicTextFormatter());
-  this.field.registerPlugin(new goog.editor.plugins.RemoveFormatting());
-  //this.field.registerPlugin(new goog.editor.plugins.UndoRedo());
-  this.field.registerPlugin(new goog.editor.plugins.ListTabHandler());
-  this.field.registerPlugin(new goog.editor.plugins.SpacesTabHandler());
-  this.field.registerPlugin(new goog.editor.plugins.EnterHandler());
-  this.field.registerPlugin(new goog.editor.plugins.HeaderFormatter());
-  this.field.registerPlugin(
-    new goog.editor.plugins.LoremIpsum('Click here to edit'));
-  this.field.registerPlugin(
-    new goog.editor.plugins.LinkDialogPlugin());
-  this.field.registerPlugin(new goog.editor.plugins.LinkBubble());
-
-  // Specify the buttons to add to the toolbar, using built in default buttons.
-  var buttons = [
-    goog.editor.Command.BOLD,
-    goog.editor.Command.ITALIC,
-    goog.editor.Command.UNDERLINE,
-    goog.editor.Command.FONT_COLOR,
-    goog.editor.Command.BACKGROUND_COLOR,
-    goog.editor.Command.FONT_FACE,
-    goog.editor.Command.FONT_SIZE,
-    goog.editor.Command.LINK,
-    //goog.editor.Command.UNDO,
-    //goog.editor.Command.REDO,
-    goog.editor.Command.UNORDERED_LIST,
-    goog.editor.Command.ORDERED_LIST,
-    goog.editor.Command.INDENT,
-    goog.editor.Command.OUTDENT,
-    goog.editor.Command.JUSTIFY_LEFT,
-    goog.editor.Command.JUSTIFY_CENTER,
-    goog.editor.Command.JUSTIFY_RIGHT,
-    //goog.editor.Command.SUBSCRIPT,
-    //goog.editor.Command.SUPERSCRIPT,
-    goog.editor.Command.STRIKE_THROUGH,
-    goog.editor.Command.REMOVE_FORMAT
-  ];
-  this.toolbar = goog.ui.editor.DefaultToolbar.makeToolbar(buttons,
-    this.elToolbar);
-
-  // Hook the toolbar into the field.
-  this.toolbarController =
-    new goog.ui.editor.ToolbarController(this.field, this.toolbar);
-
-  this.setEditorAreaHeight();
-};
 
 /**
  * Create actions menu
@@ -158,8 +97,7 @@ cld.Doc.prototype.createActionsMenu_ = function() {
  * @private
  */
 cld.Doc.prototype.createActionsButton_ = function() {
-  this.actionsButton = new goog.ui.MenuButton('Actions', this.menu,
-    cld.ui.utils.getButtonRenderer(true));
+  this.actionsButton = cld.ui.utils.newButton('Actions', this.menu);
   this.actionsButton.render(this.elHeader);
   this.actionsButton.getElement().id = 'doc-actions';
 };
@@ -168,8 +106,7 @@ cld.Doc.prototype.createActionsButton_ = function() {
  * Create and init save button.
  */
 cld.Doc.prototype.createSaveButton = function() {
-  this.button = new goog.ui.CustomButton('Save',
-    cld.ui.utils.getButtonRenderer());
+  this.button = cld.ui.utils.newButton('Save');
   this.button.render(this.elToolbar);
   this.button.getElement().id = 'savebutton';
   //this.button.setCaption('Save');
@@ -185,6 +122,136 @@ cld.Doc.prototype.setEditorAreaHeight = function() {
   var el = this.dom_.getElement('doc-container');
   var toolbarHeight = getHeight('editortoolbar', this.dom_);
   el.style.paddingTop = toolbarHeight + 'px';
+};
+
+/**
+ * which doc node if opening.
+ * @type {goog.ui.tree.BaseNode}
+ * @private
+ */
+cld.Doc.prototype.openingNode_ = null;
+
+/**
+ * Set opening doc node
+ * @param {goog.ui.tree.BaseNode} node The doc's tree node.
+ */
+cld.Doc.prototype.setOpenNode = function(node) {
+  this.openingNode_ = node;
+  if (node) {
+    this.nodeModel = node.getModel();
+    if ('date' in this.nodeModel) {
+      this.docType = 'diary';
+    } else {
+      this.docType = 'note';
+    }
+  } else {
+    this.nodeModel = null;
+    this.docType = '';
+  }
+};
+
+/**
+ * Open a exist doc.
+ * @param {!goog.ui.tree.BaseNode} node The doc's tree node.
+ */
+cld.Doc.prototype.open = function(node) {
+  this.setOpenNode(node);
+
+  // set title
+  if (this.docType === 'diary') {
+    this.setTitle('diary', this.nodeModel['date']);
+  } else if (this.docType === 'note') {
+    this.setTitle('note', this.nodeModel['title']);
+  }
+
+  // loading doc content and show it
+  if ('content' in this.nodeModel) {
+    this.updateDocContent();
+  } else {
+    this.showLoading();
+    this.loadAndShowDocContent();
+  }
+  //this.updateButtons();
+};
+
+/**
+ * Set doc's title
+ * @param {string} type The doc type.
+ * @param {string} title The doc title, If diary the title is date.
+ */
+cld.Doc.prototype.setTitle = function(type, title) {
+  if (type === 'diary') {
+    var path = 'Diary';
+    var toolTip = title.replace(/\//g, '-');
+    title = cld.DiaryTree.getDocTitleByDate(title);
+  } else {
+    var path = 'Notes';
+    var toolTip = 'Click to edit';
+  }
+  this.dom_.setTextContent(this.pathSpan, path);
+  this.dom_.setTextContent(this.titleTextSpan, title);
+  cld.ui.utils.setToolTip(this.titleTextSpan, toolTip);
+};
+
+/**
+ * Show loading message in editor area, and make field uneditable.
+ */
+cld.Doc.prototype.showLoading = function() {
+  if (!this.editor.field.isUneditable()) {
+    this.editor.field.makeUneditable();
+  }
+  this.editor.field.setHtml(false, 'Loading...');
+  this.dispatchEvent(cld.api.Docs.EventType.LOADING);
+};
+
+/**
+ * Display or update doc content in editor area.
+ * @param {string=} content The doc content.
+ */
+cld.Doc.prototype.updateDocContent = function(content) {
+  if (this.editor.field.isUneditable()) {
+    this.editor.field.makeEditable();
+  }
+  if (goog.isDef(content)) {
+    this.editor.field.setHtml(false, content);
+  } else {
+    this.editor.field.setHtml(false, this.nodeModel['content']);
+  }
+};
+
+/**
+ * Update current opening node model.
+ * @param {Object} data The node model.
+ */
+cld.Doc.prototype.updateNodeModel = function(data) {
+  for (var key in data) {
+    this.nodeModel[key] = data[key];
+  }
+  this.openingNode_.setModel(this.nodeModel);
+};
+
+/**
+ * Load doc success callback.
+ * @param {Object} data The node model.
+ * @private
+ */
+cld.Doc.prototype.onDocLoadSuccess_ = function(data) {
+    this.updateNodeModel(data);
+    this.updateDocContent();
+    this.dispatchEvent(cld.api.Docs.EventType.LOADED);
+};
+
+/**
+ * Load doc content and show it.
+ */
+cld.Doc.prototype.loadAndShowDocContent = function() {
+  var xhr = this.api.diary.newXhrIo(
+    goog.bind(this.onDocLoadSuccess_, this));
+  if (this.docType === 'diary') {
+    this.api.diary.get(xhr, this.nodeModel['date']);
+  } else if (this.docType === 'note') {
+    this.api.notes.get(xhr, this.nodeModel['id']);
+  }
 };
 
 /**

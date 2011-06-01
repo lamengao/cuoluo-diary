@@ -84,6 +84,14 @@ cld.App.prototype.loaded = function() {
     listen(this.dom_.getWindow(), goog.events.EventType.RESIZE,
       goog.bind(this.handleResize_, this));
   this.history.setEnabled(true);
+
+  this.handle.
+    listen(this, cld.api.Docs.EventType.LOADING, function(e) {
+        cld.message.showLoading();
+    }).
+    listen(this, cld.api.Docs.EventType.LOADED, function(e) {
+        cld.message.hiddenLoading();
+    });
 };
 
 /**
@@ -170,6 +178,7 @@ cld.App.prototype.onDocSelected_ = function(e) {
   if (!this.doc) {
     this.doc = new cld.Doc(cld.App.getInstance());
   }
+  this.doc.open(node);
   var token = docsTree.getTokenByNode(node);
   if (token) {
     this.history.setToken(token);
