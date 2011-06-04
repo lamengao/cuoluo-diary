@@ -178,6 +178,7 @@ cld.App.prototype.onDocSelected_ = function(e) {
   if (!this.doc) {
     this.doc = new cld.Doc(cld.App.getInstance());
   }
+  this.doc.clearActions();
   this.doc.open(node);
   var token = docsTree.getTokenByNode(node);
   if (token) {

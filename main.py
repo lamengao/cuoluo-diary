@@ -40,6 +40,8 @@ class MainHandler(webapp.RequestHandler):
 			template_values['develop'] = False
 		elif self.request.get("d") == 'true':
 			template_values['develop'] = True
+		elif self.request.get("p") == 'true':
+			template_values['develop'] = True
 		else:
 			template_values['develop'] = False
 		template_values['browser'] = getBrowserDetails(

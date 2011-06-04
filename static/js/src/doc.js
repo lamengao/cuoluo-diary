@@ -5,14 +5,15 @@
  */
 goog.provide('cld.Doc');
 
-goog.require('cld.api.Docs');
-goog.require('cld.api.Docs.EventType');
-goog.require('cld.api.Diary');
-goog.require('cld.api.Notes');
 goog.require('cld.DiaryTree');
 goog.require('cld.Editor');
+goog.require('cld.api.Diary');
+goog.require('cld.api.Docs');
+goog.require('cld.api.Docs.EventType');
+goog.require('cld.api.Notes');
 goog.require('cld.ui.utils');
 
+goog.require('goog.Timer');
 goog.require('goog.events');
 goog.require('goog.events.EventTarget');
 goog.require('goog.ui.Menu');
@@ -41,13 +42,13 @@ cld.Doc = function(app) {
     (this.dom_.getElement('editortoolbar'));
 
   this.createActionsMenu_();
-  this.renameMenuItem.setEnabled(false);
   this.createActionsButton_();
-  this.createSaveButton();
 
   this.editor = new cld.Editor('editortoolbar', 'editorarea');
-  //this.editor.field.makeEditable();
   this.setEditorAreaHeight();
+
+  this.createSaveButton();
+  this.changeSaveButtonState('Saved');
 
   this.elTitle = this.dom_.getElement('header-title');
   this.pathSpan = this.dom_.getElementByClass('path', this.elTitle);
@@ -66,11 +67,11 @@ goog.inherits(cld.Doc, goog.events.EventTarget);
 cld.Doc.prototype.createActionsMenu_ = function() {
   this.menu = new goog.ui.Menu();
   var items = [
-    this.refreshMenuItem = new goog.ui.MenuItem('Refresh'),
+    //this.refreshMenuItem = new goog.ui.MenuItem('Refresh'),
     this.deleteMenuItem = new goog.ui.MenuItem('Delete'),
     this.renameMenuItem = new goog.ui.MenuItem('Rename')
   ];
-  this.refreshMenuItem.setId('refreshmenuitem');
+  //this.refreshMenuItem.setId('refreshmenuitem');
   this.deleteMenuItem.setId('deletemenuitem');
   this.renameMenuItem.setId('renamemenuitem');
   goog.array.forEach(items, function(item) {
@@ -106,12 +107,54 @@ cld.Doc.prototype.createActionsButton_ = function() {
  * Create and init save button.
  */
 cld.Doc.prototype.createSaveButton = function() {
-  this.button = cld.ui.utils.newButton('Save');
-  this.button.render(this.elToolbar);
-  this.button.getElement().id = 'savebutton';
-  //this.button.setCaption('Save');
-  this.handle.listen(this.button, goog.ui.Component.EventType.ACTION,
+  this.saveButton = cld.ui.utils.newButton('Saved');
+  this.saveButton.render(this.elToolbar);
+  this.saveButton.getElement().id = 'savebutton';
+  this.handle.listen(this.saveButton, goog.ui.Component.EventType.ACTION,
       goog.bind(this.saveDoc, this));
+};
+
+/**
+ * Create a timer do once(clean exist) for auto save.
+ * @private
+ */
+cld.Doc.prototype.restartSaveTimer_ = function() {
+  this.stopSaveTimer_();
+  var saveNode = this.openingNode_;
+  this.saveTimerHander = goog.Timer.callOnce(function() {
+      this.saveDoc_(saveNode);
+    }, 5000, this);
+};
+
+/**
+ * Stop the auto save call once timer.
+ * @private
+ */
+cld.Doc.prototype.stopSaveTimer_ = function() {
+  if (this.saveTimerHander) {
+    goog.Timer.clear(this.saveTimerHander);
+  }
+};
+
+/**
+ * Change save button's state.
+ * @param {string} state The state.
+ */
+cld.Doc.prototype.changeSaveButtonState = function(state) {
+  switch (state) {
+    case 'Save':
+      this.saveButton.setEnabled(true);
+      this.restartSaveTimer_();
+      break;
+    case 'Saved':
+      this.saveButton.setEnabled(false);
+      break;
+    case 'Saving':
+      this.saveButton.setEnabled(false);
+      this.stopSaveTimer_();
+      break;
+  }
+  this.saveButton.setCaption(state);
 };
 
 /**
@@ -151,30 +194,6 @@ cld.Doc.prototype.setOpenNode = function(node) {
 };
 
 /**
- * Open a exist doc.
- * @param {!goog.ui.tree.BaseNode} node The doc's tree node.
- */
-cld.Doc.prototype.open = function(node) {
-  this.setOpenNode(node);
-
-  // set title
-  if (this.docType === 'diary') {
-    this.setTitle('diary', this.nodeModel['date']);
-  } else if (this.docType === 'note') {
-    this.setTitle('note', this.nodeModel['title']);
-  }
-
-  // loading doc content and show it
-  if ('content' in this.nodeModel) {
-    this.updateDocContent();
-  } else {
-    this.showLoading();
-    this.loadAndShowDocContent();
-  }
-  //this.updateButtons();
-};
-
-/**
  * Set doc's title
  * @param {string} type The doc type.
  * @param {string} title The doc title, If diary the title is date.
@@ -197,9 +216,7 @@ cld.Doc.prototype.setTitle = function(type, title) {
  * Show loading message in editor area, and make field uneditable.
  */
 cld.Doc.prototype.showLoading = function() {
-  if (!this.editor.field.isUneditable()) {
-    this.editor.field.makeUneditable();
-  }
+  this.editor.makeUneditable();
   this.editor.field.setHtml(false, 'Loading...');
   this.dispatchEvent(cld.api.Docs.EventType.LOADING);
 };
@@ -209,9 +226,7 @@ cld.Doc.prototype.showLoading = function() {
  * @param {string=} content The doc content.
  */
 cld.Doc.prototype.updateDocContent = function(content) {
-  if (this.editor.field.isUneditable()) {
-    this.editor.field.makeEditable();
-  }
+  this.editor.makeEditable();
   if (goog.isDef(content)) {
     this.editor.field.setHtml(false, content);
   } else {
@@ -219,6 +234,18 @@ cld.Doc.prototype.updateDocContent = function(content) {
   }
 };
 
+/**
+ * Set the opening node model.
+ * @param {string} key The key.
+ * @param {*} val The val..
+ * @param {goog.ui.tree.BaseNode=} opt_node The node's model will be set.
+ */
+cld.Doc.prototype.setNodeModel = function(key, val, opt_node) {
+  var node = opt_node || this.openingNode_;
+  var nodeModel = node.getModel();
+  nodeModel[key] = val;
+  node.setModel(nodeModel);
+};
 /**
  * Update current opening node model.
  * @param {Object} data The node model.
@@ -231,13 +258,63 @@ cld.Doc.prototype.updateNodeModel = function(data) {
 };
 
 /**
+ * Open a exist doc.
+ * @param {!goog.ui.tree.BaseNode} node The doc's tree node.
+ */
+cld.Doc.prototype.open = function(node) {
+  this.setOpenNode(node);
+
+  // set title
+  if (this.docType === 'diary') {
+    this.setTitle('diary', this.nodeModel['date']);
+  } else if (this.docType === 'note') {
+    this.setTitle('note', this.nodeModel['title']);
+  }
+
+  // disable all buttons before doc content loaded.
+  this.setButtonsEnabled(false);
+
+  // loading doc content and show it
+  if ('content' in this.nodeModel) {
+    this.openInternal();
+  } else {
+    this.showLoading();
+    this.loadAndShowDocContent();
+  }
+};
+
+/**
+ * Open doc internal.
+ * @protected
+ */
+cld.Doc.prototype.openInternal = function() {
+  this.updateDocContent();
+  this.updateButtons();
+  this.editor.listenChangeEvent(goog.bind(this.onFieldChange_, this));
+};
+
+/**
+ * On field change callback function.
+ * @private
+ */
+cld.Doc.prototype.onFieldChange_ = function() {
+  if (this.editor.field.isUneditable() ||
+      this.nodeModel['content'] == this.editor.field.getCleanContents()) {
+    return;
+  }
+  this.setNodeModel('content', this.editor.field.getCleanContents());
+  this.setNodeModel('modified', true);
+  this.changeSaveButtonState('Save');
+};
+
+/**
  * Load doc success callback.
  * @param {Object} data The node model.
  * @private
  */
 cld.Doc.prototype.onDocLoadSuccess_ = function(data) {
     this.updateNodeModel(data);
-    this.updateDocContent();
+    this.openInternal();
     this.dispatchEvent(cld.api.Docs.EventType.LOADED);
 };
 
@@ -245,8 +322,7 @@ cld.Doc.prototype.onDocLoadSuccess_ = function(data) {
  * Load doc content and show it.
  */
 cld.Doc.prototype.loadAndShowDocContent = function() {
-  var xhr = this.api.diary.newXhrIo(
-    goog.bind(this.onDocLoadSuccess_, this));
+  var xhr = cld.api.Docs.newXhrIo(goog.bind(this.onDocLoadSuccess_, this));
   if (this.docType === 'diary') {
     this.api.diary.get(xhr, this.nodeModel['date']);
   } else if (this.docType === 'note') {
@@ -255,12 +331,78 @@ cld.Doc.prototype.loadAndShowDocContent = function() {
 };
 
 /**
+ * Set doc buttons enable or unenable.
+ * @param {boolean} b true or false.
+ */
+cld.Doc.prototype.setButtonsEnabled = function(b) {
+  this.actionsButton.setEnabled(b);
+  this.saveButton.setEnabled(b);
+};
+
+/**
+ * Update buttons
+ */
+cld.Doc.prototype.updateButtons = function() {
+  // update action button
+  if (this.docType === 'diary') {
+    this.renameMenuItem.setEnabled(false);
+  } else if (this.docType === 'note') {
+    this.renameMenuItem.setEnabled(true);
+  }
+  this.actionsButton.setEnabled(true);
+
+  // update save button
+  var state = this.isModified() ? 'Save' : 'Saved';
+  this.changeSaveButtonState(state);
+};
+
+/**
+ * Whether the doc modified.
+ * @return {boolean} is modified?
+ */
+cld.Doc.prototype.isModified = function() {
+  return (this.nodeModel && 'modified' in this.nodeModel &&
+          this.nodeModel['modified']);
+};
+
+/**
+ * Load doc success callback.
+ * @param {goog.ui.tree.BaseNode} node Which node saved.
+ * @private
+ */
+cld.Doc.prototype.onSavedSuccess_ = function(node) {
+  if (this.openingNode_ == node) {
+    this.changeSaveButtonState('Saved');
+  }
+  this.setNodeModel('modified', false, node);
+};
+
+/**
  * Save doc.
  * @param {goog.events.Event} e toggle event.
  */
 cld.Doc.prototype.saveDoc = function(e) {
-  alert('hello');
+  this.changeSaveButtonState('Saving');
+  this.saveDoc_(this.openingNode_);
 };
+
+/**
+ * Save doc.
+ * @param {goog.ui.tree.BaseNode} node Which node will be save.
+ * @private
+ */
+cld.Doc.prototype.saveDoc_ = function(node) {
+  var nodeModel = node.getModel();
+  var content = nodeModel['content'];
+  var successCallback = goog.bind(this.onSavedSuccess_, this, node);
+  var xhr = cld.api.Docs.newXhrIo(successCallback);
+  if (this.docType === 'diary') {
+    this.api.diary.update(xhr, nodeModel['date'], content);
+  } else if (this.docType === 'note') {
+    this.api.notes.update(xhr, nodeModel['id'], undefined, content);
+  }
+};
+
 
 
 /**
@@ -282,4 +424,19 @@ cld.Doc.prototype.deleteDoc = function() {
  */
 cld.Doc.prototype.renameDoc = function() {
   alert('rename');
+};
+
+/**
+ * Clean and do immediately current actions for ready open a new node.
+ */
+cld.Doc.prototype.clearActions = function() {
+  if (!this.openingNode_) {
+    return;
+  }
+
+  // if current node not save, save it now
+  this.stopSaveTimer_();
+  if (this.isModified()) {
+    this.saveDoc_(this.openingNode_);
+  }
 };

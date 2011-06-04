@@ -7,6 +7,7 @@
 goog.provide('cld.api.Docs');
 goog.provide('cld.api.Docs.EventType');
 
+goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.net.XhrIo');
 
@@ -28,12 +29,13 @@ cld.api.Docs = function(et) {
    * @protected
    */
   this.handle = new goog.events.EventHandler(this);
+
   /** @type {Array} */
-  this.completeEventTypes = [
-      goog.net.EventType.SUCCESS,
-      goog.net.EventType.ERROR,
-      goog.net.EventType.TIMEOUT
-  ];
+  /*cld.api.Docs.completeEventTypes = [
+    goog.net.EventType.SUCCESS,
+    goog.net.EventType.ERROR,
+    goog.net.EventType.TIMEOUT
+  ];*/
 };
 goog.inherits(cld.api.Docs, goog.events.EventTarget);
 
@@ -46,6 +48,7 @@ cld.api.Docs.BASE_URL = '/api';
 /** @type {Object} */
 cld.api.Docs.POST_HEADER = {'Content-Type': 'application/json'};
 
+
 /**
  * Create a new XhrIo and listen event and bind the callback.
  * @param {Function=} onSuccess Success callback.
@@ -53,30 +56,39 @@ cld.api.Docs.POST_HEADER = {'Content-Type': 'application/json'};
  * @param {Function=} onTimeout timeout callback.
  * @return {goog.net.XhrIo} XhrIo.
  */
-cld.api.Docs.prototype.newXhrIo = function(onSuccess, onError, onTimeout) {
+cld.api.Docs.newXhrIo = function(onSuccess, onError, onTimeout) {
   var xhr = new goog.net.XhrIo();
   xhr.setTimeoutInterval(10000);
-  this.handle.listenOnce(xhr, this.completeEventTypes, function(e) {
+  var successStatusCode = [200, 202, 204, 304];
+  goog.events.listenOnce(xhr, goog.net.EventType.COMPLETE, function(e) {
     var xhr = /** @type {goog.net.XhrIo} */ (e.target);
-    if (e.type == goog.net.EventType.SUCCESS) {
+    if (goog.array.contains(successStatusCode, xhr.getStatus())) {
+      // Success!
       if (xhr.getResponseText()) {
         //this.lastResponseJson = xhr.getResponseJson();
         var data = goog.json.unsafeParse(xhr.getResponseText());
         if (goog.isDef(onSuccess)) {
           onSuccess(data);
         }
+      } else {
+        if (goog.isDef(onSuccess)) {
+          onSuccess();
+        }
       }
-    } else if (e.type == goog.net.EventType.ERROR) {
-      if (goog.isDef(onError)) {
-        onError();
-      }
-    } else if (e.type == goog.net.EventType.TIMEOUT) {
+    } else if (xhr.getLastErrorCode() === goog.net.ErrorCode.TIMEOUT) {
+      // Timeout!
       if (goog.isDef(onTimeout)) {
         onTimeout();
+      } else if (goog.isDef(onError)) {
+        onError();
       }
+    } else if (goog.isDef(onError)) {
+      // Some other error occurred.
+      onError();
     }
     xhr.dispose();
   });
+
   return xhr;
 };
 

@@ -208,7 +208,7 @@ div.toolbarbutton{margin:4px}
 /* @end */
 
 /* @group doc header */
-#header-title{line-height:30px;font-weight:bold;font-size:14px}
+#header-title{line-height:30px;font-weight:bold;font-size:16px;margin-left: 3px;}
 #doc-actions{position:absolute;right:8px;top:4px}
 #actionsmenu .goog-menuitem {padding: 3px 4em 3px 18px;}
 #actionsmenu .goog-menuitem-highlight, #actionsmenu .goog-menuitem-hover { padding-bottom: 2px; padding-top: 2px; }
@@ -220,7 +220,7 @@ div.toolbarbutton{margin:4px}
 	padding: 0 2px;
 	width: 10px;
 	position: relative;
-	top: 4px;
+	top: 5px;
 }
 /* @end */
 
@@ -240,6 +240,8 @@ position: relative;
 	height:100%;
 	color:#666;
 	padding:8px;
+	font-size: 15px;
+	font-family: Arial,Sans-serif;
 }
 #savebutton{position: absolute; right: 8px; top: 4px;z-index: 5;}
 /* @end */

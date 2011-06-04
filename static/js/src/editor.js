@@ -6,6 +6,7 @@
 
 goog.provide('cld.Editor');
 
+goog.require('goog.Timer');
 goog.require('goog.editor.Command');
 goog.require('goog.editor.Field');
 //goog.require('goog.editor.SeamlessField');
@@ -34,7 +35,9 @@ goog.require('goog.ui.editor.ToolbarController');
 cld.Editor = function(toolbar, editorArea) {
   goog.events.EventTarget.call(this);
 
+  goog.editor.Field.DELAYED_CHANGE_FREQUENCY = 100;
   this.field = new goog.editor.Field(editorArea);
+  //this.field = new goog.editor.SeamlessField(editorArea);
   this.registerPlugins();
 
   this.toolbar = goog.ui.editor.DefaultToolbar.makeToolbar(cld.Editor.buttons,
@@ -62,17 +65,98 @@ cld.Editor.prototype.registerPlugins = function() {
 };
 
 /**
+ * Set editor field initial style.
+ * @private
+ */
+cld.Editor.prototype.setFieldInitStyle_ = function() {
+  var field = this.field.getElement();
+  if (field) {
+    var style = {'font-size': '15px', 'font-family': 'Arial,Sans-serif'};
+    goog.style.setStyle(field, style);
+  }
+};
+
+/**
+ * Make field editable and set initial style.
+ */
+cld.Editor.prototype.makeEditable = function() {
+  if (this.field.isUneditable()) {
+    this.field.makeEditable();
+  }
+  this.setFieldInitStyle_();
+};
+
+/**
+ * Make field uneditable.
+ */
+cld.Editor.prototype.makeUneditable = function() {
+  if (!this.field.isUneditable()) {
+    this.field.makeUneditable();
+  }
+};
+
+/**
+ * Start listen the change event.
+ * @param {Function} handlerChange The change callback.
+ */
+cld.Editor.prototype.listenChangeEvent = function(handlerChange) {
+  if (this.isListeningChangeEvent_) {
+    return;
+  }
+  this.field.clearDelayedChange();
+
+  if (goog.userAgent.WEBKIT || goog.userAgent.OPERA) {
+    if (this.delayedChangeTimer) {
+      this.delayedChangeTimer.dispose();
+    }
+    this.delayedChangeTimer =
+      new goog.Timer(goog.editor.Field.DELAYED_CHANGE_FREQUENCY);
+    this.delayedChangeTimer.start();
+    this.lastFieldContents = this.field.getCleanContents();
+    this.isListeningChangeEvent_ =
+      goog.events.listen(this.delayedChangeTimer, goog.Timer.TICK,
+        function(e) {
+          if (this.lastFieldContents == this.field.getCleanContents()) {
+            return;
+          }
+          this.lastFieldContents = this.field.getCleanContents();
+          var footer = document.getElementById('doc-footer');
+          footer.innerHTML = footer.innerHTML + 'g';
+          handlerChange();
+        }, false, this);
+  } else {
+    this.isListeningChangeEvent_ =
+      goog.events.listen(this.field,
+        goog.editor.Field.EventType.DELAYEDCHANGE,
+        function(e) {
+          var footer = document.getElementById('doc-footer');
+          footer.innerHTML = footer.innerHTML + 'g';
+          handlerChange();
+        }, false, this);
+  }
+};
+
+/**
+ * Stop listen change event.
+ */
+cld.Editor.prototype.stopListenChangeEvent = function() {
+  if (this.isListeningChangeEvent_) {
+    goog.events.unlistenByKey(this.isListeningChangeEvent_);
+  }
+};
+
+/**
  * Specify the buttons to add to the toolbar, using built in default buttons.
  * @type {!Array}
  */
 cld.Editor.buttons = [
+  goog.editor.Command.FONT_FACE,
+  goog.editor.Command.FONT_SIZE,
   goog.editor.Command.BOLD,
   goog.editor.Command.ITALIC,
   goog.editor.Command.UNDERLINE,
   goog.editor.Command.FONT_COLOR,
   goog.editor.Command.BACKGROUND_COLOR,
-  goog.editor.Command.FONT_FACE,
-  goog.editor.Command.FONT_SIZE,
   goog.editor.Command.LINK,
   //goog.editor.Command.UNDO,
   //goog.editor.Command.REDO,
