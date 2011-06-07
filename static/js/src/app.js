@@ -9,6 +9,7 @@ goog.provide('cld.App');
 goog.require('cld.Creation');
 goog.require('cld.DiaryTree');
 goog.require('cld.Doc');
+goog.require('cld.doc.EventType');
 goog.require('cld.DocsTree');
 goog.require('cld.DocsTree.EventType');
 goog.require('cld.NotesTree');
@@ -75,15 +76,20 @@ cld.App.prototype.loaded = function() {
   goog.dom.classes.remove(this.dom_.getElement('search'), 'vh');
   cld.message.hiddenLoading();
 
+  // create new event handle
+  this.handle.
+    listen(this, cld.Creation.EventType.NEW_NOTE, this.newNote);
+
   this.handle.
     listen(this.history, goog.history.EventType.NAVIGATE, this.navCallback_).
     listen(this, cld.DocsTree.EventType.SELECT_CHANGE, this.onDocSelected_).
     listen(this, cld.DocsTree.EventType.NEW_DOC, this.onNewDoc_).
+    listen(this, cld.doc.EventType.NEW_DOC_CREATED, this.onNewDocCreated_).
+    listen(this, cld.doc.EventType.DISCARD_NEW_NOTE, this.onDiscardNewNote_).
     listen(this, cld.DocsTree.EventType.NODE_NOT_FOUND, this.onNodeNotFound_).
     listen(this, cld.Today.EventType.GOTO_TODAY, this.onGotoToday_).
     listen(this.dom_.getWindow(), goog.events.EventType.RESIZE,
       goog.bind(this.handleResize_, this));
-  this.history.setEnabled(true);
 
   this.handle.
     listen(this, cld.api.Docs.EventType.LOADING, function(e) {
@@ -92,6 +98,8 @@ cld.App.prototype.loaded = function() {
     listen(this, cld.api.Docs.EventType.LOADED, function(e) {
         cld.message.hiddenLoading();
     });
+
+  this.history.setEnabled(true);
 };
 
 /**
@@ -153,6 +161,8 @@ cld.App.prototype.controller = function(token) {
       this.history.replaceToken('diary/' + date);
     }
     this.diaryTree.selectNodeByDate(date);
+  } else if (token === 'notes/new') {
+    this.newNote();
   } else if (type === 'notes' && token.length > 6) {
     var id = token.substr(6);
     this.notesTree.selectByKey('notes:' + id);
@@ -180,7 +190,7 @@ cld.App.prototype.onDocSelected_ = function(e) {
   }
   this.doc.clearActions();
   this.doc.open(node);
-  var token = docsTree.getTokenByNode(node);
+  var token = cld.DocsTree.getTokenByNode(node);
   if (token) {
     this.history.setToken(token);
   }
@@ -193,17 +203,55 @@ cld.App.prototype.onDocSelected_ = function(e) {
  */
 cld.App.prototype.onNewDoc_ = function(e) {
   var type = e.docType;
+  var node = /** @type {goog.ui.tree.BaseNode} */ (e.node);
+  if (!this.doc) {
+    this.doc = new cld.Doc(cld.App.getInstance());
+  }
   if (type === 'diary') {
     // new diary
-    var date = /** @type {string} */ (e.data);
-    var token = 'diary/' + date;
     this.diaryZippy.zippy.expand();
-    this.history.setToken(token);
+    var token = cld.DocsTree.getTokenByNode(node);
+    if (token) {
+      this.history.setToken(token);
+    }
+    this.doc.clearActions();
+    this.doc.open(node);
   } else if (type === 'note') {
     // new note
-    var data = /** @type {Object} */ (e.data);
     alert('new note');
   }
+};
+
+/**
+ * A new doc created.
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onNewDocCreated_ = function(e) {
+  var type = e.docType;
+  var node = /** @type {goog.ui.tree.BaseNode} */ (e.node);
+  if (type === 'diary') {
+    this.diaryTree.addNewNode(node);
+    if (this.doc.getOpeningNode() == node) {
+      this.diaryTree.selectNode(node);
+    }
+  } else {
+    if (this.doc.getOpeningNode() == node) {
+      var id = node.getModel()['id'];
+      this.notesTree.setNodeInMap(node);
+      this.history.replaceToken('notes/' + id);
+    }
+  }
+};
+
+/**
+ * Discard create new note.
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onDiscardNewNote_ = function(e) {
+  var node = /** @type {goog.ui.tree.BaseNode} */ (e.node);
+  cld.NotesTree.discardNewNode(node);
 };
 
 /**
@@ -229,6 +277,14 @@ cld.App.prototype.onNodeNotFound_ = function(e) {
     this.history.replaceToken(cld.App.lastToken);
   }
   cld.message.show(cld.message.TEXT.NODE_NOT_FOUND, 5);
+};
+
+/**
+ * Create new note callback.
+ * @param {goog.events.Event} e The event.
+ */
+cld.App.prototype.newNote = function(e) {
+  this.notesTree.createNew();
 };
 
 /**

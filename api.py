@@ -99,6 +99,8 @@ class DiaryHandler(webapp.RequestHandler):
 			# new diary
 			self.diary = Diary.create_new(self.user, url, content)
 			self.response.set_status(201)
+		self.response.headers['Content-type'] = 'application/json'
+		self.response.out.write(self.diary.to_json(True))
 
 	@diary_validated
 	def delete(self, url):
@@ -225,6 +227,8 @@ class NoteHandler(webapp.RequestHandler):
 		else:
 			self.note.put()
 		self.response.set_status(202)
+		self.response.headers['Content-type'] = 'application/json'
+		self.response.out.write(self.note.to_json(True))
 	
 	@note_validated
 	def delete(self, id):

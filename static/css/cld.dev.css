@@ -88,7 +88,7 @@ em {font-weight: bold;}
 .cuoluo .o{color:#c61800}
 .cuoluo .u{color:#efba00}
 .cuoluo .l{color:#1ba823}
-.diary{color:#2b4bc5;font-size:20px;font-weight:bold}
+#logo .diary{color:#2b4bc5;font-size:20px;font-weight:bold}
 .beta{color:#CCC;position:relative;left:2px;top:-2px;}
 /*#logo span{position:relative;color:#CCC;left:150px;font-size:15px;font-weight:bold}*/
 #search {left: 230px; position: absolute; top: 38px;}
@@ -213,6 +213,8 @@ div.toolbarbutton{margin:4px}
 #actionsmenu .goog-menuitem {padding: 3px 4em 3px 18px;}
 #actionsmenu .goog-menuitem-highlight, #actionsmenu .goog-menuitem-hover { padding-bottom: 2px; padding-top: 2px; }
 #header-title .path{color: #112ABB;font-size:16px;}
+#header-title .text{padding: 2px;}
+.note #header-title .text:hover{background-color:#FFFFD3;}
 .path-arrow {
 	background-image: url("/images/icons_11.png");
 	background-position: -448px 2px;
@@ -222,6 +224,12 @@ div.toolbarbutton{margin:4px}
 	position: relative;
 	top: 5px;
 }
+#editname{font-size:14px;background-color: #FFFFD3;border: 2px solid #CCC;padding:2.5px}
+#editname:focus {
+	border: 2px solid #73A6FF;
+	outline: 0 none;
+}
+#edit-name>div{font-size:13px;font-weight:normal;line-height:16px}
 /* @end */
 
 /* @group doc container */

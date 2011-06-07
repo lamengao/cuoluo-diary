@@ -909,8 +909,9 @@
   padding: 1px 2px 1px 2px;
   text-decoration: none;
   /*color: WindowText;*/
-  font-size:12px
+  font-size:12px;
   /*cursor: default;*/
+  font-family: Arial,Sans-serif;
 }
 
 .selected .goog-tree-item-label {

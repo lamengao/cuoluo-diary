@@ -133,14 +133,14 @@ cld.DocsTree.prototype.createNew = function(e) {
  * @param {goog.ui.tree.BaseNode} node The node.
  * @return {string} The token.
  */
-cld.DocsTree.prototype.getTokenByNode = function(node) {
+cld.DocsTree.getTokenByNode = function(node) {
   var model = node.getModel();
   if ('date' in model) {
     return 'diary/' + model['date'];
   } else if ('id' in model) {
     return 'notes/' + model['id'];
   } else {
-    return '';
+    return 'notes/new';
   }
 };
 
@@ -166,6 +166,15 @@ cld.DocsTree.prototype.selectByKey = function(key) {
     this.selectNode(cld.DocsTree.allNodes[key]);
   } else {
     this.dispatchEvent(cld.DocsTree.EventType.NODE_NOT_FOUND);
+  }
+};
+
+cld.DocsTree.prototype.setNodeInMap = function(node) {
+  var model = node.getModel();
+  if ('date' in model) {
+    cld.DocsTree.allNodes['diary:' + model['date']] = node;
+  } else {
+    cld.DocsTree.allNodes['notes:' + model['id']] = node;
   }
 };
 

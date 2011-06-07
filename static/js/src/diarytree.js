@@ -53,6 +53,9 @@ cld.DiaryTree.prototype.initTree = function() {
   if (this.items_.length) {
     this.hiddenEmptyArea_();
     goog.array.forEach(this.items_, function(item) {
+        if (item['status'] === 'trashed') {
+          return;
+        }
         this.createTreeNodeByDate(item['date'], item);
     }, this);
   } else {
@@ -100,6 +103,33 @@ cld.DiaryTree.prototype.createTreeNodeByDate = function(date, opt_item) {
 };
 
 /**
+ * Create new tree node, but not yet add to the tree.
+ * @param {string} date The node date.
+ * @return {goog.ui.tree.BaseNode} The new node.
+ */
+cld.DiaryTree.prototype.createNewNode = function(date) {
+  var node = this.tree.createNode(cld.DiaryTree.getNodeTitleFromDate(date));
+  node.setModel({'date': date});
+  return node;
+};
+
+/**
+ * Add new created doc's node to the tree.
+ * @param {goog.ui.tree.BaseNode} node The node will be added.
+ */
+cld.DiaryTree.prototype.addNewNode = function(node) {
+  var date = node.getModel()['date'];
+  var parentDate = this.getParentDate_(date);
+  var parentNode = this.getTreeNodeByDate(parentDate);
+  if (goog.isNull(parentNode)) {
+    parentNode = this.createTreeNodeByDate(parentDate);
+  }
+  parentNode.add(node, this.getAfterNode_(node, parentNode));
+  this.setIconClassForNode_(node);
+  cld.DocsTree.allNodes['diary:' + date] = node;
+};
+
+/**
  * Return tree node by date.
  * @param {string} date Which date node will be return.
  * the date format like '2011/05/19' or '2011/05' or '2011'.
@@ -133,7 +163,7 @@ cld.DiaryTree.prototype.selectTodayNode = function() {
 };
 
 /**
- * Select diary node by date.
+ * Select diary node by date (only day node).
  * @param {string} date The node's date.
  */
 cld.DiaryTree.prototype.selectNodeByDate = function(date) {
@@ -157,7 +187,8 @@ cld.DiaryTree.prototype.selectNodeByDate = function(date) {
     } else {
       this.tree.setSelectedItem(null);
     }
-    this.dispatchEvent(new cld.DocsTree.NewDocEvent('diary', date));
+    var newNode = this.createNewNode(date);
+    this.dispatchEvent(new cld.DocsTree.NewDocEvent('diary', newNode));
   }
 };
 

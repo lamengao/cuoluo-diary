@@ -5,6 +5,7 @@
  */
 
 goog.provide('cld.Creation');
+goog.provide('cld.Creation.EventType');
 
 goog.require('goog.events');
 goog.require('goog.events.EventTarget');
@@ -101,13 +102,13 @@ cld.Creation.prototype.createMenuButton_ = function() {
  * Create new diary.
  */
 cld.Creation.prototype.createNewDiary = function() {
-  alert('new diary');
+  this.dispatchEvent(cld.Creation.EventType.NEW_DIARY);
 };
 /**
  * Create new Note.
  */
 cld.Creation.prototype.createNewNote = function() {
-  alert('new note');
+  this.dispatchEvent(cld.Creation.EventType.NEW_NOTE);
 };
 /**
  * Create new Email.
@@ -126,4 +127,14 @@ cld.Creation.prototype.createNewChildNote = function() {
  */
 cld.Creation.prototype.createNewSiblingNote = function() {
   alert('new sibling note');
+};
+
+
+/** @enum {string} */
+cld.Creation.EventType = {
+  NEW_DIARY: goog.events.getUniqueId('new_diary'),
+  NEW_NOTE: goog.events.getUniqueId('new_note'),
+  NEW_EMAIL: goog.events.getUniqueId('new_email'),
+  NEW_CHILDNOTE: goog.events.getUniqueId('new_childnote'),
+  NEW_SIBLINGNOTE: goog.events.getUniqueId('new_siblingnote')
 };

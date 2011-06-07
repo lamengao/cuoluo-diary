@@ -13,11 +13,11 @@ goog.require('goog.events.Event');
 /**
  * Event object dispatched when the new doc create.
  * @param {string} docType The type of new doc.
- * @param {string|Object} data The new doc's metadata.
+ * @param {goog.ui.tree.BaseNode} node The new node.
  * @constructor
  * @extends {goog.events.Event}
  */
-cld.DocsTree.NewDocEvent = function(docType, data) {
+cld.DocsTree.NewDocEvent = function(docType, node) {
   goog.events.Event.call(this, cld.DocsTree.EventType.NEW_DOC);
 
   /**
@@ -26,7 +26,7 @@ cld.DocsTree.NewDocEvent = function(docType, data) {
    */
   this.docType = docType;
 
-  /** @type {string|Object} */
-  this.data = data;
+  /** @type {goog.ui.tree.BaseNode} */
+  this.node = node;
 };
 goog.inherits(cld.DocsTree.NewDocEvent, goog.events.Event);

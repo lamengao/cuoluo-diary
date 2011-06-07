@@ -11,15 +11,18 @@ goog.require('cld.api.Diary');
 goog.require('cld.api.Docs');
 goog.require('cld.api.Docs.EventType');
 goog.require('cld.api.Notes');
+goog.require('cld.doc.NewDocCreatedEvent');
+goog.require('cld.doc.DiscardNewNoteEvent');
 goog.require('cld.ui.utils');
 
 goog.require('goog.Timer');
 goog.require('goog.events');
 goog.require('goog.events.EventTarget');
+goog.require('goog.events.EventType');
+goog.require('goog.object');
 goog.require('goog.ui.Menu');
 goog.require('goog.ui.MenuItem');
 goog.require('goog.ui.Separator');
-
 
 /**
  * Doc class for open diary or note.
@@ -37,6 +40,7 @@ cld.Doc = function(app) {
    */
   this.handle = new goog.events.EventHandler(this);
 
+  this.elDoc = this.dom_.getElement('doc');
   this.elHeader = this.dom_.getElement('doc-header');
   this.elToolbar = /** @type {!Element} */
     (this.dom_.getElement('editortoolbar'));
@@ -53,6 +57,11 @@ cld.Doc = function(app) {
   this.elTitle = this.dom_.getElement('header-title');
   this.pathSpan = this.dom_.getElementByClass('path', this.elTitle);
   this.titleTextSpan = this.dom_.getElementByClass('text', this.elTitle);
+
+  this.elEditName = this.dom_.getElement('edit-name');
+  this.editNameInput = this.dom_.getElement('editname');
+  this.handle.listen(this.titleTextSpan, goog.events.EventType.CLICK,
+      goog.bind(this.renameHandle, this));
 
   this.api = {};
   this.api.diary = new cld.api.Diary(this);
@@ -144,7 +153,9 @@ cld.Doc.prototype.changeSaveButtonState = function(state) {
   switch (state) {
     case 'Save':
       this.saveButton.setEnabled(true);
-      this.restartSaveTimer_();
+      if (!(this.isNew() && !this.isModified())) {
+        this.restartSaveTimer_();
+      }
       break;
     case 'Saved':
       this.saveButton.setEnabled(false);
@@ -194,6 +205,24 @@ cld.Doc.prototype.setOpenNode = function(node) {
 };
 
 /**
+ * Return the node of current openning.
+ * @return {goog.ui.tree.BaseNode} node Opening node.
+ */
+cld.Doc.prototype.getOpeningNode = function() {
+  return this.openingNode_;
+};
+
+/**
+ * Is new doc node?
+ * @param {goog.ui.tree.BaseNode=} opt_node The doc node.
+ * @return {boolean} is new.
+ */
+cld.Doc.prototype.isNew = function(opt_node) {
+  var node = opt_node || this.openingNode_;
+  return !('created' in node.getModel());
+};
+
+/**
  * Set doc's title
  * @param {string} type The doc type.
  * @param {string} title The doc title, If diary the title is date.
@@ -229,6 +258,10 @@ cld.Doc.prototype.updateDocContent = function(content) {
   this.editor.makeEditable();
   if (goog.isDef(content)) {
     this.editor.field.setHtml(false, content);
+  } else if (this.isNew()) {
+    this.editor.field.setHtml(false, '');
+    this.editor.field.focusAndPlaceCursorAtStart();
+    this.setNodeModel('content', this.editor.field.getCleanContents());
   } else {
     this.editor.field.setHtml(false, this.nodeModel['content']);
   }
@@ -249,12 +282,15 @@ cld.Doc.prototype.setNodeModel = function(key, val, opt_node) {
 /**
  * Update current opening node model.
  * @param {Object} data The node model.
+ * @param {goog.ui.tree.BaseNode=} opt_node The node's model will be set.
  */
-cld.Doc.prototype.updateNodeModel = function(data) {
+cld.Doc.prototype.updateNodeModel = function(data, opt_node) {
+  var node = opt_node || this.openingNode_;
+  var nodeModel = node.getModel();
   for (var key in data) {
-    this.nodeModel[key] = data[key];
+    nodeModel[key] = data[key];
   }
-  this.openingNode_.setModel(this.nodeModel);
+  node.setModel(nodeModel);
 };
 
 /**
@@ -264,6 +300,7 @@ cld.Doc.prototype.updateNodeModel = function(data) {
 cld.Doc.prototype.open = function(node) {
   this.setOpenNode(node);
 
+  this.elDoc.className = this.docType;
   // set title
   if (this.docType === 'diary') {
     this.setTitle('diary', this.nodeModel['date']);
@@ -275,7 +312,10 @@ cld.Doc.prototype.open = function(node) {
   this.setButtonsEnabled(false);
 
   // loading doc content and show it
-  if ('content' in this.nodeModel) {
+  if (this.isNew()) {
+    // open a new doc
+    this.openInternal();
+  } else if ('content' in this.nodeModel) {
     this.openInternal();
   } else {
     this.showLoading();
@@ -302,6 +342,7 @@ cld.Doc.prototype.onFieldChange_ = function() {
       this.nodeModel['content'] == this.editor.field.getCleanContents()) {
     return;
   }
+
   this.setNodeModel('content', this.editor.field.getCleanContents());
   this.setNodeModel('modified', true);
   this.changeSaveButtonState('Save');
@@ -349,11 +390,19 @@ cld.Doc.prototype.updateButtons = function() {
   } else if (this.docType === 'note') {
     this.renameMenuItem.setEnabled(true);
   }
-  this.actionsButton.setEnabled(true);
+  if (this.isNew()) {
+    this.actionsButton.setEnabled(false);
+  } else {
+    this.actionsButton.setEnabled(true);
+  }
 
   // update save button
-  var state = this.isModified() ? 'Save' : 'Saved';
-  this.changeSaveButtonState(state);
+  if (this.isNew()) {
+    this.changeSaveButtonState('Save');
+  } else {
+    var state = this.isModified() ? 'Save' : 'Saved';
+    this.changeSaveButtonState(state);
+  }
 };
 
 /**
@@ -362,19 +411,37 @@ cld.Doc.prototype.updateButtons = function() {
  */
 cld.Doc.prototype.isModified = function() {
   return (this.nodeModel && 'modified' in this.nodeModel &&
-          this.nodeModel['modified']);
+    this.nodeModel['modified']);
 };
 
 /**
  * Load doc success callback.
  * @param {goog.ui.tree.BaseNode} node Which node saved.
+ * @param {Object=} data The node model.
  * @private
  */
-cld.Doc.prototype.onSavedSuccess_ = function(node) {
+cld.Doc.prototype.onSavedSuccess_ = function(node, data) {
   if (this.openingNode_ == node) {
     this.changeSaveButtonState('Saved');
   }
+  var isNew = this.isNew(node);
+  if (data) {
+    this.updateNodeModel(data, node);
+  }
   this.setNodeModel('modified', false, node);
+  if (isNew) {
+    this.dispatchEvent(new cld.doc.NewDocCreatedEvent(node));
+  }
+  var title = node.getModel()['title'];
+  if ('id' in node.getModel() && node.getText() !== title) {
+    // note title renamed
+    if (this.openingNode_ == node) {
+      this.setTitle('note', title);
+      this.cancleRename();
+    }
+    node.setText(title);
+  }
+  this.dispatchEvent(cld.api.Docs.EventType.LOADED);
 };
 
 /**
@@ -399,11 +466,69 @@ cld.Doc.prototype.saveDoc_ = function(node) {
   if (this.docType === 'diary') {
     this.api.diary.update(xhr, nodeModel['date'], content);
   } else if (this.docType === 'note') {
-    this.api.notes.update(xhr, nodeModel['id'], undefined, content);
+    var title = nodeModel['title'];
+    if (this.isNew(node)) {
+      this.api.notes.insert(xhr, nodeModel['id'], title, content);
+    } else if (node.getText() !== title) {
+      this.api.notes.update(xhr, nodeModel['id'], title);
+    } else {
+      this.api.notes.update(xhr, nodeModel['id'], undefined, content);
+    }
   }
 };
 
+/**
+ * Handle for click title text.
+ * @param {goog.events.Event} e toggle event.
+ */
+cld.Doc.prototype.renameHandle = function(e) {
+  this.renameDoc();
+};
 
+/**
+ * Create edit name buttons.
+ * @private
+ */
+cld.Doc.prototype.createEditNameButtons_ = function() {
+  if (this.editNameButton) {
+    return;
+  }
+  this.editNameButton = cld.ui.utils.newButton('OK');
+  this.editNameButton.render(this.elEditName);
+  this.editNameCancleButton = cld.ui.utils.newButton('Cancle');
+  this.editNameCancleButton.render(this.elEditName);
+
+  var keyHandler = new goog.events.KeyHandler(this.editNameInput);
+
+  this.handle.
+    listen(keyHandler, goog.events.KeyHandler.EventType.KEY,
+      function(e) {
+        var keyEvent = /** @type {goog.events.KeyEvent} */ (e);
+        if (keyEvent.keyCode === goog.events.KeyCodes.ENTER) {
+          this.renameInternal();
+        }
+      }, false, this).
+    listen(this.editNameInput, goog.events.EventType.BLUR,
+      function(e) {
+        //this.cancleRename();
+      }, false, this).
+    listen(this.editNameButton, goog.ui.Component.EventType.ACTION,
+      function(e) {
+        this.renameInternal();
+      }, false, this).
+    listen(this.editNameCancleButton, goog.ui.Component.EventType.ACTION,
+      function(e) {
+        this.cancleRename();
+      }, false, this);
+};
+
+/**
+ * Cancle the rename action.
+ */
+cld.Doc.prototype.cancleRename = function() {
+  goog.dom.classes.add(this.elEditName, 'hidden');
+  goog.dom.classes.remove(this.titleTextSpan, 'hidden');
+};
 
 /**
  * Refresh current doc.
@@ -423,7 +548,36 @@ cld.Doc.prototype.deleteDoc = function() {
  * Rename current doc.
  */
 cld.Doc.prototype.renameDoc = function() {
-  alert('rename');
+  if (this.docType != 'note') {
+    return;
+  }
+  if (!this.editNameButton) {
+    this.createEditNameButtons_();
+  }
+  var title = this.dom_.getTextContent(this.titleTextSpan);
+  this.editNameInput.value = title;
+  goog.dom.classes.add(this.titleTextSpan, 'hidden');
+  goog.dom.classes.remove(this.elEditName, 'hidden');
+  this.editNameInput.focus();
+  this.editNameButton.setEnabled(true);
+  this.editNameCancleButton.setEnabled(true);
+};
+
+/**
+ * Rename and update note title.
+ * @protected
+ */
+cld.Doc.prototype.renameInternal = function() {
+  if (!goog.style.isElementShown(this.elEditName)) {
+    return;
+  }
+  this.editNameButton.setEnabled(false);
+  this.editNameCancleButton.setEnabled(false);
+  var title = this.editNameInput.value;
+  this.setNodeModel('title', title);
+  this.setNodeModel('modified', true);
+  this.dispatchEvent(cld.api.Docs.EventType.LOADING);
+  this.saveDoc_(this.openingNode_);
 };
 
 /**
@@ -433,10 +587,13 @@ cld.Doc.prototype.clearActions = function() {
   if (!this.openingNode_) {
     return;
   }
-
+  this.cancleRename();
   // if current node not save, save it now
   this.stopSaveTimer_();
   if (this.isModified()) {
     this.saveDoc_(this.openingNode_);
+  } else if (this.isNew() && this.docType === 'note') {
+    // new note and not save, discard it
+    this.dispatchEvent(new cld.doc.DiscardNewNoteEvent(this.openingNode_));
   }
 };

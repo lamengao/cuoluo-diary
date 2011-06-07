@@ -29,13 +29,6 @@ cld.api.Docs = function(et) {
    * @protected
    */
   this.handle = new goog.events.EventHandler(this);
-
-  /** @type {Array} */
-  /*cld.api.Docs.completeEventTypes = [
-    goog.net.EventType.SUCCESS,
-    goog.net.EventType.ERROR,
-    goog.net.EventType.TIMEOUT
-  ];*/
 };
 goog.inherits(cld.api.Docs, goog.events.EventTarget);
 
@@ -59,7 +52,7 @@ cld.api.Docs.POST_HEADER = {'Content-Type': 'application/json'};
 cld.api.Docs.newXhrIo = function(onSuccess, onError, onTimeout) {
   var xhr = new goog.net.XhrIo();
   xhr.setTimeoutInterval(10000);
-  var successStatusCode = [200, 202, 204, 304];
+  var successStatusCode = [200, 201, 202, 204, 304];
   goog.events.listenOnce(xhr, goog.net.EventType.COMPLETE, function(e) {
     var xhr = /** @type {goog.net.XhrIo} */ (e.target);
     if (goog.array.contains(successStatusCode, xhr.getStatus())) {

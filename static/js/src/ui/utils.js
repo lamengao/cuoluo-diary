@@ -23,6 +23,8 @@ cld.ui.utils.HAS_CSS3_GRADIENT =
   goog.userAgent.OPERA && goog.userAgent.isVersion('11.10') ||
   goog.userAgent.WEBKIT && goog.userAgent.isVersion('532.1');
 
+//cld.ui.utils.HAS_CSS3_GRADIENT = false;
+
 /**
  * Return the better button renderer.
  * @param {boolean=} isMenu whether return menu button renderer.

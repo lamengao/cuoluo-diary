@@ -65,7 +65,7 @@ cld.NotesTree.prototype.initTree = function() {
   } else {
     this.showEmptyArea_();
   }
-  // update folder node icon class for fix the bug
+  // update folder node icon class for fix the icon bug
   goog.array.forEach(tree.getChildren(), function(child) {
       if (child.hasChildren()) {
         child.toggle();
@@ -79,16 +79,6 @@ cld.NotesTree.prototype.initTree = function() {
 
 /** @type {Object} */
 cld.NotesTree.itemsMap = {};
-
-
-
-/**
- * Create new notes.
- * @param {goog.events.Event} e The event.
- */
-cld.NotesTree.prototype.createNew = function(e) {
-  alert('create new notes now');
-};
 
 /**
  * Create tree node by date, return the tree node.
@@ -113,12 +103,50 @@ cld.NotesTree.prototype.createTreeNodeByItem = function(item) {
   if (!parentNode) {
     return null;
   }
-  var node = this.tree.createNode(item['title']);
+  var node = this.tree.createNode('');
   node.setToolTip(item['title']);
-  parentNode.add(node);
   node.setModel(item);
+  node.setText(item['title']);
+  parentNode.add(node);
   cld.DocsTree.allNodes['notes:' + id] = node;
   return node;
+};
+
+/**
+ * Create new notes.
+ * @param {goog.events.Event} e The event.
+ */
+cld.NotesTree.prototype.createNew = function(e) {
+  var node = this.getNewNode();
+  this.tree.addChildAt(node, 0);
+  node.select();
+};
+
+/**
+ * Create and return a new node.
+ * @param {string} opt_title The node title.
+ * @return {goog.ui.tree.BaseNode} The new item.
+ */
+cld.NotesTree.prototype.getNewNode = function(opt_title) {
+  var title = opt_title || 'New Note';
+  var node = this.tree.createNode('');
+  node.setToolTip(title);
+  node.setText(title);
+  var model = {};
+  model['title'] = title;
+  node.setModel(model);
+  return node;
+};
+
+/**
+ * Static function for discard created new note node.
+ * @param {!goog.ui.tree.BaseNode} node The node will set icon class.
+ */
+cld.NotesTree.discardNewNode = function(node) {
+  if ('created' in node.getModel()) {
+    return;
+  }
+  node.getParent().removeChild(node);
 };
 
 /**
