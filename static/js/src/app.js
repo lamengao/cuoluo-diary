@@ -9,7 +9,6 @@ goog.provide('cld.App');
 goog.require('cld.Creation');
 goog.require('cld.DiaryTree');
 goog.require('cld.Doc');
-goog.require('cld.doc.EventType');
 goog.require('cld.DocsTree');
 goog.require('cld.DocsTree.EventType');
 goog.require('cld.NotesTree');
@@ -18,6 +17,7 @@ goog.require('cld.SplitPane');
 goog.require('cld.Tasks');
 goog.require('cld.Today');
 goog.require('cld.Zippy');
+goog.require('cld.doc.EventType');
 goog.require('cld.message');
 goog.require('cld.ui.utils');
 
@@ -77,8 +77,12 @@ cld.App.prototype.loaded = function() {
   cld.message.hiddenLoading();
 
   // create new event handle
-  this.handle.
-    listen(this, cld.Creation.EventType.NEW_NOTE, this.newNote);
+  var newNoteEvents = [
+    cld.Creation.EventType.NEW_NOTE,
+    cld.Creation.EventType.NEW_CHILDNOTE,
+    cld.Creation.EventType.NEW_SIBLINGNOTE
+  ];
+  this.handle.listen(this, newNoteEvents, this.onNewNote_);
 
   this.handle.
     listen(this.history, goog.history.EventType.NAVIGATE, this.navCallback_).
@@ -176,13 +180,19 @@ cld.App.prototype.controller = function(token) {
  */
 cld.App.prototype.onDocSelected_ = function(e) {
   var docsTree = /** @type {!cld.DocsTree} */ (e.target);
-  if (docsTree.type === 'diary') {
+  var docType = docsTree.type;
+  if (docType === 'diary') {
     this.diaryZippy.zippy.expand();
-    this.notesTree.tree.setSelectedItem(null);
-  } else if (docsTree.type === 'notes') {
+    //this.notesTree.tree.setSelectedItem(null);
+    this.notesTree.tree.select();
+    this.createNew.updateMenu('diary');
+  } else if (docType === 'notes') {
     this.notesZippy.zippy.expand();
-    this.diaryTree.tree.setSelectedItem(null);
+    //this.diaryTree.tree.setSelectedItem(null);
+    this.diaryTree.tree.select();
+    this.createNew.updateMenu('note');
   }
+
   var node = docsTree.tree.getSelectedItem();
 
   if (!this.doc) {
@@ -190,6 +200,9 @@ cld.App.prototype.onDocSelected_ = function(e) {
   }
   this.doc.clearActions();
   this.doc.open(node);
+  if (this.doc.isNew()) {
+    this.createNew.updateMenu('newnote');
+  }
   var token = cld.DocsTree.getTokenByNode(node);
   if (token) {
     this.history.setToken(token);
@@ -214,6 +227,7 @@ cld.App.prototype.onNewDoc_ = function(e) {
     if (token) {
       this.history.setToken(token);
     }
+    this.createNew.updateMenu('diary');
     this.doc.clearActions();
     this.doc.open(node);
   } else if (type === 'note') {
@@ -250,7 +264,7 @@ cld.App.prototype.onNewDocCreated_ = function(e) {
  * @private
  */
 cld.App.prototype.onDiscardNewNote_ = function(e) {
-  var node = /** @type {goog.ui.tree.BaseNode} */ (e.node);
+  var node = /** @type {!goog.ui.tree.BaseNode} */ (e.node);
   cld.NotesTree.discardNewNode(node);
 };
 
@@ -279,12 +293,31 @@ cld.App.prototype.onNodeNotFound_ = function(e) {
   cld.message.show(cld.message.TEXT.NODE_NOT_FOUND, 5);
 };
 
+
 /**
  * Create new note callback.
  * @param {goog.events.Event} e The event.
+ * @private
  */
-cld.App.prototype.newNote = function(e) {
-  this.notesTree.createNew();
+cld.App.prototype.onNewNote_ = function(e) {
+  if (e.type === cld.Creation.EventType.NEW_NOTE) {
+    this.notesTree.createNewInternal();
+    return;
+  }
+  var referNode = this.notesTree.tree.getSelectedItem();
+  if (e.type === cld.Creation.EventType.NEW_CHILDNOTE) {
+    var newNoteType = 'child';
+  } else {
+    var newNoteType = 'sibling';
+  }
+  this.notesTree.createNewInternal(referNode, newNoteType);
+};
+
+/**
+ * Create new note callback.
+ */
+cld.App.prototype.newNote = function() {
+  this.notesTree.createNewInternal();
 };
 
 /**

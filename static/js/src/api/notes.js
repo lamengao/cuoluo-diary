@@ -56,7 +56,7 @@ cld.api.Notes.prototype.get = function(xhr, id) {
 cld.api.Notes.prototype.insert = function(xhr, id, title, content, parentId) {
   var url = cld.api.Notes.NOTES_URL;
   if (goog.isDef(parentId)) {
-    url = url + '/' + parentId;
+    url = cld.api.Notes.NOTE_URL + '/' + parentId;
   }
   var o = {'title': title, 'content': content};
   goog.base(this, 'insert', xhr, url, goog.json.serialize(o), 'POST');

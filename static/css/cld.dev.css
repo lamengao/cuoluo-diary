@@ -214,7 +214,8 @@ div.toolbarbutton{margin:4px}
 #actionsmenu .goog-menuitem-highlight, #actionsmenu .goog-menuitem-hover { padding-bottom: 2px; padding-top: 2px; }
 #header-title .path{color: #112ABB;font-size:16px;}
 #header-title .text{padding: 2px;}
-.note #header-title .text:hover{background-color:#FFFFD3;}
+/*.note #header-title .text:hover{background-color:#FFFFD3;}*/
+.note #header-title .text:hover{color:#666}
 .path-arrow {
 	background-image: url("/images/icons_11.png");
 	background-position: -448px 2px;

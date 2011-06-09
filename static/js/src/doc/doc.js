@@ -421,9 +421,6 @@ cld.Doc.prototype.isModified = function() {
  * @private
  */
 cld.Doc.prototype.onSavedSuccess_ = function(node, data) {
-  if (this.openingNode_ == node) {
-    this.changeSaveButtonState('Saved');
-  }
   var isNew = this.isNew(node);
   if (data) {
     this.updateNodeModel(data, node);
@@ -442,6 +439,9 @@ cld.Doc.prototype.onSavedSuccess_ = function(node, data) {
     node.setText(title);
   }
   this.dispatchEvent(cld.api.Docs.EventType.LOADED);
+  if (this.openingNode_ == node) {
+    this.updateButtons();
+  }
 };
 
 /**
@@ -468,9 +468,14 @@ cld.Doc.prototype.saveDoc_ = function(node) {
   } else if (this.docType === 'note') {
     var title = nodeModel['title'];
     if (this.isNew(node)) {
-      this.api.notes.insert(xhr, nodeModel['id'], title, content);
+      var parentId = nodeModel['parent_id'];
+      if (parentId) {
+        this.api.notes.insert(xhr, nodeModel['id'], title, content, parentId);
+      } else {
+        this.api.notes.insert(xhr, nodeModel['id'], title, content);
+      }
     } else if (node.getText() !== title) {
-      this.api.notes.update(xhr, nodeModel['id'], title);
+      this.api.notes.update(xhr, nodeModel['id'], title, undefined);
     } else {
       this.api.notes.update(xhr, nodeModel['id'], undefined, content);
     }

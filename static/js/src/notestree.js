@@ -117,14 +117,37 @@ cld.NotesTree.prototype.createTreeNodeByItem = function(item) {
  * @param {goog.events.Event} e The event.
  */
 cld.NotesTree.prototype.createNew = function(e) {
+  this.createNewInternal();
+};
+
+/**
+ * Create new notes internal.
+ * @param {goog.ui.tree.BaseNode=} opt_referNode The refer node.
+ * @param {string=} opt_type 'child' or 'sibling' node.
+ * @protected
+ */
+cld.NotesTree.prototype.createNewInternal = function(opt_referNode, opt_type) {
+  var referNode = opt_referNode || this.tree;
+  var type = opt_type || 'child';
   var node = this.getNewNode();
-  this.tree.addChildAt(node, 0);
-  node.select();
+  if (type === 'child') {
+    var parentNode = referNode;
+  } else {
+    var parentNode = referNode.getParent();
+  }
+  if (parentNode != referNode.getTree()) {
+    node.getModel()['parent_id'] = parentNode.getModel()['id'];
+  }
+  // add new node at first or last? that's a question.
+  //parentNode.addChildAt(node, index);
+  parentNode.expand();
+  parentNode.add(node);
+  this.selectNode(node);
 };
 
 /**
  * Create and return a new node.
- * @param {string} opt_title The node title.
+ * @param {string=} opt_title The node title.
  * @return {goog.ui.tree.BaseNode} The new item.
  */
 cld.NotesTree.prototype.getNewNode = function(opt_title) {
@@ -146,6 +169,7 @@ cld.NotesTree.discardNewNode = function(node) {
   if ('created' in node.getModel()) {
     return;
   }
+  var tree = node.getTree();
   node.getParent().removeChild(node);
 };
 
@@ -157,7 +181,7 @@ cld.NotesTree.discardNewNode = function(node) {
 cld.NotesTree.prototype.onSelectChange_ = function(e) {
   var tree = e.target;
   var node = tree.getSelectedItem();
-  if (node == null) {
+  if (node == null || node == node.getTree()) {
     return;
   }
   this.dispatchEvent(cld.DocsTree.EventType.SELECT_CHANGE);

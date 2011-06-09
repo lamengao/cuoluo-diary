@@ -90,6 +90,20 @@ cld.Creation.prototype.createMenu_ = function() {
 };
 
 /**
+ * Update create new menu
+ * @param {string} type The doc type 'diary' ,'note' or 'newnote'.
+ */
+cld.Creation.prototype.updateMenu = function(type) {
+  if (type === 'diary' || type === 'newnote') {
+    this.childnoteMenuItem.setEnabled(false);
+    this.siblingnoteMenuItem.setEnabled(false);
+  } else if (type === 'note') {
+    this.childnoteMenuItem.setEnabled(true);
+    this.siblingnoteMenuItem.setEnabled(true);
+  }
+};
+
+/**
  * create menu button.
  * @private
  */
@@ -120,13 +134,13 @@ cld.Creation.prototype.createNewEmail = function() {
  * Create new child note.
  */
 cld.Creation.prototype.createNewChildNote = function() {
-  alert('new child note');
+  this.dispatchEvent(cld.Creation.EventType.NEW_CHILDNOTE);
 };
 /**
  * Create new sibling note.
  */
 cld.Creation.prototype.createNewSiblingNote = function() {
-  alert('new sibling note');
+  this.dispatchEvent(cld.Creation.EventType.NEW_SIBLINGNOTE);
 };
 
 

@@ -185,7 +185,8 @@ cld.DiaryTree.prototype.selectNodeByDate = function(date) {
     } else if (yearNode) {
       this.selectNode(yearNode);
     } else {
-      this.tree.setSelectedItem(null);
+      //this.tree.setSelectedItem(null);
+      this.tree.select();
     }
     var newNode = this.createNewNode(date);
     this.dispatchEvent(new cld.DocsTree.NewDocEvent('diary', newNode));
@@ -307,7 +308,7 @@ cld.DiaryTree.getDocTitleByDate = function(date) {
 cld.DiaryTree.prototype.onSelectChange_ = function(e) {
   var tree = e.target;
   var node = tree.getSelectedItem();
-  if (node === null) {
+  if (node === null || node == node.getTree()) {
     this.selectedDiary_ = null;
     return;
   } else if (node === this.selectedDiary_) {
