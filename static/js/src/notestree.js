@@ -60,6 +60,9 @@ cld.NotesTree.prototype.initTree = function() {
     });
     // built tree
     goog.array.forEach(this.items_, function(item) {
+        if (item['status'] === 'trashed') {
+          return;
+        }
         this.createTreeNodeByItem(item);
     }, this);
   } else {

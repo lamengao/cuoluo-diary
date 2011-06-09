@@ -11,8 +11,7 @@ goog.require('cld.api.Diary');
 goog.require('cld.api.Docs');
 goog.require('cld.api.Docs.EventType');
 goog.require('cld.api.Notes');
-goog.require('cld.doc.NewDocCreatedEvent');
-goog.require('cld.doc.DiscardNewNoteEvent');
+goog.require('cld.doc.Event');
 goog.require('cld.ui.utils');
 
 goog.require('goog.Timer');
@@ -23,6 +22,7 @@ goog.require('goog.object');
 goog.require('goog.ui.Menu');
 goog.require('goog.ui.MenuItem');
 goog.require('goog.ui.Separator');
+
 
 /**
  * Doc class for open diary or note.
@@ -427,7 +427,8 @@ cld.Doc.prototype.onSavedSuccess_ = function(node, data) {
   }
   this.setNodeModel('modified', false, node);
   if (isNew) {
-    this.dispatchEvent(new cld.doc.NewDocCreatedEvent(node));
+    //this.dispatchEvent(new cld.doc.NewDocCreatedEvent(node));
+    this.dispatchEvent(new cld.doc.Event('newDocCreated', node));
   }
   var title = node.getModel()['title'];
   if ('id' in node.getModel() && node.getText() !== title) {
@@ -543,10 +544,40 @@ cld.Doc.prototype.refreshDoc = function() {
 };
 
 /**
+ * delete doc success callback.
+ * @param {goog.ui.tree.BaseNode} node Which node saved.
+ * @private
+ */
+cld.Doc.prototype.onDeletedSuccess_ = function(node) {
+  this.deleteDocInternal(node);
+};
+
+/**
  * Delete current doc.
  */
 cld.Doc.prototype.deleteDoc = function() {
-  alert('delete');
+  var node = this.getOpeningNode();
+  var nodeModel = node.getModel();
+  var successCallback = goog.bind(this.onDeletedSuccess_, this, node);
+  var xhr = cld.api.Docs.newXhrIo(successCallback);
+  if (this.docType === 'diary') {
+    console.log('not implement');
+    //this.api.diary.update(xhr, nodeModel['date'], content);
+  } else if (this.docType === 'note') {
+    this.api.notes.trash(xhr, nodeModel['id']);
+  }
+};
+
+/**
+ * Delete doc internal
+ * @param {goog.ui.tree.BaseNode} node Which node saved.
+ * @protected
+ */
+cld.Doc.prototype.deleteDocInternal = function(node) {
+  if (node == this.getOpeningNode()) {
+  }
+  //this.dispatchEvent(new cld.doc.DeletedEvent(node));
+  this.dispatchEvent(new cld.doc.Event('deleted', node));
 };
 
 /**
@@ -576,9 +607,13 @@ cld.Doc.prototype.renameInternal = function() {
   if (!goog.style.isElementShown(this.elEditName)) {
     return;
   }
+  var title = this.editNameInput.value;
+  if (title == this.openingNode_.getText()) {
+    this.cancleRename();
+    return;
+  }
   this.editNameButton.setEnabled(false);
   this.editNameCancleButton.setEnabled(false);
-  var title = this.editNameInput.value;
   this.setNodeModel('title', title);
   this.setNodeModel('modified', true);
   this.dispatchEvent(cld.api.Docs.EventType.LOADING);
@@ -599,6 +634,7 @@ cld.Doc.prototype.clearActions = function() {
     this.saveDoc_(this.openingNode_);
   } else if (this.isNew() && this.docType === 'note') {
     // new note and not save, discard it
-    this.dispatchEvent(new cld.doc.DiscardNewNoteEvent(this.openingNode_));
+    //this.dispatchEvent(new cld.doc.DiscardNewNoteEvent(this.openingNode_));
+    this.dispatchEvent(new cld.doc.Event('discard', this.openingNode_));
   }
 };

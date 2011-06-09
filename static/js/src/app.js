@@ -84,12 +84,16 @@ cld.App.prototype.loaded = function() {
   ];
   this.handle.listen(this, newNoteEvents, this.onNewNote_);
 
+  // doc events
+  this.handle.
+    listen(this, cld.doc.EventType.NEW_DOC_CREATED, this.onNewDocCreated_).
+    listen(this, cld.doc.EventType.DISCARD_NEW_NOTE, this.onDiscardNewNote_).
+    listen(this, cld.doc.EventType.DELETED, this.onDocDeleted_);
+
   this.handle.
     listen(this.history, goog.history.EventType.NAVIGATE, this.navCallback_).
     listen(this, cld.DocsTree.EventType.SELECT_CHANGE, this.onDocSelected_).
     listen(this, cld.DocsTree.EventType.NEW_DOC, this.onNewDoc_).
-    listen(this, cld.doc.EventType.NEW_DOC_CREATED, this.onNewDocCreated_).
-    listen(this, cld.doc.EventType.DISCARD_NEW_NOTE, this.onDiscardNewNote_).
     listen(this, cld.DocsTree.EventType.NODE_NOT_FOUND, this.onNodeNotFound_).
     listen(this, cld.Today.EventType.GOTO_TODAY, this.onGotoToday_).
     listen(this.dom_.getWindow(), goog.events.EventType.RESIZE,
@@ -254,6 +258,7 @@ cld.App.prototype.onNewDocCreated_ = function(e) {
       var id = node.getModel()['id'];
       this.notesTree.setNodeInMap(node);
       this.history.replaceToken('notes/' + id);
+      this.createNew.updateMenu('note');
     }
   }
 };
@@ -266,6 +271,16 @@ cld.App.prototype.onNewDocCreated_ = function(e) {
 cld.App.prototype.onDiscardNewNote_ = function(e) {
   var node = /** @type {!goog.ui.tree.BaseNode} */ (e.node);
   cld.NotesTree.discardNewNode(node);
+};
+
+/**
+ * Doc deleted.
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onDocDeleted_ = function(e) {
+  var node = /** @type {!goog.ui.tree.BaseNode} */ (e.node);
+  console.log('node:' + node.getText() + ' deleted');
 };
 
 /**
