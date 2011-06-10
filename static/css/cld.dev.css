@@ -67,6 +67,7 @@ em {font-weight: bold;}
 .loadingstatusbox, #mbox {font-family: arial, sans-serif; font-weight: bold; position: absolute; z-index: 1100; left: 50%; }
 .loadingstatusbox{padding: 3px; margin-left: -35px; border: 2px solid #fff1a8; border-top: 0px; top: 0;}
 #mbox{padding:0 7px;border: 3px solid transparent;line-height:16px;top:70px;margin-left:-168px}
+#undolink{margin-left:8px}
 /* @end */
 
 /* @group gb */
@@ -215,6 +216,7 @@ div.toolbarbutton{margin:4px}
 #header-title .path{color: #112ABB;font-size:16px;}
 #header-title .text{padding: 2px;}
 /*.note #header-title .text:hover{background-color:#FFFFD3;}*/
+#header-title .text.hover{color:#666}
 .note #header-title .text:hover{color:#666}
 .path-arrow {
 	background-image: url("/images/icons_11.png");

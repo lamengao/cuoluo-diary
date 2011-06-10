@@ -111,7 +111,7 @@ cld.NotesTree.prototype.createTreeNodeByItem = function(item) {
   node.setModel(item);
   node.setText(item['title']);
   parentNode.add(node);
-  cld.DocsTree.allNodes['notes:' + id] = node;
+  cld.DocsTree.setNodeInMap(node);
   return node;
 };
 
@@ -132,7 +132,7 @@ cld.NotesTree.prototype.createNew = function(e) {
 cld.NotesTree.prototype.createNewInternal = function(opt_referNode, opt_type) {
   var referNode = opt_referNode || this.tree;
   var type = opt_type || 'child';
-  var node = this.getNewNode();
+  var node = /** @type {!goog.ui.tree.BaseNode} */ (this.getNewNode());
   if (type === 'child') {
     var parentNode = referNode;
   } else {
@@ -145,7 +145,7 @@ cld.NotesTree.prototype.createNewInternal = function(opt_referNode, opt_type) {
   //parentNode.addChildAt(node, index);
   parentNode.expand();
   parentNode.add(node);
-  this.selectNode(node);
+  cld.DocsTree.selectNode(node);
 };
 
 /**
@@ -162,18 +162,6 @@ cld.NotesTree.prototype.getNewNode = function(opt_title) {
   model['title'] = title;
   node.setModel(model);
   return node;
-};
-
-/**
- * Static function for discard created new note node.
- * @param {!goog.ui.tree.BaseNode} node The node will set icon class.
- */
-cld.NotesTree.discardNewNode = function(node) {
-  if ('created' in node.getModel()) {
-    return;
-  }
-  var tree = node.getTree();
-  node.getParent().removeChild(node);
 };
 
 /**

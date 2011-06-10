@@ -88,7 +88,8 @@ cld.App.prototype.loaded = function() {
   this.handle.
     listen(this, cld.doc.EventType.NEW_DOC_CREATED, this.onNewDocCreated_).
     listen(this, cld.doc.EventType.DISCARD_NEW_NOTE, this.onDiscardNewNote_).
-    listen(this, cld.doc.EventType.DELETED, this.onDocDeleted_);
+    listen(this, cld.doc.EventType.DELETED, this.onDocDeleted_).
+    listen(this, cld.doc.EventType.RESTORED, this.onDocRestored_);
 
   this.handle.
     listen(this.history, goog.history.EventType.NAVIGATE, this.navCallback_).
@@ -234,6 +235,7 @@ cld.App.prototype.onNewDoc_ = function(e) {
     this.createNew.updateMenu('diary');
     this.doc.clearActions();
     this.doc.open(node);
+    this.notesTree.tree.select();
   } else if (type === 'note') {
     // new note
     alert('new note');
@@ -247,16 +249,16 @@ cld.App.prototype.onNewDoc_ = function(e) {
  */
 cld.App.prototype.onNewDocCreated_ = function(e) {
   var type = e.docType;
-  var node = /** @type {goog.ui.tree.BaseNode} */ (e.node);
+  var node = /** @type {!goog.ui.tree.BaseNode} */ (e.node);
   if (type === 'diary') {
     this.diaryTree.addNewNode(node);
     if (this.doc.getOpeningNode() == node) {
-      this.diaryTree.selectNode(node);
+      cld.DocsTree.selectNode(node);
     }
   } else {
     if (this.doc.getOpeningNode() == node) {
       var id = node.getModel()['id'];
-      this.notesTree.setNodeInMap(node);
+      cld.DocsTree.setNodeInMap(node);
       this.history.replaceToken('notes/' + id);
       this.createNew.updateMenu('note');
     }
@@ -270,7 +272,18 @@ cld.App.prototype.onNewDocCreated_ = function(e) {
  */
 cld.App.prototype.onDiscardNewNote_ = function(e) {
   var node = /** @type {!goog.ui.tree.BaseNode} */ (e.node);
-  cld.NotesTree.discardNewNode(node);
+  cld.DocsTree.discardNewNode(node);
+};
+
+/**
+ * Restored doc.
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onDocRestored_ = function(e) {
+  var node = /** @type {!goog.ui.tree.BaseNode} */ (e.node);
+  cld.DocsTree.restore(node);
+  cld.message.hiddenLoading();
 };
 
 /**
@@ -280,8 +293,17 @@ cld.App.prototype.onDiscardNewNote_ = function(e) {
  */
 cld.App.prototype.onDocDeleted_ = function(e) {
   var node = /** @type {!goog.ui.tree.BaseNode} */ (e.node);
-  console.log('node:' + node.getText() + ' deleted');
+  var deletedNode = cld.DocsTree.deleteNode(node);
+  var text = 'id' in node.getModel() ?
+    cld.message.TEXT.NOTE_DELETED : cld.message.TEXT.DIARY_DELETED;
+  var restoreHandler = goog.bind(this.doc.restoreDoc, this.doc, node);
+  cld.message.show(text, true, function(e) {
+      cld.message.hidden();
+      cld.message.showLoading();
+      restoreHandler();
+  }, 60);
 };
+
 
 /**
  * Handle goto today event, when click the today button.
@@ -305,7 +327,7 @@ cld.App.prototype.onNodeNotFound_ = function(e) {
   } else {
     this.history.replaceToken(cld.App.lastToken);
   }
-  cld.message.show(cld.message.TEXT.NODE_NOT_FOUND, 5);
+  cld.message.simpleShow(cld.message.TEXT.NODE_NOT_FOUND, 5);
 };
 
 

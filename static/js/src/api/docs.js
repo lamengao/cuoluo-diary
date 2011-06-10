@@ -134,6 +134,17 @@ cld.api.Docs.prototype.trash = function(xhr, url) {
   xhr.send(url, 'DELETE');
 };
 
+/**
+ * Restore deleted doc.
+ * @param {goog.net.XhrIo} xhr The listened events xhr.
+ * @param {string} url Uri to make request to.
+ */
+cld.api.Docs.prototype.restore = function(xhr, url) {
+  var json = {};
+  json['status'] = 'private'
+  xhr.send(url, 'PUT', goog.json.serialize(json));
+};
+
 /** @enum {string} */
 cld.api.Docs.EventType = {
   LOADING: goog.events.getUniqueId('doc_loading'),

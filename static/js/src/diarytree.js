@@ -98,7 +98,8 @@ cld.DiaryTree.prototype.createTreeNodeByDate = function(date, opt_item) {
   }
   parentNode.add(node, this.getAfterNode_(node, parentNode));
   this.setIconClassForNode_(node);
-  cld.DocsTree.allNodes['diary:' + date] = node;
+  //cld.DocsTree.allNodes['diary:' + date] = node;
+  cld.DocsTree.setNodeInMap(node);
   return node;
 };
 
@@ -174,16 +175,16 @@ cld.DiaryTree.prototype.selectNodeByDate = function(date) {
   }
   var node = this.getTreeNodeByDate(date);
   if (node) {
-    this.selectNode(node);
+    cld.DocsTree.selectNode(node);
   } else {
     var month = this.getParentDate_(date);
     var year = this.getParentDate_(month);
     var monthNode = this.getTreeNodeByDate(month);
     var yearNode = this.getTreeNodeByDate(year);
     if (monthNode) {
-      this.selectNode(monthNode);
+      cld.DocsTree.selectNode(monthNode);
     } else if (yearNode) {
-      this.selectNode(yearNode);
+      cld.DocsTree.selectNode(yearNode);
     } else {
       //this.tree.setSelectedItem(null);
       this.tree.select();

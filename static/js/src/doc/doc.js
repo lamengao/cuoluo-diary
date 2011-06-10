@@ -164,6 +164,9 @@ cld.Doc.prototype.changeSaveButtonState = function(state) {
       this.saveButton.setEnabled(false);
       this.stopSaveTimer_();
       break;
+    case 'Trashed':
+      this.saveButton.setEnabled(false);
+      break;
   }
   this.saveButton.setCaption(state);
 };
@@ -223,6 +226,16 @@ cld.Doc.prototype.isNew = function(opt_node) {
 };
 
 /**
+ * Is doc trashed?
+ * @param {goog.ui.tree.BaseNode=} opt_node The doc node.
+ * @return {boolean} is trashed.
+ */
+cld.Doc.prototype.isTrashed = function(opt_node) {
+  var node = opt_node || this.openingNode_;
+  return node.getModel()['status'] === 'trashed';
+};
+
+/**
  * Set doc's title
  * @param {string} type The doc type.
  * @param {string} title The doc title, If diary the title is date.
@@ -238,6 +251,7 @@ cld.Doc.prototype.setTitle = function(type, title) {
   }
   this.dom_.setTextContent(this.pathSpan, path);
   this.dom_.setTextContent(this.titleTextSpan, title);
+  goog.dom.classes.remove(this.titleTextSpan, 'hover');
   cld.ui.utils.setToolTip(this.titleTextSpan, toolTip);
 };
 
@@ -382,8 +396,14 @@ cld.Doc.prototype.setButtonsEnabled = function(b) {
 
 /**
  * Update buttons
+ * @param {boolean=} onoff turn on or off all buttons.
  */
-cld.Doc.prototype.updateButtons = function() {
+cld.Doc.prototype.updateButtons = function(onoff) {
+  if (goog.isDef(onoff)) {
+    this.actionsButton.setEnabled(onoff);
+    this.saveButton.setEnabled(onoff);
+    return;
+  }
   // update action button
   if (this.docType === 'diary') {
     this.renameMenuItem.setEnabled(false);
@@ -392,6 +412,8 @@ cld.Doc.prototype.updateButtons = function() {
   }
   if (this.isNew()) {
     this.actionsButton.setEnabled(false);
+  } else if (this.isTrashed()) {
+    this.actionsButton.setEnabled(false);
   } else {
     this.actionsButton.setEnabled(true);
   }
@@ -399,6 +421,8 @@ cld.Doc.prototype.updateButtons = function() {
   // update save button
   if (this.isNew()) {
     this.changeSaveButtonState('Save');
+  } else if (this.isTrashed()) {
+    this.changeSaveButtonState('Trashed');
   } else {
     var state = this.isModified() ? 'Save' : 'Saved';
     this.changeSaveButtonState(state);
@@ -427,7 +451,6 @@ cld.Doc.prototype.onSavedSuccess_ = function(node, data) {
   }
   this.setNodeModel('modified', false, node);
   if (isNew) {
-    //this.dispatchEvent(new cld.doc.NewDocCreatedEvent(node));
     this.dispatchEvent(new cld.doc.Event('newDocCreated', node));
   }
   var title = node.getModel()['title'];
@@ -510,7 +533,8 @@ cld.Doc.prototype.createEditNameButtons_ = function() {
     listen(keyHandler, goog.events.KeyHandler.EventType.KEY,
       function(e) {
         var keyEvent = /** @type {goog.events.KeyEvent} */ (e);
-        if (keyEvent.keyCode === goog.events.KeyCodes.ENTER) {
+        if (keyEvent.keyCode === goog.events.KeyCodes.ENTER ||
+            keyEvent.keyCode === goog.events.KeyCodes.ESC) {
           this.renameInternal();
         }
       }, false, this).
@@ -549,22 +573,63 @@ cld.Doc.prototype.refreshDoc = function() {
  * @private
  */
 cld.Doc.prototype.onDeletedSuccess_ = function(node) {
-  this.deleteDocInternal(node);
+  var nodeModel = node.getModel();
+  nodeModel['status'] = 'trashed';
+  var type = 'id' in nodeModel ? 'note' : 'journal';
+  if (node == this.getOpeningNode()) {
+    cld.ui.utils.setToolTip(this.titleTextSpan,
+      'This ' + type + ' has been moved to the trash');
+    this.updateButtons();
+  }
+  this.dispatchEvent(new cld.doc.Event('deleted', node));
 };
 
 /**
  * Delete current doc.
  */
 cld.Doc.prototype.deleteDoc = function() {
+  this.stopSaveTimer_();
+  goog.dom.classes.add(this.titleTextSpan, 'hover');
+
+  this.updateButtons(false);
+  this.editor.makeUneditable();
   var node = this.getOpeningNode();
+  this.deleteDocInternal(node);
+};
+
+/**
+ * restored doc success callback.
+ * @param {goog.ui.tree.BaseNode} node Which node restored.
+ * @private
+ */
+cld.Doc.prototype.onRestoredSuccess_ = function(node) {
   var nodeModel = node.getModel();
-  var successCallback = goog.bind(this.onDeletedSuccess_, this, node);
+  nodeModel['status'] = 'private';
+  var type = 'id' in nodeModel ? 'note' : 'diary';
+  if (node == this.getOpeningNode()) {
+    if (type === 'diary') {
+      this.setTitle('diary', this.nodeModel['date']);
+    } else {
+      this.setTitle('note', this.nodeModel['title']);
+    }
+    this.updateButtons();
+    this.editor.makeEditable();
+  }
+  this.dispatchEvent(new cld.doc.Event('restored', node));
+};
+
+/**
+ * Restore deleted doc
+ * @param {!goog.ui.tree.BaseNode} node The deleted doc node.
+ */
+cld.Doc.prototype.restoreDoc = function(node) {
+  var nodeModel = node.getModel();
+  var successCallback = goog.bind(this.onRestoredSuccess_, this, node);
   var xhr = cld.api.Docs.newXhrIo(successCallback);
   if (this.docType === 'diary') {
-    console.log('not implement');
-    //this.api.diary.update(xhr, nodeModel['date'], content);
+    this.api.diary.restore(xhr, nodeModel['date']);
   } else if (this.docType === 'note') {
-    this.api.notes.trash(xhr, nodeModel['id']);
+    this.api.notes.restore(xhr, nodeModel['id']);
   }
 };
 
@@ -574,16 +639,23 @@ cld.Doc.prototype.deleteDoc = function() {
  * @protected
  */
 cld.Doc.prototype.deleteDocInternal = function(node) {
-  if (node == this.getOpeningNode()) {
+  var nodeModel = node.getModel();
+  var successCallback = goog.bind(this.onDeletedSuccess_, this, node);
+  var xhr = cld.api.Docs.newXhrIo(successCallback);
+  if (this.docType === 'diary') {
+    this.api.diary.trash(xhr, nodeModel['date']);
+  } else if (this.docType === 'note') {
+    this.api.notes.trash(xhr, nodeModel['id']);
   }
-  //this.dispatchEvent(new cld.doc.DeletedEvent(node));
-  this.dispatchEvent(new cld.doc.Event('deleted', node));
 };
 
 /**
  * Rename current doc.
  */
 cld.Doc.prototype.renameDoc = function() {
+  if (this.isTrashed()) {
+    return;
+  }
   if (this.docType != 'note') {
     return;
   }
@@ -634,7 +706,6 @@ cld.Doc.prototype.clearActions = function() {
     this.saveDoc_(this.openingNode_);
   } else if (this.isNew() && this.docType === 'note') {
     // new note and not save, discard it
-    //this.dispatchEvent(new cld.doc.DiscardNewNoteEvent(this.openingNode_));
     this.dispatchEvent(new cld.doc.Event('discard', this.openingNode_));
   }
 };

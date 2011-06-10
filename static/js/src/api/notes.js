@@ -99,3 +99,12 @@ cld.api.Notes.prototype.trash = function(xhr, id, isDelete) {
   goog.base(this, 'trash', xhr, url);
 };
 
+/**
+ * Restore deleted doc.
+ * @param {goog.net.XhrIo} xhr The listened events xhr.
+ * @param {string} id The note id.
+ */
+cld.api.Notes.prototype.restore = function(xhr, id) {
+  var url = cld.api.Notes.NOTE_URL + '/' + id;
+  goog.base(this, 'restore', xhr, url);
+};

@@ -87,18 +87,21 @@ class DiaryHandler(webapp.RequestHandler):
 	@diary_validated
 	def put(self, url):
 		'''create new diary or modify diary'''
-		if not self.json.has_key('content'):
-			return
-		content = self.json['content']
-		if self.diary:
-			# update diary
-			self.diary.set_content(content)
-			db.put([self.diary.content, self.diary])
-			self.response.set_status(202)
+		if self.json.has_key('status'):
+			self.diary.set_status(self.json['status'])
+		if self.json.has_key('content'):
+			content = self.json['content']
+			if self.diary:
+				# update diary
+				self.diary.set_content(content)
+				db.put([self.diary.content, self.diary])
+				self.response.set_status(202)
+			else:
+				# new diary
+				self.diary = Diary.create_new(self.user, url, content)
+				self.response.set_status(201)
 		else:
-			# new diary
-			self.diary = Diary.create_new(self.user, url, content)
-			self.response.set_status(201)
+			self.diary.put()
 		self.response.headers['Content-type'] = 'application/json'
 		self.response.out.write(self.diary.to_json(True))
 
@@ -220,6 +223,8 @@ class NoteHandler(webapp.RequestHandler):
 			if not self.note.check_parent_id(parent_id):
 				self.error(400)
 				return
+		if self.json.has_key('status'):
+			self.note.set_status(self.json['status'])
 		if self.json.has_key('content'):
 			content = self.json['content']
 			self.note.set_content(content)

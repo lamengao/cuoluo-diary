@@ -145,10 +145,23 @@ cld.DocsTree.getTokenByNode = function(node) {
 };
 
 /**
- * Select the give node and expand all parents.
+ * Get node's type 'diary' or 'note'
+ * @param {goog.ui.tree.BaseNode} node The node.
+ * @return {string} The type.
+ */
+cld.DocsTree.getNodeType = function(node) {
+  var model = node.getModel();
+  if ('id' in model) {
+    return 'note';
+  }
+  return 'diary';
+};
+
+/**
+ * Static function select the give node and expand all parents.
  * @param {!goog.ui.tree.BaseNode} node The node will be select.
  */
-cld.DocsTree.prototype.selectNode = function(node) {
+cld.DocsTree.selectNode = function(node) {
   var parentNode = node.getParent();
   while (parentNode) {
     parentNode.expand();
@@ -163,19 +176,76 @@ cld.DocsTree.prototype.selectNode = function(node) {
  */
 cld.DocsTree.prototype.selectByKey = function(key) {
   if (key in cld.DocsTree.allNodes) {
-    this.selectNode(cld.DocsTree.allNodes[key]);
+    cld.DocsTree.selectNode(cld.DocsTree.allNodes[key]);
   } else {
     this.dispatchEvent(cld.DocsTree.EventType.NODE_NOT_FOUND);
   }
 };
 
-cld.DocsTree.prototype.setNodeInMap = function(node) {
+/**
+ * Static function for set node in map.
+ * @param {!goog.ui.tree.BaseNode} node The node.
+ * @param {boolean=} isDelete Is delete?
+ */
+cld.DocsTree.setNodeInMap = function(node, isDelete) {
   var model = node.getModel();
   if ('date' in model) {
-    cld.DocsTree.allNodes['diary:' + model['date']] = node;
+    var key = 'diary:' + model['date'];
   } else {
-    cld.DocsTree.allNodes['notes:' + model['id']] = node;
+    var key = 'notes:' + model['id'];
   }
+  if (isDelete === false && key in cld.DocsTree.allNodes) {
+    delete cld.DocsTree.allNodes[key];
+  } else {
+    cld.DocsTree.allNodes[key] = node;
+  }
+};
+
+/**
+ * Static function for discard created new note node.
+ * @param {!goog.ui.tree.BaseNode} node The node.
+ */
+cld.DocsTree.discardNewNode = function(node) {
+  if ('created' in node.getModel()) {
+    return;
+  }
+  node.getParent().removeChild(node);
+};
+
+/**
+ * Static function for delete node.
+ * @param {!goog.ui.tree.BaseNode} node The node will be deleted.
+ * @return {goog.ui.tree.BaseNode} The removed node, if any.
+ */
+cld.DocsTree.deleteNode = function(node) {
+  var parentNode = node.getParent();
+  var index = parentNode.indexOfChild(node);
+  var nodeModel = node.getModel();
+  nodeModel['parent_node'] = parentNode;
+  nodeModel['index'] = index;
+  cld.DocsTree.setNodeInMap(node, true /* isDelete */);
+  node.getTree().select();
+  return /** @type {goog.ui.tree.BaseNode} */ (parentNode.removeChild(node));
+};
+
+/**
+ * Static function for restore node.
+ * @param {!goog.ui.tree.BaseNode} node The node restored.
+ */
+cld.DocsTree.restore = function(node) {
+  var model = node.getModel();
+  if (model['parent_node']) {
+    var parentNode = model['parent_node'];
+    delete model['parent_node'];
+  }
+  if (model['index']) {
+    var index = model['index'];
+    delete model['index'];
+  }
+  parentNode.addChildAt(node, index);
+  cld.DocsTree.setNodeInMap(node);
+
+  cld.DocsTree.selectNode(node);
 };
 
 /**

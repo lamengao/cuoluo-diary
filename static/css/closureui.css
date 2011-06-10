@@ -767,7 +767,8 @@
 /* @group linkbutton.css */
 .goog-link-button {
   position: relative;
-  color: #00f;
+  /*color: #00f;*/
+  color: #00C;
   text-decoration: underline;
   cursor: pointer;
 }

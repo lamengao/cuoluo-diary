@@ -24,6 +24,8 @@ cld.doc.Event = function(type, node) {
     goog.events.Event.call(this, cld.doc.EventType.NEW_DOC_CREATED);
   } else if (type === 'deleted') {
     goog.events.Event.call(this, cld.doc.EventType.DELETED);
+  } else if (type === 'restored') {
+    goog.events.Event.call(this, cld.doc.EventType.RESTORED);
   }
 
   /**

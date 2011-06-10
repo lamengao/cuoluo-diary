@@ -125,6 +125,11 @@ class Diary(db.Model):
 		self.title = date_str
 		return self
 
+	def set_status(self, status):
+		if status in ["private", "public", "trashed"]:
+			self.status = status
+		return self
+
 	def set_content(self, content):
 		'''set rich text and auto fill plain text'''
 		if not self.content:
@@ -194,6 +199,11 @@ class Note(db.Model):
 
 	def set_title(self, title):
 		self.title = title
+		return self
+
+	def set_status(self, status):
+		if status in ["private", "public", "trashed"]:
+			self.status = status
 		return self
 
 	def set_content(self, content):

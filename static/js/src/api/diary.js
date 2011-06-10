@@ -80,3 +80,12 @@ cld.api.Diary.prototype.trash = function(xhr, date, isDelete) {
   goog.base(this, 'trash', xhr, url);
 };
 
+/**
+ * Restore deleted diary.
+ * @param {goog.net.XhrIo} xhr The listened events xhr.
+ * @param {string} date The date format like '2011/06/01'.
+ */
+cld.api.Diary.prototype.restore = function(xhr, date) {
+  var url = cld.api.Diary.BASE_URL + '/' + date.replace(/\//g, '');
+  goog.base(this, 'restore', xhr, url);
+};
