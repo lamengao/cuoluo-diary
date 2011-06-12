@@ -832,13 +832,13 @@
 .goog-tree-expand-icon-plus {
   width: 19px;
   background-position: 0 0;
-  background-image:url("/images/icons_13.png");
+  background-image:url("/images/icons_19.png");
   background-position:-384px 0;
 }
 
 .goog-tree-expand-icon-minus {
   width: 19px;
-  background-image:url("/images/icons_13.png");
+  background-image:url("/images/icons_19.png");
   background-position:-402px 0;
   /*background-position: -24px 0;*/
 }
@@ -883,7 +883,7 @@
   height: 16px;
   width: 16px;
   /*background-position: -0px -24px;*/
-  background-image:url("/images/icons_13.png");
+  background-image:url("/images/icons_19.png");
   background-position: 0 0;
 }
 
@@ -892,7 +892,7 @@
   height: 16px;
   width: 16px;
   /*background-position: -24px -24px;*/
-  background-image:url("/images/icons_13.png");
+  background-image:url("/images/icons_19.png");
   background-position: 0 0;
 }
 
@@ -901,7 +901,7 @@
   height: 16px;
   width: 16px;
   /*background-position: -48px -24px;*/
-  background-image:url("/images/icons_13.png");
+  background-image:url("/images/icons_19.png");
   background-position: -144px 0;
 }
 
@@ -1883,4 +1883,54 @@ div.tr_multi_bubble div.tr_bubble_panel {
 /* @end */
 
 /* @group saf */
+/* @end */
+
+
+/* @group autocomplete.css */
+
+/*
+ * TODO(annams): Rename (here and in renderer.js) to specify class name as
+ * goog-autocomplete-renderer
+ */
+.ac-renderer {
+  font: normal 13px Arial, sans-serif;
+  position: absolute;
+	background: #E0ECFF;
+  border: 1px solid #666;
+  -moz-box-shadow: 2px 2px 2px rgba(102, 102, 102, .4);
+  -webkit-box-shadow: 2px 2px 2px rgba(102, 102, 102, .4);
+}
+.ac-renderer {
+	color: #00C;
+	margin: 0px 0px;
+	padding: 0px 0px 1px 0px;
+	z-index: 1010;
+	overflow: visible;
+	position: absolute;
+	white-space: nowrap;
+}
+
+.ac-row {
+  cursor: pointer;
+  padding: .4em;
+}
+.ac-row {
+	margin: 2px;
+	padding: 2px 8px 2px 2px;
+}
+
+.ac-highlighted {
+  font-weight: bold;
+}
+
+.ac-active {
+  background-color: #b2b4bf;
+}
+
+.ac-active {
+	border-top: 1px dotted #C3D9FF;
+	border-bottom: 1px dotted #C3D9FF;
+	padding: 1px 8px 1px 2px;
+	background: #C3D9FF;
+}
 /* @end */

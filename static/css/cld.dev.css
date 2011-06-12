@@ -118,7 +118,7 @@ em {font-weight: bold;}
 #createnewmenu .goog-menuitem{padding-right:37px}
 #createnewmenu ..goog-menuitem-content{line-height:16px}
 .Diary-menuitemicon{background:url(/images/date/favicon_v2010_31.ico) no-repeat}
-.Note-menuitemicon{background-image: url("/images/icons_13.png");background-position: -144px 0;}
+.Note-menuitemicon{background-image: url("/images/icons_19.png");background-position: -144px 0;}
 .Email-menuitemicon{background-image: url("/images/blue-gmail16.png");}
 /* @end */
 
@@ -132,7 +132,7 @@ div.toolbarbutton{margin:4px}
 #navpanelist li:hover{background-color:#e3e9ff}
 #navpanelist .text, #tasks .caption{float:left}
 #navpanelist .icon, #tasks .icon { margin: 2px 0 0 3px; width: 16px; height: 16px; float: left;}
-/*#navpanelist .trash .icon{background:url("/images/icons_13.png") no-repeat;background-position: -96px 0;}*/
+/*#navpanelist .trash .icon{background:url("/images/icons_19.png") no-repeat;background-position: -96px 0;}*/
 #tasks .icon{background:url(/images/1304729777-tasks.png) no-repeat;}
 /* @end */
 
@@ -255,4 +255,22 @@ position: relative;
 	font-family: Arial,Sans-serif;
 }
 #savebutton{position: absolute; right: 8px; top: 4px;z-index: 5;}
+/* @end */
+
+/* @group search row */
+.ac-row .icon{
+height: 16px;
+width: 16px;
+margin: 0 2px;
+background-repeat: no-repeat;
+vertical-align: middle;
+}
+.default-icon {
+background: no-repeat url(/images/icons_19.png);
+background-position: -224px 0;
+}
+.note-icon{
+background-image: url("/images/icons_13.png");
+background-position: -144px 0;
+}
 /* @end */

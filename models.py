@@ -76,10 +76,18 @@ class User(db.Model):
 		return new_count
 
 	def search_contents(self, q=''):
+		result = {}
+		result['diaries'] = [];
+		result['notes'] = [];
 		if q == '':
-			return None
+			return result
 		for content in self.contents:
-			pass
+			if content.text.find(q) != -1:
+				if content.type == 'diary':
+					result['diaries'].append(content.doc_key)
+				elif content.type == 'note':
+					result['notes'].append(content.doc_key)
+		return result
 	
 	def get_diary_list(self):
 		"""return diary list json data"""
@@ -105,6 +113,9 @@ class Content(db.Model):
 	text = db.TextProperty()
 	type = db.StringProperty(default="diary",
 			                   choices=set(["diary", "note"]))
+	@property
+	def doc_key(self):
+		return self.key().name().split('.')[2]
 
 
 class Diary(db.Model):

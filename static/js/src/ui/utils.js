@@ -11,8 +11,8 @@ goog.require('goog.ui.MenuButton');
 goog.require('goog.ui.Css3ButtonRenderer');
 goog.require('goog.ui.Css3MenuButtonRenderer');
 goog.require('goog.ui.CustomButton');
+goog.require('goog.ui.ImagelessButtonRenderer');
 goog.require('goog.ui.ImagelessMenuButtonRenderer');
-
 
 /**
  * Whether this browser support css3 gradient.

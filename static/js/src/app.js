@@ -89,7 +89,10 @@ cld.App.prototype.loaded = function() {
     listen(this, cld.doc.EventType.NEW_DOC_CREATED, this.onNewDocCreated_).
     listen(this, cld.doc.EventType.DISCARD_NEW_NOTE, this.onDiscardNewNote_).
     listen(this, cld.doc.EventType.DELETED, this.onDocDeleted_).
-    listen(this, cld.doc.EventType.RESTORED, this.onDocRestored_);
+    listen(this, cld.doc.EventType.RESTORED, this.onDocRestored_).
+    listen(this, cld.ui.TreeControl.EventType.NODE_CHANGED, function(e) {
+        this.search.updateSearchRows();
+    });
 
   this.handle.
     listen(this.history, goog.history.EventType.NAVIGATE, this.navCallback_).
@@ -366,9 +369,10 @@ cld.App.prototype.install = function(opt_app) {
 
   this.createNew = new cld.Creation(app);
   this.today = new cld.Today(app);
-  this.search = new cld.Search(app);
   this.diaryTree = new cld.DiaryTree(app);
   this.notesTree = new cld.NotesTree(app);
+  this.search = new cld.Search(app);
+  this.search.initAutoComplete();
 
   this.loaded();
 };

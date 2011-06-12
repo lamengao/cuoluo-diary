@@ -47,6 +47,7 @@ cld.DocsTree = function(app, type) {
     (goog.object.get(this.dom_.getWindow(), itemsName, []));
 
   var tree = this.initTree();
+  tree.setParentEventTarget(this);
   tree.setShowRootNode(false);
   tree.setShowLines(false);
   tree.setSelectedItem(null);
@@ -183,7 +184,7 @@ cld.DocsTree.prototype.selectByKey = function(key) {
 };
 
 /**
- * Static function for set node in map.
+ * Set node in map.
  * @param {!goog.ui.tree.BaseNode} node The node.
  * @param {boolean=} isDelete Is delete?
  */
@@ -268,5 +269,6 @@ cld.DocsTree.prototype.handlerExpand_ = function(e) {};
 cld.DocsTree.EventType = {
   SELECT_CHANGE: goog.events.getUniqueId('select_change'),
   NEW_DOC: goog.events.getUniqueId('new_doc'),
+  NODE_CHANGED: goog.events.getUniqueId('node_changed'),
   NODE_NOT_FOUND: goog.events.getUniqueId('node_not_found')
 };

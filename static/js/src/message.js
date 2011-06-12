@@ -38,6 +38,17 @@ cld.message.hiddenLoading = function() {
 };
 
 /**
+ * Show message not undo action.
+ * @param {string} msg The display message.
+ * @param {number=} opt_timeout After timeout second,
+ * the msg will be disappear,if timeout = 0,
+ * message wouldn't be disappear.
+ */
+cld.message.simpleShow = function(msg, opt_timeout) {
+  cld.message.show(msg, false, undefined, opt_timeout);
+};
+
+/**
  * Show message.
  * @param {string} msg The display message.
  * @param {boolean=} isResumable Can undo?
@@ -47,6 +58,7 @@ cld.message.hiddenLoading = function() {
  * message wouldn't be disappear.
  */
 cld.message.show = function(msg, isResumable, undoHandle, opt_timeout) {
+  cld.message.hidden();
   var el = cld.message.msgElement;
   var textSpan = goog.dom.getElementByClass('text', el);
   goog.dom.setTextContent(textSpan, msg);
@@ -87,17 +99,6 @@ cld.message.getUndoLink = function() {
   }
   cld.message.createUndoLink();
   return cld.message.undoLink;
-};
-
-/**
- * Show message not undo action.
- * @param {string} msg The display message.
- * @param {number=} opt_timeout After timeout second,
- * the msg will be disappear,if timeout = 0,
- * message wouldn't be disappear.
- */
-cld.message.simpleShow = function(msg, opt_timeout) {
-  cld.message.show(msg, false, undefined, opt_timeout);
 };
 
 /**

@@ -87,9 +87,9 @@ class DiaryHandler(webapp.RequestHandler):
 	@diary_validated
 	def put(self, url):
 		'''create new diary or modify diary'''
-		if self.json.has_key('status'):
+		if 'status' in self.json:
 			self.diary.set_status(self.json['status'])
-		if self.json.has_key('content'):
+		if 'content' in self.json:
 			content = self.json['content']
 			if self.diary:
 				# update diary
@@ -141,8 +141,8 @@ class NotesListHandler(webapp.RequestHandler):
 	@login_required
 	def post(self):
 		'''create new note no parent not in folder'''
-		if (not self.json.has_key('title') or
-			not self.json.has_key('content')):
+		if ('title' not in self.json or
+			'content' not in self.json):
 			self.error(400)
 			return
 		title = self.json['title']
@@ -197,8 +197,8 @@ class NoteHandler(webapp.RequestHandler):
 	@note_validated
 	def post(self, id):
 		'''create new child note'''
-		if (not self.json.has_key('title') or
-			not self.json.has_key('content')):
+		if ('title' not in self.json or
+			'content' not in self.json):
 			self.error(400)
 			return
 		title = self.json['title']
@@ -215,17 +215,17 @@ class NoteHandler(webapp.RequestHandler):
 	@note_validated
 	def put(self, id):
 		'''update note's content or move to another node'''
-		if self.json.has_key('title'):
+		if 'title' in self.json:
 			self.note.set_title(self.json['title'])
-		if self.json.has_key('parent_id'):
+		if 'parent_id' in self.json:
 			# move to another folder
 			parent_id = self.json['parent_id']
 			if not self.note.check_parent_id(parent_id):
 				self.error(400)
 				return
-		if self.json.has_key('status'):
+		if 'status' in self.json:
 			self.note.set_status(self.json['status'])
-		if self.json.has_key('content'):
+		if 'content' in self.json:
 			content = self.json['content']
 			self.note.set_content(content)
 			db.put([self.note.content, self.note])
@@ -247,8 +247,14 @@ class NoteHandler(webapp.RequestHandler):
 
 class SearchHandler(webapp.RequestHandler):
 	'''URI: /api/search'''
-	def get(self, url):
-		self.response.out.write('search handler')
+	@login_required
+	def get(self):
+		q = self.request.get('q')
+		if not q:
+			return
+		result = self.user.search_contents(q)
+		self.response.headers['Content-type'] = 'application/json'
+		self.response.out.write(simplejson.dumps(result))
 
 
 class EmailHandler(webapp.RequestHandler):

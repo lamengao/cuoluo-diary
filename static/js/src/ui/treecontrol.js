@@ -5,6 +5,7 @@
  */
 
 goog.provide('cld.ui.TreeControl');
+goog.provide('cld.ui.TreeControl.EventType');
 
 goog.require('goog.ui.tree.TreeControl');
 
@@ -61,7 +62,28 @@ cld.ui.TreeControl.prototype.handleMouseEvent_ = function(e) {
  * @param {!goog.events.BrowserEvent} e The browser event.
  * @protected
  * @suppress {underscore}
- * @override
  */
 cld.ui.TreeControl.prototype.onDoubleClick_ = function(e) {
+};
+
+/**
+ * @override
+ */
+cld.ui.TreeControl.prototype.setNode = function(node) {
+  goog.base(this, 'setNode', node);
+  this.dispatchEvent(cld.ui.TreeControl.EventType.NODE_CHANGED);
+};
+
+
+/**
+ * @override
+ */
+cld.ui.TreeControl.prototype.removeNode = function(node) {
+  goog.base(this, 'removeNode', node);
+  this.dispatchEvent(cld.ui.TreeControl.EventType.NODE_CHANGED);
+};
+
+/** @enum {string} */
+cld.ui.TreeControl.EventType = {
+  NODE_CHANGED: goog.events.getUniqueId('node_changed')
 };

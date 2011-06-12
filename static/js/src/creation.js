@@ -7,12 +7,10 @@
 goog.provide('cld.Creation');
 goog.provide('cld.Creation.EventType');
 
+goog.require('cld.ui.utils');
+
 goog.require('goog.events');
 goog.require('goog.events.EventTarget');
-goog.require('goog.ui.Css3ButtonRenderer');
-goog.require('goog.ui.Css3MenuButtonRenderer');
-goog.require('goog.ui.CustomButton');
-goog.require('goog.ui.ImagelessMenuButtonRenderer');
 goog.require('goog.ui.Menu');
 goog.require('goog.ui.MenuButton');
 goog.require('goog.ui.MenuItem');

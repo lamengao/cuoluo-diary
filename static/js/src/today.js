@@ -8,11 +8,11 @@ goog.provide('cld.Today');
 goog.provide('cld.Today.EventType');
 
 goog.require('cld.DiaryTree');
+goog.require('cld.ui.utils');
+
 goog.require('goog.events');
 goog.require('goog.events.EventTarget');
-goog.require('goog.ui.Css3ButtonRenderer');
-goog.require('goog.ui.CustomButton');
-goog.require('goog.ui.ImagelessButtonRenderer');
+
 
 /**
  * Today button.
