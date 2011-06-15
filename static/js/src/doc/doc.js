@@ -4,6 +4,7 @@
  * @author lamengao@gmail.com (Lamengao)
  */
 goog.provide('cld.Doc');
+goog.provide('cld.Doc.TEXT');
 
 goog.require('cld.DiaryTree');
 goog.require('cld.Editor');
@@ -40,8 +41,9 @@ cld.Doc = function(app) {
    */
   this.handle = new goog.events.EventHandler(this);
 
-  this.elDoc = this.dom_.getElement('doc');
+  this.element = this.dom_.getElement('doc');
   this.elHeader = this.dom_.getElement('doc-header');
+  this.elFooter = this.dom_.getElement('doc-footer');
   this.elToolbar = /** @type {!Element} */
     (this.dom_.getElement('editortoolbar'));
 
@@ -49,7 +51,6 @@ cld.Doc = function(app) {
   this.createActionsButton_();
 
   this.editor = new cld.Editor('editortoolbar', 'editorarea');
-  this.setEditorAreaHeight();
 
   this.createSaveButton();
   this.changeSaveButtonState('Saved');
@@ -66,6 +67,8 @@ cld.Doc = function(app) {
   this.api = {};
   this.api.diary = new cld.api.Diary(this);
   this.api.notes = new cld.api.Notes(this);
+
+  this.initBackToLink_();
 };
 goog.inherits(cld.Doc, goog.events.EventTarget);
 
@@ -121,6 +124,49 @@ cld.Doc.prototype.createSaveButton = function() {
   this.saveButton.getElement().id = 'savebutton';
   this.handle.listen(this.saveButton, goog.ui.Component.EventType.ACTION,
       goog.bind(this.saveDoc, this));
+};
+
+/**
+ * Create and init back to link button.
+ * @private
+ */
+cld.Doc.prototype.initBackToLink_ = function() {
+  this.topBacktoLink = cld.ui.utils.newLinkButton(cld.Doc.TEXT.BACKTO_SEARCH);
+  this.topBacktoLink.renderBefore(this.pathSpan);
+  this.topBacktoLink.getElement().id = 'topbacktolink';
+  goog.dom.classes.add(this.topBacktoLink.getElement(), 'backto');
+
+  this.bottomBacktoLink =
+    cld.ui.utils.newLinkButton(cld.Doc.TEXT.BACKTO_SEARCH);
+  this.bottomBacktoLink.render(this.elFooter);
+  this.bottomBacktoLink.getElement().id = 'bottombacktolink';
+  goog.dom.classes.add(this.bottomBacktoLink.getElement(), 'backto');
+
+  this.handle.
+    listen(this.topBacktoLink, goog.ui.Component.EventType.ACTION,
+      function(e) {
+        this.dispatchEvent(cld.doc.EventType.BACKTO);
+      }, false ,this).
+    listen(this.bottomBacktoLink, goog.ui.Component.EventType.ACTION,
+      function(e) {
+        this.dispatchEvent(cld.doc.EventType.BACKTO);
+      }, false, this);
+};
+
+/**
+ * Hidden all back to links.
+ */
+cld.Doc.prototype.hiddenBackToLink_ = function() {
+  goog.dom.classes.add(this.topBacktoLink.getElement(), 'hidden');
+  goog.dom.classes.add(this.bottomBacktoLink.getElement(), 'hidden');
+};
+
+/**
+ * Show all back to links.
+ */
+cld.Doc.prototype.showBackToLink_ = function() {
+  goog.dom.classes.remove(this.topBacktoLink.getElement(), 'hidden');
+  goog.dom.classes.remove(this.bottomBacktoLink.getElement(), 'hidden');
 };
 
 /**
@@ -251,6 +297,7 @@ cld.Doc.prototype.setTitle = function(type, title) {
   }
   this.dom_.setTextContent(this.pathSpan, path);
   this.dom_.setTextContent(this.titleTextSpan, title);
+  this.dom_.getDocument().title = 'Cuoluo Diary - ' + path + ' - ' + title;
   goog.dom.classes.remove(this.titleTextSpan, 'hover');
   cld.ui.utils.setToolTip(this.titleTextSpan, toolTip);
 };
@@ -312,9 +359,16 @@ cld.Doc.prototype.updateNodeModel = function(data, opt_node) {
  * @param {!goog.ui.tree.BaseNode} node The doc's tree node.
  */
 cld.Doc.prototype.open = function(node) {
-  this.setOpenNode(node);
+  this.show();
 
-  this.elDoc.className = this.docType;
+  if ('source' in node.getModel()) {
+    this.showBackToLink_();
+    delete node.getModel()['source'];
+  } else {
+    this.hiddenBackToLink_();
+  }
+  this.setOpenNode(node);
+  this.element.className = this.docType;
   // set title
   if (this.docType === 'diary') {
     this.setTitle('diary', this.nodeModel['date']);
@@ -708,4 +762,24 @@ cld.Doc.prototype.clearActions = function() {
     // new note and not save, discard it
     this.dispatchEvent(new cld.doc.Event('discard', this.openingNode_));
   }
+};
+
+/**
+ * Hidden #doc element.
+ */
+cld.Doc.prototype.hidden = function() {
+  goog.dom.classes.add(this.element, 'hidden');
+};
+
+/**
+ * Show #doc element.
+ */
+cld.Doc.prototype.show = function() {
+  goog.dom.classes.remove(this.element, 'hidden');
+  this.setEditorAreaHeight();
+};
+
+/** @enum {string} */
+cld.Doc.TEXT = {
+  BACKTO_SEARCH: '« Back to Search Results'
 };

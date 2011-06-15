@@ -5,11 +5,12 @@
  */
 
 goog.provide('cld.Search');
+goog.provide('cld.Search.EventType');
 
 goog.require('cld.DocsTree');
+goog.require('cld.api.Search');
 goog.require('cld.ui.AutoComplete.Search');
 goog.require('cld.ui.utils');
-
 goog.require('goog.events');
 goog.require('goog.events.EventTarget');
 
@@ -35,23 +36,32 @@ cld.Search = function(app) {
 
   goog.events.listen(this.elSearchForm, goog.events.EventType.SUBMIT,
     function(e) {
-      alert('submited');
+      this.searchDocs();
       e.preventDefault();
-  });
+  }, false, this);
+
+  this.searchApi = new cld.api.Search();
+
+  this.lastQuery = '';
 };
 goog.inherits(cld.Search, goog.events.EventTarget);
+
+/** @type {Object} */
+cld.Search.cache = {};
 
 /**
  * Create search diary button.
  */
 cld.Search.prototype.createSearchDiaryButton = function() {
-  this.searchDiaryButton = cld.ui.utils.newButton(null);
-  this.searchDiaryButton.decorate(this.elSearchDiary);
-  this.searchDiaryButton.setCaption('Search Diary and Notes');
-  this.searchDiaryButton.setCollapsed(goog.ui.ButtonSide.START);
-  goog.events.listen(this.searchDiaryButton,
+  this.searchDocsButton = cld.ui.utils.newButton(null);
+  this.searchDocsButton.decorate(this.elSearchDiary);
+  this.searchDocsButton.setCaption('Search Diary and Notes');
+  this.searchDocsButton.setCollapsed(goog.ui.ButtonSide.START);
+  goog.events.listen(this.searchDocsButton,
     goog.ui.Component.EventType.ACTION,
-    goog.bind(this.searchDiary, this));
+    function(e) {
+      this.searchDocs();
+  }, false, this);
 };
 
 /**
@@ -137,11 +147,12 @@ cld.Search.searchRowToString = function() {
  */
 cld.Search.searchRowSelect = function(search) {
   if (this.type === 'default') {
-    search.searchDiary();
+    search.searchDocs();
   } else if (this.type === 'note' && this.key in cld.DocsTree.allNodes) {
     search.cleanInput();
     cld.DocsTree.allNodes[this.key].select();
   }
+  search.elInput.blur();
 };
 
 /**
@@ -178,9 +189,50 @@ cld.Search.prototype.searchWeb = function() {
 
 /**
  * search diary and notes
+ * @param {string=} query The query for search.
+ * @param {boolean=} refresh True no use cache.
  */
-cld.Search.prototype.searchDiary = function() {
-  alert('search diary and notes');
+cld.Search.prototype.searchDocs = function(query, refresh) {
+  if (query) {
+    var q = query;
+    this.elInput.value = query;
+  } else {
+    var q = this.elInput.value;
+  }
+  this.lastQuery = q;
+  if (q == '') {
+    return;
+  }
+  if (refresh || !(q in cld.Search.cache)) {
+    this.dispatchEvent(cld.Search.EventType.SEARCHING);
+    var successCallback = goog.bind(this.onSearchSuccess_, this, q);
+    this.searchApi.search(q, successCallback);
+  } else {
+    this.dispatchEvent({
+        type: cld.Search.EventType.SEARCHED,
+        query: q,
+        results: cld.Search.cache[q]
+      });
+  }
+};
+
+cld.Search.prototype.back = function() {
+  this.searchDocs(this.lastQuery);
+};
+
+/**
+ * search successful callback
+ * @param {string} q The token to search.
+ * @param {Object} results The result.
+ * @private
+ */
+cld.Search.prototype.onSearchSuccess_ = function(q, results) {
+  cld.Search.cache[q] = results;
+  this.dispatchEvent({
+      type: cld.Search.EventType.SEARCHED,
+      query: q,
+      results: results
+  });
 };
 
 /**
@@ -188,4 +240,10 @@ cld.Search.prototype.searchDiary = function() {
  */
 cld.Search.prototype.cleanInput = function() {
   this.elInput.value = '';
+};
+
+/** @enum {string} */
+cld.Search.EventType = {
+  SEARCHING: goog.events.getUniqueId('searching'),
+  SEARCHED: goog.events.getUniqueId('searched')
 };

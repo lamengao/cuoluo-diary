@@ -89,6 +89,8 @@ class DiaryHandler(webapp.RequestHandler):
 		'''create new diary or modify diary'''
 		if 'status' in self.json:
 			self.diary.set_status(self.json['status'])
+		elif self.diary.status == 'trashed':
+			self.diary.set_status('private')
 		if 'content' in self.json:
 			content = self.json['content']
 			if self.diary:

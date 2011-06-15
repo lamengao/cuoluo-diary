@@ -9,6 +9,7 @@ goog.provide('cld.App');
 goog.require('cld.Creation');
 goog.require('cld.DiaryTree');
 goog.require('cld.Doc');
+goog.require('cld.DocsList');
 goog.require('cld.DocsTree');
 goog.require('cld.DocsTree.EventType');
 goog.require('cld.NotesTree');
@@ -94,6 +95,19 @@ cld.App.prototype.loaded = function() {
         this.search.updateSearchRows();
     });
 
+  // search events
+  this.handle.
+    listen(this, cld.Search.EventType.SEARCHED, this.onSearched_).
+    listen(this, cld.DocsList.EventType.REFRESH_SEARCH, this.onRefreshSearch_).
+    listen(this, cld.doc.EventType.BACKTO, function(e) {
+        this.search.back();
+    });
+
+  // docs list events
+  this.handle.
+    listen(this, cld.DocsList.EventType.DOC_SELECT, this.onDocListSelect_);
+
+
   this.handle.
     listen(this.history, goog.history.EventType.NAVIGATE, this.navCallback_).
     listen(this, cld.DocsTree.EventType.SELECT_CHANGE, this.onDocSelected_).
@@ -103,11 +117,19 @@ cld.App.prototype.loaded = function() {
     listen(this.dom_.getWindow(), goog.events.EventType.RESIZE,
       goog.bind(this.handleResize_, this));
 
+  var loadingEvents = [
+    cld.api.Docs.EventType.LOADING,
+    cld.Search.EventType.SEARCHING
+  ];
+  var loadedEvents = [
+    cld.api.Docs.EventType.LOADED,
+    cld.Search.EventType.SEARCHED
+  ];
   this.handle.
-    listen(this, cld.api.Docs.EventType.LOADING, function(e) {
+    listen(this, loadingEvents, function(e) {
         cld.message.showLoading();
     }).
-    listen(this, cld.api.Docs.EventType.LOADED, function(e) {
+    listen(this, loadedEvents, function(e) {
         cld.message.hiddenLoading();
     });
 
@@ -178,6 +200,9 @@ cld.App.prototype.controller = function(token) {
   } else if (type === 'notes' && token.length > 6) {
     var id = token.substr(6);
     this.notesTree.selectByKey('notes:' + id);
+  } else if (type === 'search' && token.length > 7) {
+    var query = token.substr(7);
+    this.search.searchDocs(decodeURIComponent(query));
   }
 };
 
@@ -206,7 +231,7 @@ cld.App.prototype.onDocSelected_ = function(e) {
   if (!this.doc) {
     this.doc = new cld.Doc(cld.App.getInstance());
   }
-  this.doc.clearActions();
+  this.beforeOpenDoc();
   this.doc.open(node);
   if (this.doc.isNew()) {
     this.createNew.updateMenu('newnote');
@@ -236,12 +261,11 @@ cld.App.prototype.onNewDoc_ = function(e) {
       this.history.setToken(token);
     }
     this.createNew.updateMenu('diary');
-    this.doc.clearActions();
+    this.beforeOpenDoc();
     this.doc.open(node);
     this.notesTree.tree.select();
   } else if (type === 'note') {
     // new note
-    alert('new note');
   }
 };
 
@@ -299,11 +323,15 @@ cld.App.prototype.onDocDeleted_ = function(e) {
   var deletedNode = cld.DocsTree.deleteNode(node);
   var text = 'id' in node.getModel() ?
     cld.message.TEXT.NOTE_DELETED : cld.message.TEXT.DIARY_DELETED;
-  var restoreHandler = goog.bind(this.doc.restoreDoc, this.doc, node);
+  var restoreHandler = goog.bind(this.doc.restoreDoc, this.doc);
   cld.message.show(text, true, function(e) {
       cld.message.hidden();
+      var key = cld.DocsTree.getNodeKey(node);
+      if (key in cld.DocsTree.allNodes) {
+        return;
+      }
       cld.message.showLoading();
-      restoreHandler();
+      restoreHandler(node);
   }, 60);
 };
 
@@ -354,10 +382,66 @@ cld.App.prototype.onNewNote_ = function(e) {
 };
 
 /**
+ * Search successful callback.
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onSearched_ = function(e) {
+  var docs = /** @type {Object} */ (e.results);
+  var query = /** @type {string} */ (e.query);
+  if (this.doc) {
+    this.doc.hidden();
+  }
+  this.notesTree.tree.select();
+  this.diaryTree.tree.select();
+  this.docsList.show('search', query, docs);
+  this.history.setToken('search/' + encodeURIComponent(query));
+};
+
+/**
+ * Refresh search.
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onRefreshSearch_ = function(e) {
+  var query = /** @type {string} */ (e.query);
+  this.search.searchDocs(query, true);
+};
+
+/**
+ * Doc selected in doc list.
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onDocListSelect_ = function(e) {
+  var docType = e.docType;
+  if (docType === 'diary') {
+    var node = cld.DocsTree.allNodes['diary:' + e.key];
+  } else {
+    var node = cld.DocsTree.allNodes['notes:' + e.key];
+  }
+  if (!node) {
+    return;
+  }
+  node.getModel()['source'] = 'search';
+  cld.DocsTree.selectNode(node);
+};
+
+/**
  * Create new note callback.
  */
 cld.App.prototype.newNote = function() {
   this.notesTree.createNewInternal();
+};
+
+/**
+ * Before open doc action.
+ */
+cld.App.prototype.beforeOpenDoc = function() {
+  this.doc.clearActions();
+  this.docsList.hidden();
+  this.search.cleanInput();
+  cld.message.hidden();
 };
 
 /**
@@ -373,6 +457,8 @@ cld.App.prototype.install = function(opt_app) {
   this.notesTree = new cld.NotesTree(app);
   this.search = new cld.Search(app);
   this.search.initAutoComplete();
+
+  this.docsList = new cld.DocsList(cld.App.getInstance());
 
   this.loaded();
 };

@@ -92,20 +92,41 @@
     </div><!-- end #tasks -->
   </div>
   <div class="goog-splitpane-second-container" id="viewpane">
-    <div id="doc">
+    <div id="doc" class="hidden">
       <div id="doc-header">
         <h1 id="header-title">
-          <span class="docpath"><span class="path"></span><span class="path-arrow goog-inline-block">&nbsp;</span></span>
+          <span class="docpath"><span class="path"></span><span class="path-arrow goog-inline-block hidden">&nbsp;</span></span>
           <span class="text"></span>
           <div id="edit-name" class="goog-inline-block hidden"><input type="text" id="editname" size="30"></div>
         </h1>
       </div>
       <div id="doc-container">
-        <div id="editortoolbar" class="lightbg"></div>
+        <div id="editortoolbar" class="lightbg toolbar"></div>
         <div id="editorarea"></div>
       </div>
       <div id="doc-footer"></div>
     </div><!-- #doc end -->
+    <div id="docslist" class="hidden">
+      <div id="docslist-header">
+        <div id="docslist-title"><span class="text">Search results for: </span><em></em></div>
+      </div>
+      <div id="docslist-container">
+        <div id="docslist-toolbar" class="lightbg toolbar">
+          <span id="results-count"><span>Results: <b class="count">0</b> for <b class="query"></b>.</span></span>
+        </div>
+        <ul id="doclist">
+          <li id="diary-20110609">
+            <span class="goog-inline-block doclist-icon day-icon-14"> </span>
+            <span class="goog-inline-block doclist-name">Thursday, June 09, 2011</span>
+          </li>
+          <li id="note-1">
+            <span class="goog-inline-block doclist-icon note-icon"> </span>
+            <span class="goog-inline-block doclist-name">wa haha yes ni hao</span>
+          </li>
+        </ul>
+      </div>
+      <div id="docslist-footer"></div>
+    </div><!-- #docslist end -->
   </div>
   <div class="goog-splitpane-handle" id="splitpane-handle"></div>
 </div>
@@ -139,6 +160,8 @@ var _NOTES_LIST = {{ notes_list|safe }};
 <script type="text/javascript" src="/js/src/today.js"></script>
 <script type="text/javascript" src="/js/src/ui/autocomplete/searcharraymatcher.js"></script>
 <script type="text/javascript" src="/js/src/ui/autocomplete/search.js"></script>
+<script type="text/javascript" src="/js/src/api/search.js"></script>
+<script type="text/javascript" src="/js/src/docslist.js"></script>
 <script type="text/javascript" src="/js/src/search.js"></script>
 <script type="text/javascript" src="/js/src/tasks.js"></script>
 <script type="text/javascript" src="/js/src/app.js"></script>

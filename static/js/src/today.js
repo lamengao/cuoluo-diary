@@ -55,7 +55,7 @@ goog.inherits(cld.Today, goog.events.EventTarget);
  */
 cld.Today.prototype.isToday = function(e) {
   var token = e.token;
-  if (token == 'diary/' + cld.DiaryTree.getTodayDate()) {
+  if (token === 'diary/' + cld.DiaryTree.getTodayDate()) {
     this.button.setEnabled(false);
     return true;
   } else {

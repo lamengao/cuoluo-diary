@@ -120,8 +120,6 @@ cld.Editor.prototype.listenChangeEvent = function(handlerChange) {
             return;
           }
           this.lastFieldContents = this.field.getCleanContents();
-          var footer = document.getElementById('doc-footer');
-          footer.innerHTML = footer.innerHTML + 'g';
           handlerChange();
         }, false, this);
   } else {
@@ -129,8 +127,6 @@ cld.Editor.prototype.listenChangeEvent = function(handlerChange) {
       goog.events.listen(this.field,
         goog.editor.Field.EventType.DELAYEDCHANGE,
         function(e) {
-          var footer = document.getElementById('doc-footer');
-          footer.innerHTML = footer.innerHTML + 'g';
           handlerChange();
         }, false, this);
   }

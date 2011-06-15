@@ -6,13 +6,14 @@
 
 goog.provide('cld.ui.utils');
 
-goog.require('goog.userAgent');
-goog.require('goog.ui.MenuButton');
 goog.require('goog.ui.Css3ButtonRenderer');
 goog.require('goog.ui.Css3MenuButtonRenderer');
 goog.require('goog.ui.CustomButton');
 goog.require('goog.ui.ImagelessButtonRenderer');
 goog.require('goog.ui.ImagelessMenuButtonRenderer');
+goog.require('goog.ui.LinkButtonRenderer');
+goog.require('goog.ui.MenuButton');
+goog.require('goog.userAgent');
 
 /**
  * Whether this browser support css3 gradient.
@@ -60,6 +61,17 @@ cld.ui.utils.newButton = function(content, menu) {
   } else {
     return new goog.ui.CustomButton(content, cld.ui.utils.getButtonRenderer());
   }
+};
+
+/**
+ * Create a new link button.
+ * @param {goog.ui.ControlContent} content Text caption or existing DOM
+ * structure to display as the button's caption.
+ * @return {goog.ui.Button} The new button.
+ */
+cld.ui.utils.newLinkButton = function(content) {
+  return new goog.ui.Button(content,
+    goog.ui.LinkButtonRenderer.getInstance());
 };
 
 /**

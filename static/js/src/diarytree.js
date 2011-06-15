@@ -312,8 +312,8 @@ cld.DiaryTree.prototype.onSelectChange_ = function(e) {
   if (node === null || node == node.getTree()) {
     this.selectedDiary_ = null;
     return;
-  } else if (node === this.selectedDiary_) {
-    return;
+  //} else if (node === this.selectedDiary_) {
+    //return;
   }
   if (this.isDayNode_(node)) {
     this.selectedDiary_ = node;

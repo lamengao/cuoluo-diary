@@ -117,5 +117,6 @@ cld.message.TEXT = {
   LOADING: 'Loading...',
   DIARY_DELETED: 'The diary has been moved to the trash',
   NOTE_DELETED: 'The note has been moved to the trash',
-  NODE_NOT_FOUND: 'The document that you requested no longer exists.'
+  NODE_NOT_FOUND: 'The document that you requested no longer exists.',
+  SERVER_ERROR: 'The server encountered an error. Please try again later.'
 };

@@ -146,6 +146,22 @@ cld.DocsTree.getTokenByNode = function(node) {
 };
 
 /**
+ * Get node key
+ * @param {!goog.ui.tree.BaseNode} node The node.
+ * @return {string} The key
+ */
+cld.DocsTree.getNodeKey = function(node) {
+  var key = '';
+  var model = node.getModel();
+  if ('date' in model) {
+    key = 'diary:' + model['date'];
+  } else {
+    key = 'notes:' + model['id'];
+  }
+  return key;
+};
+
+/**
  * Get node's type 'diary' or 'note'
  * @param {goog.ui.tree.BaseNode} node The node.
  * @return {string} The type.
@@ -189,15 +205,10 @@ cld.DocsTree.prototype.selectByKey = function(key) {
  * @param {boolean=} isDelete Is delete?
  */
 cld.DocsTree.setNodeInMap = function(node, isDelete) {
-  var model = node.getModel();
-  if ('date' in model) {
-    var key = 'diary:' + model['date'];
-  } else {
-    var key = 'notes:' + model['id'];
-  }
-  if (isDelete === false && key in cld.DocsTree.allNodes) {
+  var key = cld.DocsTree.getNodeKey(node);
+  if (isDelete === true && key in cld.DocsTree.allNodes) {
     delete cld.DocsTree.allNodes[key];
-  } else {
+  } else if (!isDelete) {
     cld.DocsTree.allNodes[key] = node;
   }
 };

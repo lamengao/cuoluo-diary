@@ -7,10 +7,11 @@
 goog.provide('cld.ui.AutoComplete.Search');
 
 goog.require('cld.ui.AutoComplete.SearchArrayMatcher');
-goog.require('goog.ui.AutoComplete');
-goog.require('goog.ui.AutoComplete.RichInputHandler');
-goog.require('goog.ui.AutoComplete.Renderer');
 
+goog.require('goog.events.KeyCodes');
+goog.require('goog.ui.AutoComplete');
+goog.require('goog.ui.AutoComplete.Renderer');
+goog.require('goog.ui.AutoComplete.RichInputHandler');
 
 
 /**
@@ -47,7 +48,14 @@ cld.ui.AutoComplete.Search = function(data, input) {
    * @type {goog.ui.AutoComplete.RichInputHandler}
    * @private
    */
-  var inputhandler = new goog.ui.AutoComplete.RichInputHandler(null, null, false);
+  var inputhandler =
+      new goog.ui.AutoComplete.RichInputHandler(null, null, false);
+  inputhandler.handleKeyEvent = function(e) {
+    if (e.keyCode !== goog.events.KeyCodes.TAB) {
+      return this.constructor.prototype.handleKeyEvent.apply(this, arguments);
+    }
+    return false;
+  };
 
   goog.ui.AutoComplete.call(this, matcher, renderer, inputhandler);
 

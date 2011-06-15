@@ -202,18 +202,30 @@ div.toolbarbutton{margin:4px}
 /* @end */
 
 /* @group main */
-#doc{position:absolute;width:100%;height:100%}
-#doc-header{height:30px;position:absolute;width:100%}
-#doc-footer{height:30px;position:absolute;bottom:0;width:100%}
-#doc-container{background-color:#FFF;position:absolute;top:30px;bottom:30px;width:100%;padding-top:30px}
+#doc,#docslist{position:absolute;width:100%;height:100%}
+#doc-header, #docslist-header{height:30px;position:absolute;width:100%}
+#doc-footer, #docslist-footer{height:30px;position:absolute;bottom:0;width:100%}
+#doc-container, #docslist-container{background-color:#FFF;position:absolute;top:30px;bottom:30px;width:100%;padding-top:30px}
 /* @end */
 
 /* @group doc header */
-#header-title{line-height:30px;font-weight:bold;font-size:16px;margin-left: 3px;}
+#header-title,#docslist-title{
+	line-height:30px;font-weight:bold;font-size:16px;
+	/*margin-left: 3px;*/
+}
 #doc-actions{position:absolute;right:8px;top:4px}
 #actionsmenu .goog-menuitem {padding: 3px 4em 3px 18px;}
 #actionsmenu .goog-menuitem-highlight, #actionsmenu .goog-menuitem-hover { padding-bottom: 2px; padding-top: 2px; }
 #header-title .path{color: #112ABB;font-size:16px;}
+#header-title .path {
+	background-color: #6688EE;
+	border-radius: 2px 2px 2px 2px;
+	color: #FFFFFF;
+	font-size: 13px;
+	padding: 3px 5px;
+	position: relative;
+	top: -1px;
+}
 #header-title .text{padding: 2px;}
 /*.note #header-title .text:hover{background-color:#FFFFD3;}*/
 #header-title .text.hover{color:#666}
@@ -233,6 +245,7 @@ div.toolbarbutton{margin:4px}
 	outline: 0 none;
 }
 #edit-name>div{font-size:13px;font-weight:normal;line-height:16px}
+.backto{font-size:13px;margin-right:10px;font-weight:bold;line-height: 30px;}
 /* @end */
 
 /* @group doc container */
@@ -241,7 +254,7 @@ width:100%;height:100%;
 position: relative;
 }
 /*#container-table td{height:100%}*/
-#editortoolbar{
+.toolbar{
 	position: absolute;
 	width: 100%;
 	top: 0;
@@ -257,8 +270,23 @@ position: relative;
 #savebutton{position: absolute; right: 8px; top: 4px;z-index: 5;}
 /* @end */
 
-/* @group search row */
-.ac-row .icon{
+/* @group docs list header */
+#docslist-title em{font-style: italic;}
+#docslist-toolbar{height:30px}
+#results-count{display:block;color:#333;text-align:right;padding-right:10px;line-height:30px}
+/* @end */
+
+/* @group docs list */
+#searchrefresh{position:absolute;top:4px;left: 2px;}
+#docslist-container {padding-top:40px}
+#doclist{overflow-x: hidden;overflow-y: auto;height:100%}
+#doclist li{padding-left:10px;height: 22px;line-height:22px;cursor:pointer;border-bottom: 1px solid #DDD;}
+#doclist li:hover{background-color:#E3E9FF;}
+#doclist .doclist-icon{margin-right:8px}
+/* @end */
+
+/* @group search autucomplete row */
+.ac-row .icon, .doclist-icon{
 height: 16px;
 width: 16px;
 margin: 0 2px;
