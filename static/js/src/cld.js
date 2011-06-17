@@ -25,4 +25,5 @@ goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventTarget');
 goog.require('goog.ui.AutoComplete');
 goog.require('goog.ui.Zippy');
+goog.require('goog.ui.PopupDatePicker');
 goog.require('goog.ui.tree.TreeControl');

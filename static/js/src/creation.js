@@ -11,6 +11,7 @@ goog.require('cld.ui.utils');
 
 goog.require('goog.events');
 goog.require('goog.events.EventTarget');
+goog.require('goog.ui.Dialog');
 goog.require('goog.ui.Menu');
 goog.require('goog.ui.MenuButton');
 goog.require('goog.ui.MenuItem');
@@ -35,6 +36,7 @@ cld.Creation = function(app) {
   this.siblingnoteMenuItem.setEnabled(false);
 
   this.createMenuButton_();
+
 };
 goog.inherits(cld.Creation, goog.events.EventTarget);
 
@@ -139,6 +141,35 @@ cld.Creation.prototype.createNewChildNote = function() {
  */
 cld.Creation.prototype.createNewSiblingNote = function() {
   this.dispatchEvent(cld.Creation.EventType.NEW_SIBLINGNOTE);
+};
+
+/**
+ * Create 'new diary' chose date calendar dialog.
+ * @private
+ */
+cld.Creation.prototype.initDiaryDialog_ = function() {
+  var diaryDialog = new goog.ui.Dialog();
+  /*diaryDialog.setContent(
+      'Lorem ipsum dolor sit amet, consectetuer' +
+      'euismod risus. Nam hendrerit lacus vehicula augue. Duis ante.');*/
+    diaryDialog.setTitle('Choose The Date');
+    diaryDialog.getDialogElement().id = 'diarydialog';
+
+    this.diaryDialog = diaryDialog;
+
+    this.initDatePicker_();
+};
+
+/**
+ * Create date picker.
+ * @private
+ */
+cld.Creation.prototype.initDatePicker_ = function() {
+  var datePicker = new goog.ui.DatePicker();
+  datePicker.render(this.diaryDialog.getContentElement());
+  datePicker.getElement().id = 'newdiarydatepicker';
+  datePicker.setShowWeekNum(false);
+  this.datePicker = datePicker;
 };
 
 

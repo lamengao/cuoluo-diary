@@ -93,6 +93,9 @@ cld.App.prototype.loaded = function() {
     listen(this, cld.doc.EventType.RESTORED, this.onDocRestored_).
     listen(this, cld.ui.TreeControl.EventType.NODE_CHANGED, function(e) {
         this.search.updateSearchRows();
+    }).
+    listen(this, cld.doc.EventType.DATE_CHANGED, function(e) {
+        this.diaryTree.selectNodeByDate(/** @type {string} */ (e.date));
     });
 
   // search events
@@ -106,6 +109,10 @@ cld.App.prototype.loaded = function() {
   // docs list events
   this.handle.
     listen(this, cld.DocsList.EventType.DOC_SELECT, this.onDocListSelect_);
+
+  // creation events
+  this.handle.
+    listen(this, cld.Creation.EventType.NEW_DIARY, this.onNewDiary_);
 
 
   this.handle.
@@ -425,6 +432,20 @@ cld.App.prototype.onDocListSelect_ = function(e) {
   }
   node.getModel()['source'] = 'search';
   cld.DocsTree.selectNode(node);
+};
+
+/**
+ * New diary.
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onNewDiary_ = function(e) {
+  if (this.doc.isOpen() && this.doc.docType === 'diary') {
+    this.doc.showDatePicker();
+  } else {
+    this.diaryTree.selectTodayNode();
+    this.doc.showDatePicker();
+  }
 };
 
 /**

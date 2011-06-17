@@ -120,6 +120,12 @@ em {font-weight: bold;}
 .Diary-menuitemicon{background:url(/images/date/favicon_v2010_31.ico) no-repeat}
 .Note-menuitemicon{background-image: url("/images/icons_19.png");background-position: -144px 0;}
 .Email-menuitemicon{background-image: url("/images/blue-gmail16.png");}
+#diarydialog{
+	/*width:430px;*/
+}
+#newdiarydatepicker{
+	margin-bottom:10px;
+}
 /* @end */
 
 /* @group contentcreationpane */
@@ -219,17 +225,33 @@ div.toolbarbutton{margin:4px}
 #header-title .path{color: #112ABB;font-size:16px;}
 #header-title .path {
 	background-color: #6688EE;
-	border-radius: 2px 2px 2px 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
 	color: #FFFFFF;
 	font-size: 13px;
 	padding: 3px 5px;
 	position: relative;
 	top: -1px;
 }
-#header-title .text{padding: 2px;}
-/*.note #header-title .text:hover{background-color:#FFFFD3;}*/
-#header-title .text.hover{color:#666}
+#header-title .text{
+	/*padding: 2px;*/
+	line-height: 20px;
+	padding-left:2px;
+	border:1px solid #BCF;
+	outline:0 none;
+}
+.note #header-title .text{cursor: text;}
+.diary #header-title .text{cursor: default;}
 .note #header-title .text:hover{color:#666}
+.diary #header-title .text:hover, .diary #header-title .text.datepicker-on{
+	/*background-color:#FFF;*/
+	border:1px solid #555;
+}
+.diary #header-title .text:hover .arrow, .diary #header-title .text.datepicker-on .arrow{
+	background-color:#6688EE;
+	color:#FFF;
+}
 .path-arrow {
 	background-image: url("/images/icons_11.png");
 	background-position: -448px 2px;
@@ -238,6 +260,12 @@ div.toolbarbutton{margin:4px}
 	width: 10px;
 	position: relative;
 	top: 5px;
+}
+#header-title .arrow{
+	color: #636563;
+	font-size: 12px;
+	margin-left: 5px;
+	padding: 2px 0 0 2px;
 }
 #editname{font-size:14px;background-color: #FFFFD3;border: 2px solid #CCC;padding:2.5px}
 #editname:focus {
@@ -267,7 +295,10 @@ position: relative;
 	font-size: 15px;
 	font-family: Arial,Sans-serif;
 }
-#savebutton{position: absolute; right: 8px; top: 4px;z-index: 5;}
+#savebutton{
+	position: absolute; right: 8px; top: 4px;
+	/*z-index: 5;*/
+}
 /* @end */
 
 /* @group docs list header */

@@ -209,7 +209,7 @@ class Note(db.Model):
 				return parent + '/' + self.id
 
 	def set_title(self, title):
-		self.title = title
+		self.title = title.strip()
 		return self
 
 	def set_status(self, status):

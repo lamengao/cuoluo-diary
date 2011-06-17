@@ -13,6 +13,7 @@ goog.require('cld.api.Docs');
 goog.require('cld.api.Docs.EventType');
 goog.require('cld.api.Notes');
 goog.require('cld.doc.Event');
+goog.require('cld.ui.PopupDatePicker');
 goog.require('cld.ui.utils');
 
 goog.require('goog.Timer');
@@ -20,9 +21,12 @@ goog.require('goog.events');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
 goog.require('goog.object');
+goog.require('goog.ui.Control');
+goog.require('goog.ui.ControlRenderer');
 goog.require('goog.ui.Menu');
 goog.require('goog.ui.MenuItem');
 goog.require('goog.ui.Separator');
+goog.require('goog.ui.decorate');
 
 
 /**
@@ -61,8 +65,9 @@ cld.Doc = function(app) {
 
   this.elEditName = this.dom_.getElement('edit-name');
   this.editNameInput = this.dom_.getElement('editname');
-  this.handle.listen(this.titleTextSpan, goog.events.EventType.CLICK,
-      goog.bind(this.renameHandle, this));
+
+  this.initTitleControl_();
+  this.initPopupDatePicker_();
 
   this.api = {};
   this.api.diary = new cld.api.Diary(this);
@@ -127,6 +132,51 @@ cld.Doc.prototype.createSaveButton = function() {
 };
 
 /**
+ * Initial title control.
+ * @private
+ */
+cld.Doc.prototype.initTitleControl_ = function() {
+  this.titleControl = goog.ui.decorate(this.titleTextSpan);
+
+  this.handle.listen(this.titleControl, goog.ui.Component.EventType.ACTION,
+      function(e) {
+        if (this.docType === 'note') {
+          this.renameHandle(e);
+        }
+      }, false, this);
+};
+
+/**
+ * Initial date picker for diary.
+ * @private
+ */
+cld.Doc.prototype.initPopupDatePicker_ = function() {
+  this.popupDatePicker = new cld.ui.PopupDatePicker(null, this.dom_);
+  this.popupDatePicker.render();
+  this.popupDatePicker.setAllowAutoFocus(false);
+  this.datePicker = this.popupDatePicker.getDatePicker();
+  this.datePicker.setAllowNone(false);
+  this.datePicker.setShowToday(false);
+  this.datePicker.setShowWeekNum(false);
+  this.datePicker.setUseSimpleNavigationMenu(true);
+
+  this.handle.listen(this.popupDatePicker, goog.ui.DatePicker.Events.CHANGE,
+      function(e) {
+        var date = cld.Doc.getDateString(e.date);
+        this.dispatchEvent({
+            type: cld.doc.EventType.DATE_CHANGED,
+            date: date
+        });
+      }, false, this);
+};
+
+cld.Doc.prototype.showDatePicker = function() {
+  if (this.docType === 'diary') {
+    this.popupDatePicker.showPopup(this.titleTextSpan);
+  }
+};
+
+/**
  * Create and init back to link button.
  * @private
  */
@@ -146,7 +196,7 @@ cld.Doc.prototype.initBackToLink_ = function() {
     listen(this.topBacktoLink, goog.ui.Component.EventType.ACTION,
       function(e) {
         this.dispatchEvent(cld.doc.EventType.BACKTO);
-      }, false ,this).
+      }, false, this).
     listen(this.bottomBacktoLink, goog.ui.Component.EventType.ACTION,
       function(e) {
         this.dispatchEvent(cld.doc.EventType.BACKTO);
@@ -155,6 +205,7 @@ cld.Doc.prototype.initBackToLink_ = function() {
 
 /**
  * Hidden all back to links.
+ * @private
  */
 cld.Doc.prototype.hiddenBackToLink_ = function() {
   goog.dom.classes.add(this.topBacktoLink.getElement(), 'hidden');
@@ -163,6 +214,7 @@ cld.Doc.prototype.hiddenBackToLink_ = function() {
 
 /**
  * Show all back to links.
+ * @private
  */
 cld.Doc.prototype.showBackToLink_ = function() {
   goog.dom.classes.remove(this.topBacktoLink.getElement(), 'hidden');
@@ -291,12 +343,19 @@ cld.Doc.prototype.setTitle = function(type, title) {
     var path = 'Diary';
     var toolTip = title.replace(/\//g, '-');
     title = cld.DiaryTree.getDocTitleByDate(title);
+    var titleHTML = title + cld.Doc.TEXT.ARROW_SPAN;
+    this.titleTextSpan.innerHTML = titleHTML;
+    this.popupDatePicker.attach(this.titleTextSpan);
+    this.popupDatePicker.setDate(cld.Doc.getGoogDate(this.nodeModel['date']));
+    this.titleControl.setAllowTextSelection(false);
   } else {
     var path = 'Notes';
     var toolTip = 'Click to edit';
+    this.dom_.setTextContent(this.titleTextSpan, title);
+    this.popupDatePicker.detach(this.titleTextSpan);
+    this.titleControl.setAllowTextSelection(true);
   }
   this.dom_.setTextContent(this.pathSpan, path);
-  this.dom_.setTextContent(this.titleTextSpan, title);
   this.dom_.getDocument().title = 'Cuoluo Diary - ' + path + ' - ' + title;
   goog.dom.classes.remove(this.titleTextSpan, 'hover');
   cld.ui.utils.setToolTip(this.titleTextSpan, toolTip);
@@ -733,8 +792,8 @@ cld.Doc.prototype.renameInternal = function() {
   if (!goog.style.isElementShown(this.elEditName)) {
     return;
   }
-  var title = this.editNameInput.value;
-  if (title == this.openingNode_.getText()) {
+  var title = goog.string.trim(this.editNameInput.value);
+  if (title == goog.string.trim(this.openingNode_.getText())) {
     this.cancleRename();
     return;
   }
@@ -765,6 +824,14 @@ cld.Doc.prototype.clearActions = function() {
 };
 
 /**
+ * whether the doc is opening.
+ * @return {boolean} Is open?
+ */
+cld.Doc.prototype.isOpen = function() {
+  return goog.style.isElementShown(this.element);
+};
+
+/**
  * Hidden #doc element.
  */
 cld.Doc.prototype.hidden = function() {
@@ -779,7 +846,41 @@ cld.Doc.prototype.show = function() {
   this.setEditorAreaHeight();
 };
 
+/**
+ * Date string to goog.date.Date.
+ * @param {string} date The date string.
+ * @return {goog.date.Date} The Date().
+ */
+cld.Doc.getGoogDate = function(date) {
+  var d = date.split('/');
+  return new goog.date.Date(parseInt(d[0], 10),
+                            parseInt(d[1], 10) - 1,
+                            parseInt(d[2], 10));
+};
+
+/**
+ * Date string to goog.date.Date.
+ * @param {goog.date.Date} date The date object.
+ * @return {string} The date string.
+ */
+cld.Doc.getDateString = function(date) {
+  if (!date) {
+    return '';
+  }
+  y = date.getFullYear() + '';
+  m = (date.getMonth() + 1) + '';
+  d = date.getDate() + '';
+  if (m.length === 1) {
+    m = '0' + m;
+  }
+  if (d.length === 1) {
+    d = '0' + d;
+  }
+  return y + '/' + m + '/' + d;
+};
+
 /** @enum {string} */
 cld.Doc.TEXT = {
-  BACKTO_SEARCH: '« Back to Search Results'
+  BACKTO_SEARCH: '« Back to Search Results',
+  ARROW_SPAN: '<span class="arrow goog-inline-block">▼</span>'
 };

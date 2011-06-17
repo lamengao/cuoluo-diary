@@ -106,6 +106,7 @@ cld.Editor.prototype.listenChangeEvent = function(handlerChange) {
   this.field.clearDelayedChange();
 
   if (goog.userAgent.WEBKIT || goog.userAgent.OPERA) {
+  //if (goog.userAgent.OPERA) {
     if (this.delayedChangeTimer) {
       this.delayedChangeTimer.dispose();
     }
