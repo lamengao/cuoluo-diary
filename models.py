@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #import logging
 import re
+import random
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -22,14 +23,15 @@ def html_to_text(html):
 	# TODO decode html entity
 	return re.sub(pattern, '', html)
 
+def get_random_str(length):
+	allowed_chars = 'abcdefghijklmnopqrstuvwxyz'
+	allowed_chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+	return ''.join([random.choice(allowed_chars) for i in range(length)])
 
 class User(db.Model):
 	"""key name: user_id"""
 	GAccount = db.UserProperty(auto_current_user_add=True)
 	created = db.DateTimeProperty(auto_now_add=True)
-	diary_total = db.IntegerProperty(default=0)
-	note_total = db.IntegerProperty(default=0)
-	note_max = db.IntegerProperty(default=0)
 	last_signin = db.DateTimeProperty(auto_now=True)
 	timezone = db.StringProperty()
 	date_format = db.StringProperty(default="YMD",
@@ -55,25 +57,6 @@ class User(db.Model):
 			# notice: the new user **NOT** insert(put) to datastore here
 			u = User(key_name=user_id)
 		return u
-
-	def update_counter(self, name, opt='+', num=1):
-		if not hasattr(self, name):
-			return False
-		count = getattr(self, name)
-		if num == 0:
-			return count
-		if opt == '+':
-			new_count = count + num
-			if name == 'note_max':
-				self.note_total = self.note_total + num
-		elif opt == '-':
-			new_count = count - num
-		setattr(self, name, new_count)
-		if not self.is_saved():
-			# new user
-			Counter.update_counter('user.total')
-		self.put()
-		return new_count
 
 	def search_contents(self, q=''):
 		result = {}
@@ -157,17 +140,16 @@ class Diary(db.Model):
 
 	def remove(self, delete=False):
 		if delete:
-			if self.status != 'trashed':
-				self.owner.update_counter('diary_total', '-')
 			db.delete([self.content, self])
 		elif self.status != 'trashed':
 			self.status = 'trashed'
 			self.put()
-			self.owner.update_counter('diary_total', '-')
 
 	def to_json(self, only_meta=False):
 		diary = {}
-		diary['date'] = self.title[0:4] + '/' + self.title[4:6] + '/' + self.title[6:8]
+		diary['date'] = '/'.join([self.title[0:4],
+			                      self.title[4:6],
+								  self.title[6:8]])
 		diary['created'] = self.created.isoformat() + '+00:00'
 		diary['last_modified'] = self.last_modified.isoformat() + '+00:00'
 		diary['status'] = self.status
@@ -180,19 +162,21 @@ class Diary(db.Model):
 		key_name = user.id + '.' + date_str
 		diary = Diary(key_name=key_name, owner=user)
 		diary.set_title(date_str).set_content(content)
-		db.put([diary.content, diary])
-		user.update_counter('diary_total')
+		if user.is_saved():
+			db.put([diary.content, diary])
+		else:
+			db.put([user, diary.content, diary])
 		return diary
 
 
 class Note(db.Model):
-	'''key name: {user_id}.{num}'''
+	'''key name: {user_id}.{hash}'''
 	owner = db.ReferenceProperty(User, collection_name='notes')
 	title = db.StringProperty()
 	content = db.ReferenceProperty(Content, collection_name='note')
 	created = db.DateTimeProperty(auto_now_add=True)
 	last_modified = db.DateTimeProperty(auto_now=True)
-	parent_id = db.IntegerProperty()
+	parent_id = db.StringProperty()
 	parents = db.StringListProperty()
 	status = db.StringProperty(default="private",
 			                   choices=set(["private", "public", "trashed"]))
@@ -205,7 +189,7 @@ class Note(db.Model):
 	def path(self):
 		if not self.parent_id:
 			return '/' + self.id
-		_p = '/' + str(self.parent_id)
+		_p = '/' + self.parent_id
 		for parent in self.parents:
 			if parent.endswith(_p):
 				return parent + '/' + self.id
@@ -236,26 +220,23 @@ class Note(db.Model):
 					 u=user_key, path=note_path)
 		if q.count() == 0:
 			return
+		#TODO: optimize here
 		for child in q:
 			child.remove(delete, False)
 
 	def remove(self, delete=False, remove_children=True):
 		if delete:
-			if self.status != 'trashed':
-				self.owner.update_counter('note_total', '-')
 			self.delete()
 		elif self.status != 'trashed':
 			self.status = 'trashed'
 			self.put()
-			self.owner.update_counter('note_total', '-')
 		if remove_children:
 			# TODO: remove children in taskqueue
 			Note.remove_children(self.owner.id, self.path, delete)
-			pass
 
 	def to_json(self, only_meta=False):
 		note = {}
-		note['id'] = int(self.id)
+		note['id'] = self.id
 		note['title'] = self.title
 		note['created'] = self.created.isoformat() + '+00:00'
 		note['last_modified'] = self.last_modified.isoformat() + '+00:00'
@@ -272,9 +253,6 @@ class Note(db.Model):
 		"""if parent_id is valid, 
 		auto set the parent_id and parents fields
 		"""
-		parent_id = str(parent_id)
-		if not parent_id.isdigit():
-			return False
 		if self.id == parent_id:
 			return False
 		key_name = self.owner.id + '.' + parent_id
@@ -284,21 +262,26 @@ class Note(db.Model):
 		parent_path = parent_note.path
 		if self.is_saved() and self.path in parent_note.parents:
 			return False
-		self.parent_id = int(parent_id)
+		self.parent_id = parent_id
 		self.parents = parent_note.parents + [parent_path]
 		return True
 
-
 	@staticmethod
 	def create_new(user, title, content, parent_id=None):
-		num = user.update_counter('note_max')
-		key_name = user.id + '.' + str(num)
+		key_name = user.id + '.' + Note.make_hash()
 		note = Note(key_name=key_name, owner=user)
 		note.set_title(title).set_content(content)
 		if parent_id and not note.check_parent_id(parent_id):
 			return False
-		db.put([note.content, note])
+		if user.is_saved():
+			db.put([note.content, note])
+		else:
+			db.put([user, note.content, note])
 		return note
+
+	@staticmethod
+	def make_hash():
+		return get_random_str(6)
 
 
 class Counter(db.Model):

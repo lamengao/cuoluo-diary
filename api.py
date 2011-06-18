@@ -162,7 +162,7 @@ def note_validated(handler_method):
 		if user is None:
 			self.error(403)
 			return
-		if not id.isdigit():
+		if len(id) < 6:
 			self.error(400)
 			return
 		if not user.is_saved():
