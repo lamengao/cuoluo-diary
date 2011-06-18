@@ -36,6 +36,8 @@ cld.DiaryTreeItem;
  */
 cld.DiaryTree = function(app) {
   goog.base(this, app, 'diary');
+
+  goog.dom.classes.add(this.create1st.getElement(), 'hidden');
 };
 goog.inherits(cld.DiaryTree, cld.DocsTree);
 
@@ -70,7 +72,7 @@ cld.DiaryTree.prototype.initTree = function() {
  * @param {goog.events.Event} e The event.
  */
 cld.DiaryTree.prototype.createNew = function(e) {
-  alert('create new diary now');
+  this.dispatchEvent(cld.DocsTree.EventType.FIRST_DIARY);
 };
 
 /**

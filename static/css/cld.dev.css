@@ -116,7 +116,7 @@ em {font-weight: bold;}
 /* @group creation and today */
 #createnewmenu {padding:1px 0}
 #createnewmenu .goog-menuitem{padding-right:37px}
-#createnewmenu ..goog-menuitem-content{line-height:16px}
+#createnewmenu .goog-menuitem-content{line-height:16px}
 .Diary-menuitemicon{background:url(/images/date/favicon_v2010_31.ico) no-repeat}
 .Note-menuitemicon{background-image: url("/images/icons_19.png");background-position: -144px 0;}
 .Email-menuitemicon{background-image: url("/images/blue-gmail16.png");}

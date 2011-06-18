@@ -94,7 +94,8 @@ class User(db.Model):
 		if not self.is_saved():
 			# new user
 			return '[]'
-		diary_json_list = [diary.to_json(True) for diary in self.diary]
+		diary_json_list = [diary.to_json(True) for diary in self.diary
+				                               if diary.status != 'trashed']
 		return '[' + ','.join(diary_json_list) + ']'
 
 	def get_notes_list(self):
@@ -102,7 +103,8 @@ class User(db.Model):
 		if not self.is_saved():
 			# new user
 			return '[]'
-		notes_json_list = [note.to_json(True) for note in self.notes]
+		notes_json_list = [note.to_json(True) for note in self.notes
+				                              if note.status != 'trashed']
 		return '[' + ','.join(notes_json_list) + ']'
 
 

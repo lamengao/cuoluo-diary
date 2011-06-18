@@ -122,6 +122,18 @@ cld.DocsTree.prototype.hiddenEmptyArea_ = function() {
 };
 
 /**
+ * Update empty area.
+ * @param {type} param
+ */
+cld.DocsTree.prototype.updateEmptyArea = function() {
+  if (this.tree.hasChildren()) {
+    this.hiddenEmptyArea_();
+  } else {
+    this.showEmptyArea_();
+  }
+};
+
+/**
  * Create new docs.
  * @param {goog.events.Event} e toggle event.
  */
@@ -280,6 +292,7 @@ cld.DocsTree.prototype.handlerExpand_ = function(e) {};
 cld.DocsTree.EventType = {
   SELECT_CHANGE: goog.events.getUniqueId('select_change'),
   NEW_DOC: goog.events.getUniqueId('new_doc'),
+  FIRST_DIARY: goog.events.getUniqueId('first_diary'),
   NODE_CHANGED: goog.events.getUniqueId('node_changed'),
   NODE_NOT_FOUND: goog.events.getUniqueId('node_not_found')
 };

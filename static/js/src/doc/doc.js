@@ -277,6 +277,12 @@ cld.Doc.prototype.setEditorAreaHeight = function() {
   var el = this.dom_.getElement('doc-container');
   var toolbarHeight = getHeight('editortoolbar', this.dom_);
   el.style.paddingTop = toolbarHeight + 'px';
+
+  if (goog.userAgent.WEBKIT) {
+    var containerHeight = getHeight('doc-container', this.dom_);
+    var elEditorArea = this.dom_.getElement('editorarea');
+    elEditorArea.style.height = (containerHeight - toolbarHeight) + 'px';
+  }
 };
 
 /**
@@ -828,7 +834,8 @@ cld.Doc.prototype.clearActions = function() {
  * @return {boolean} Is open?
  */
 cld.Doc.prototype.isOpen = function() {
-  return goog.style.isElementShown(this.element);
+  //return goog.style.isElementShown(this.element);
+  return !goog.dom.classes.has(this.element, 'hidden');
 };
 
 /**
@@ -867,9 +874,9 @@ cld.Doc.getDateString = function(date) {
   if (!date) {
     return '';
   }
-  y = date.getFullYear() + '';
-  m = (date.getMonth() + 1) + '';
-  d = date.getDate() + '';
+  var y = date.getFullYear() + '';
+  var m = (date.getMonth() + 1) + '';
+  var d = date.getDate() + '';
   if (m.length === 1) {
     m = '0' + m;
   }
