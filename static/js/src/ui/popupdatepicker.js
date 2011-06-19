@@ -225,6 +225,7 @@ cld.ui.PopupDatePicker.prototype.showPopup = function(element) {
   this.popup_.setPinnedCorner(goog.positioning.Corner.TOP_RIGHT);
   this.popup_.setPosition(new goog.positioning.AnchoredPosition(
       element, goog.positioning.Corner.BOTTOM_END));
+  this.popup_.setMargin(1, 0, 0, 0);
 
   // Don't listen to date changes while we're setting up the popup so we don't
   // have to worry about change events when we call setDate().

@@ -132,7 +132,7 @@ em {font-weight: bold;}
 #contentcreationpane{min-height:30px;padding-left:4px}
 div.toolbarbutton{margin:4px}
 #today{margin-right:0}
-#today.goog-css3-button{padding-right:4px;line-height: 16px;}
+#today.goog-css3-button{line-height: 16px;}
 #datepickerbutton{margin-left:0}
 #datepickerbutton.goog-css3-button{padding-left:4px;padding-right:4px}
 #datepickerbutton .goog-css3-button-dropdown{margin:0}
