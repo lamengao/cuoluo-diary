@@ -131,6 +131,13 @@ em {font-weight: bold;}
 /* @group contentcreationpane */
 #contentcreationpane{min-height:30px;padding-left:4px}
 div.toolbarbutton{margin:4px}
+#today{margin-right:0}
+#today.goog-css3-button{padding-right:4px;line-height: 16px;}
+#datepickerbutton{margin-left:0}
+#datepickerbutton.goog-css3-button{padding-left:4px;padding-right:4px}
+#datepickerbutton .goog-css3-button-dropdown{margin:0}
+#datepickerbutton.goog-imageless-button .goog-css3-button-dropdown{vertical-align: middle;}
+#datepickerbutton.goog-imageless-button .goog-imageless-button-content{padding:0 4px}
 /* @end */
 
 /* @group navpanelist */
@@ -244,14 +251,8 @@ div.toolbarbutton{margin:4px}
 .note #header-title .text{cursor: text;}
 .diary #header-title .text{cursor: default;}
 .note #header-title .text:hover{color:#666}
-.diary #header-title .text:hover, .diary #header-title .text.datepicker-on{
-	/*background-color:#FFF;*/
-	border:1px solid #555;
-}
-.diary #header-title .text:hover .arrow, .diary #header-title .text.datepicker-on .arrow{
-	background-color:#6688EE;
-	color:#FFF;
-}
+/*.diary #header-title .text:hover, .diary #header-title .text.datepicker-on{ border:1px solid #555; }*/
+/*.diary #header-title .text:hover .arrow, .diary #header-title .text.datepicker-on .arrow{ background-color:#6688EE; color:#FFF; }*/
 .path-arrow {
 	background-image: url("/images/icons_11.png");
 	background-position: -448px 2px;

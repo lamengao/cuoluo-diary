@@ -96,7 +96,7 @@ cld.App.prototype.loaded = function() {
         this.notesTree.updateEmptyArea();
         this.search.updateSearchRows();
     }).
-    listen(this, cld.doc.EventType.DATE_CHANGED, function(e) {
+    listen(this, cld.Today.EventType.DATE_CHANGED, function(e) {
         this.diaryTree.selectNodeByDate(/** @type {string} */ (e.date));
     });
 
@@ -442,14 +442,7 @@ cld.App.prototype.onDocListSelect_ = function(e) {
  * @private
  */
 cld.App.prototype.onNewDiary_ = function(e) {
-  if (this.doc && this.doc.isOpen() && this.doc.docType === 'diary') {
-    this.doc.showDatePicker();
-    console.log('a today');
-  } else {
-    console.log('go to today');
-    this.diaryTree.selectTodayNode();
-    this.doc.showDatePicker();
-  }
+  this.today.showDatePicker();
 };
 
 /**

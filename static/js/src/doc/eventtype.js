@@ -15,6 +15,5 @@ cld.doc.EventType = {
   DISCARD_NEW_NOTE: goog.events.getUniqueId('discard_new_note'),
   DELETED: goog.events.getUniqueId('deleted'),
   RESTORED: goog.events.getUniqueId('restored'),
-  BACKTO: goog.events.getUniqueId('backto'),
-  DATE_CHANGED: goog.events.getUniqueId('date_changed')
+  BACKTO: goog.events.getUniqueId('backto')
 };

@@ -98,6 +98,9 @@ cld.ui.PopupDatePicker.prototype.enterDocument = function() {
       if (!e.target || (this.elAttach_ && e.target != this.elAttach_ &&
                         e.target.parentNode != this.elAttach_)) {
         goog.dom.classes.remove(this.elAttach_, 'datepicker-on');
+        if (this.attachedButton) {
+          this.attachedButton.setChecked(false);
+        }
       }
     }, false, this);
 };
@@ -171,6 +174,17 @@ cld.ui.PopupDatePicker.prototype.attach = function(element) {
                            this.showPopup_);
 };
 
+/**
+ * Attaches the popup date picker to a button.
+ * @param {goog.ui.Button} button The button to attach to.
+ */
+cld.ui.PopupDatePicker.prototype.attachButton = function(button) {
+  this.attachedButton = button;
+  this.elAttach_ = button.getElement();
+  this.getHandler().listen(button,
+    [goog.ui.Component.EventType.CHECK, goog.ui.Component.EventType.UNCHECK],
+     this.showPopup_);
+};
 
 /**
  * Detatches the popup date picker from an element.
@@ -207,9 +221,6 @@ cld.ui.PopupDatePicker.prototype.getAllowAutoFocus = function() {
  *     will appear at the bottom-left corner of this element.
  */
 cld.ui.PopupDatePicker.prototype.showPopup = function(element) {
-  if (!goog.dom.classes.has(element, 'datepicker-on')) {
-    goog.dom.classes.add(element, 'datepicker-on');
-  }
   this.lastTarget_ = element;
   this.popup_.setPinnedCorner(goog.positioning.Corner.TOP_RIGHT);
   this.popup_.setPosition(new goog.positioning.AnchoredPosition(
@@ -217,8 +228,8 @@ cld.ui.PopupDatePicker.prototype.showPopup = function(element) {
 
   // Don't listen to date changes while we're setting up the popup so we don't
   // have to worry about change events when we call setDate().
-  this.getHandler().unlisten(this.datePicker_, goog.ui.DatePicker.Events.CHANGE,
-                             this.onDateChanged_);
+  //this.getHandler().unlisten(this.datePicker_, goog.ui.DatePicker.Events.CHANGE,
+                             //this.onDateChanged_);
   //this.datePicker_.setDate(null);
 
   // Forward the change event onto our listeners.  Done before we start
@@ -226,8 +237,8 @@ cld.ui.PopupDatePicker.prototype.showPopup = function(element) {
   // without firing more events.
   this.dispatchEvent(goog.ui.PopupBase.EventType.SHOW);
 
-  this.getHandler().listen(this.datePicker_, goog.ui.DatePicker.Events.CHANGE,
-                           this.onDateChanged_);
+  //this.getHandler().listen(this.datePicker_, goog.ui.DatePicker.Events.CHANGE,
+                           //this.onDateChanged_);
   this.popup_.setVisible(true);
   if (this.allowAutoFocus_) {
     this.getElement().focus();  // Our element contains the date picker.
@@ -241,11 +252,16 @@ cld.ui.PopupDatePicker.prototype.showPopup = function(element) {
  * @private
  */
 cld.ui.PopupDatePicker.prototype.showPopup_ = function(event) {
-  var element = /** @type {Element} */ (event.currentTarget);
-  goog.dom.classes.toggle(element, 'datepicker-on');
-  if (goog.dom.classes.has(element, 'datepicker-on')) {
-    this.showPopup(element);
+  if (event.target instanceof goog.ui.Button) {
+    var element = /** @type {Element} */ (event.target.getElement());
   } else {
+    var element = /** @type {Element} */ (event.currentTarget);
+  }
+  if (event.type === goog.ui.Component.EventType.CHECK) {
+    if (!this.popup_.isVisible()) {
+      this.showPopup(element);
+    }
+  } else if (event.type === goog.ui.Component.EventType.UNCHECK) {
     this.hidePopup();
   }
 };

@@ -143,36 +143,6 @@ cld.Creation.prototype.createNewSiblingNote = function() {
   this.dispatchEvent(cld.Creation.EventType.NEW_SIBLINGNOTE);
 };
 
-/**
- * Create 'new diary' chose date calendar dialog.
- * @private
- */
-cld.Creation.prototype.initDiaryDialog_ = function() {
-  var diaryDialog = new goog.ui.Dialog();
-  /*diaryDialog.setContent(
-      'Lorem ipsum dolor sit amet, consectetuer' +
-      'euismod risus. Nam hendrerit lacus vehicula augue. Duis ante.');*/
-    diaryDialog.setTitle('Choose The Date');
-    diaryDialog.getDialogElement().id = 'diarydialog';
-
-    this.diaryDialog = diaryDialog;
-
-    this.initDatePicker_();
-};
-
-/**
- * Create date picker.
- * @private
- */
-cld.Creation.prototype.initDatePicker_ = function() {
-  var datePicker = new goog.ui.DatePicker();
-  datePicker.render(this.diaryDialog.getContentElement());
-  datePicker.getElement().id = 'newdiarydatepicker';
-  datePicker.setShowWeekNum(false);
-  this.datePicker = datePicker;
-};
-
-
 /** @enum {string} */
 cld.Creation.EventType = {
   NEW_DIARY: goog.events.getUniqueId('new_diary'),

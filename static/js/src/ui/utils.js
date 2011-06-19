@@ -13,6 +13,7 @@ goog.require('goog.ui.ImagelessButtonRenderer');
 goog.require('goog.ui.ImagelessMenuButtonRenderer');
 goog.require('goog.ui.LinkButtonRenderer');
 goog.require('goog.ui.MenuButton');
+goog.require('goog.ui.ToggleButton');
 goog.require('goog.userAgent');
 
 /**
@@ -72,6 +73,16 @@ cld.ui.utils.newButton = function(content, menu) {
 cld.ui.utils.newLinkButton = function(content) {
   return new goog.ui.Button(content,
     goog.ui.LinkButtonRenderer.getInstance());
+};
+
+/**
+ * Create a new toggle button.
+ * @param {goog.ui.ControlContent} content Text caption or existing DOM
+ * structure to display as the button's caption.
+ * @return {goog.ui.Button} The new button.
+ */
+cld.ui.utils.newToggleButton = function(content) {
+  return new goog.ui.ToggleButton(content, cld.ui.utils.getButtonRenderer());
 };
 
 /**

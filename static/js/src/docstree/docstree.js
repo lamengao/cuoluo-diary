@@ -123,7 +123,6 @@ cld.DocsTree.prototype.hiddenEmptyArea_ = function() {
 
 /**
  * Update empty area.
- * @param {type} param
  */
 cld.DocsTree.prototype.updateEmptyArea = function() {
   if (this.tree.hasChildren()) {
