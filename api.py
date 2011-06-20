@@ -4,6 +4,7 @@ import time
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
+from google.appengine.api import mail
 #from google.appengine.api import memcache
 from django.utils import simplejson
 
@@ -260,9 +261,19 @@ class SearchHandler(webapp.RequestHandler):
 
 
 class EmailHandler(webapp.RequestHandler):
-	'''URI: /api/email/send'''
+	'''URI: /api/email'''
+	@json_verified
+	@login_required
 	def post(self):
-		self.response.out.write('email handler')
+		"""Send email"""
+		if 'to' not in self.json:
+			self.error(400)
+			return
+		sender = self.user.email
+		to = self.json['to']
+		subject = self.json.get('subject', '')
+		body = self.json.get('body', '')
+		mail.send_mail(sender=sender, to=to, subject=subject, body=body)
 
 
 application = webapp.WSGIApplication([(r'/api/diary', DiaryListHandler),
@@ -270,7 +281,7 @@ application = webapp.WSGIApplication([(r'/api/diary', DiaryListHandler),
 									  (r'/api/notes', NotesListHandler),
 									  (r'/api/note/(.*)', NoteHandler),
 									  (r'/api/search', SearchHandler),
-									  (r'/api/email/send', EmailHandler)
+									  (r'/api/email', EmailHandler)
 									 ],
 									 debug=True)
 

@@ -18,7 +18,7 @@ del,ins {text-decoration: none;}
 /* @end */
 
 /* @group font face */
-/*@font-face {
+@font-face {
   font-family: 'Vollkorn';
   font-style: italic;
   font-weight: bold;
@@ -41,7 +41,7 @@ del,ins {text-decoration: none;}
   font-style: normal;
   font-weight: normal;
   src: local('Vollkorn Regular'), local('Vollkorn-Regular'), url('http://themes.googleusercontent.com/font?kit=BCFBp4rt5gxxFrX6F12DKiD4i3kEMkPDRbZVAX_DCSs&text') format('woff');
-}*/
+}
 /* @end */
 
 /* @group layout */
@@ -215,10 +215,16 @@ div.toolbarbutton{margin:4px}
 /* @end */
 
 /* @group main */
-#doc,#docslist{position:absolute;width:100%;height:100%}
-#doc-header, #docslist-header{height:30px;position:absolute;width:100%}
-#doc-footer, #docslist-footer{height:30px;position:absolute;bottom:0;width:100%}
-#doc-container, #docslist-container{background-color:#FFF;position:absolute;top:30px;bottom:30px;width:100%;padding-top:30px}
+#doc,#docslist,#email{position:absolute;width:100%;height:100%}
+.mainheader{
+	height:30px;position:absolute;width:100%;
+}
+.mainfooter{
+	height:30px;position:absolute;bottom:0;width:100%;
+}
+.maincontainer {
+	background-color:#FFF;position:absolute;top:30px;bottom:30px;width:100%;padding-top:30px;
+}
 /* @end */
 
 /* @group doc header */
@@ -333,4 +339,29 @@ background-position: -224px 0;
 background-image: url("/images/icons_13.png");
 background-position: -144px 0;
 }
+/* @end */
+
+/* @group email */
+#email-container{padding:0;background-color:#BBCCFF;}
+.maincontainer label{font-weight: bold;display:block;float:left;width:55px;text-align:right;margin-right: 5px;}
+.email-field{height:29px;line-height: 25px;margin-bottom:5px}
+#email-to, #email-subject{
+	padding: 3px 0 3px 3px;
+	margin: 1px;
+	border: 1px solid;
+	border-color:#666 #CCC #CCC #CCC;
+	width:80%;
+}
+#email-body{
+	width:95%;margin-top: 5px;border: 0;
+	margin-left: 3px;
+	outline: 0;
+	overflow: auto;
+	padding: 8px;
+	border:1px solid;
+	border-color:#666 #CCC #CCC #CCC;
+}
+.emailbutton{margin-top:5px}
+.mainfooter .emailbutton{margin-top:4px}
+#sendbutton, #btmsendbutton{font-weight:bold;margin-right:10px}
 /* @end */

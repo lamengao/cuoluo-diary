@@ -12,6 +12,7 @@ goog.require('cld.Doc');
 goog.require('cld.DocsList');
 goog.require('cld.DocsTree');
 goog.require('cld.DocsTree.EventType');
+goog.require('cld.Email');
 goog.require('cld.NotesTree');
 goog.require('cld.Search');
 goog.require('cld.SplitPane');
@@ -46,6 +47,7 @@ cld.App = function() {
   this.handle = new goog.events.EventHandler(this);
   /** @type {cld.SplitPane} */
   this.splitpane = new cld.SplitPane(this.dom_);
+  this.splitpane.setParentEventTarget(this);
   /** @type {cld.Zippy} */
   this.diaryZippy =
     new cld.Zippy('diary-tree-header', 'diary-tree-content', this.dom_);
@@ -55,7 +57,7 @@ cld.App = function() {
   /** @type {cld.Zippy} */
   this.tasksZippy =
     new cld.Zippy('tasks-title', 'tasks-container', this.dom_);
-  //this.tasks = new cld.Tasks(this.dom_);
+  this.tasks = new cld.Tasks(this.dom_);
 };
 goog.inherits(cld.App, goog.events.EventTarget);
 goog.addSingletonGetter(cld.App);
@@ -116,7 +118,10 @@ cld.App.prototype.loaded = function() {
   this.handle.
     listen(this,
       [cld.Creation.EventType.NEW_DIARY, cld.DocsTree.EventType.FIRST_DIARY],
-      this.onNewDiary_);
+      this.onNewDiary_).
+    listen(this, cld.Creation.EventType.NEW_EMAIL, this.onNewEmail_).
+    listen(this, cld.Email.EventType.DISCARD, this.onEmailDiscard_).
+    listen(this, cld.Email.EventType.SENT, this.onEmailSent_);
 
 
   this.handle.
@@ -126,11 +131,13 @@ cld.App.prototype.loaded = function() {
     listen(this, cld.DocsTree.EventType.NODE_NOT_FOUND, this.onNodeNotFound_).
     listen(this, cld.Today.EventType.GOTO_TODAY, this.onGotoToday_).
     listen(this.dom_.getWindow(), goog.events.EventType.RESIZE,
-      goog.bind(this.handleResize_, this));
+      goog.bind(this.handleResize_, this)).
+    listen(this, cld.SplitPane.EventType.RESIZE, this.handleResize_);
 
   var loadingEvents = [
     cld.api.Docs.EventType.LOADING,
-    cld.Search.EventType.SEARCHING
+    cld.Search.EventType.SEARCHING,
+    cld.Email.EventType.SENDING
   ];
   var loadedEvents = [
     cld.api.Docs.EventType.LOADED,
@@ -138,7 +145,11 @@ cld.App.prototype.loaded = function() {
   ];
   this.handle.
     listen(this, loadingEvents, function(e) {
-        cld.message.showLoading();
+        if (e.type === cld.Email.EventType.SENDING) {
+          cld.message.showLoading('Sending');
+        } else {
+          cld.message.showLoading();
+        }
     }).
     listen(this, loadedEvents, function(e) {
         cld.message.hiddenLoading();
@@ -153,12 +164,17 @@ cld.App.prototype.loaded = function() {
  * @private
  */
 cld.App.prototype.handleResize_ = function(e) {
-  this.splitpane.fitSize();
-  goog.array.forEach(cld.Zippy.list, function(zippy) {
-    zippy.resetContentHeight();
-  });
-  if (this.doc) {
+  if (e.type !== cld.SplitPane.EventType.RESIZE) {
+    this.splitpane.fitSize();
+    goog.array.forEach(cld.Zippy.list, function(zippy) {
+      zippy.resetContentHeight();
+    });
+  }
+  if (this.doc && this.doc.isOpen()) {
     this.doc.setEditorAreaHeight();
+  }
+  if (this.email.isOpen()) {
+    this.email.adjustFieldSize();
   }
 };
 
@@ -214,6 +230,10 @@ cld.App.prototype.controller = function(token) {
   } else if (type === 'search' && token.length > 7) {
     var query = token.substr(7);
     this.search.searchDocs(decodeURIComponent(query));
+  } else if (token === 'email') {
+    this.newEmail();
+  } else if (token == '') {
+    this.diaryTree.selectTodayNode();
   }
 };
 
@@ -403,6 +423,7 @@ cld.App.prototype.onSearched_ = function(e) {
   }
   this.notesTree.tree.select();
   this.diaryTree.tree.select();
+  this.email.hidden();
   this.docsList.show('search', query, docs);
   this.history.setToken('search/' + encodeURIComponent(query));
 };
@@ -446,6 +467,57 @@ cld.App.prototype.onNewDiary_ = function(e) {
 };
 
 /**
+ * New Email.
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onNewEmail_ = function(e) {
+  this.newEmail();
+};
+
+/**
+ * New Email.
+ */
+cld.App.prototype.newEmail = function() {
+  var backto = '';
+  var token = this.history.getToken();
+  if (token != 'email') {
+    backto = token;
+  }
+  if (this.doc) {
+    this.doc.hidden();
+  }
+  this.notesTree.tree.select();
+  this.diaryTree.tree.select();
+  this.search.cleanInput();
+  this.docsList.hidden();
+  this.email.open(backto);
+  this.history.setToken('email');
+};
+
+/**
+ * Email discard.
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onEmailDiscard_ = function(e) {
+  var backto = /** @type {string} */ (e.backto);
+  this.controller(backto);
+};
+
+/**
+ * Email sent.
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onEmailSent_ = function(e) {
+  var backto = /** @type {string} */ (e.backto);
+  this.controller(backto);
+  cld.message.hiddenLoading();
+  cld.message.simpleShow(cld.Email.TEXT.SENT, 8);
+};
+
+/**
  * Create new note callback.
  */
 cld.App.prototype.newNote = function() {
@@ -458,6 +530,7 @@ cld.App.prototype.newNote = function() {
 cld.App.prototype.beforeOpenDoc = function() {
   this.doc.clearActions();
   this.docsList.hidden();
+  this.email.hidden();
   this.search.cleanInput();
   cld.message.hidden();
 };
@@ -477,6 +550,7 @@ cld.App.prototype.install = function(opt_app) {
   this.search.initAutoComplete();
 
   this.docsList = new cld.DocsList(cld.App.getInstance());
+  this.email = new cld.Email(cld.App.getInstance());
 
   this.loaded();
 };

@@ -163,6 +163,7 @@ cld.DocsList.prototype.createRefreshButton_ = function() {
 /**
  * on click doc in doc list.
  * @param {goog.events.Event} e Click event.
+ * @private
  */
 cld.DocsList.prototype.handleDocSelect_ = function(e) {
   var li = /** @type {Element} */ (e.target);

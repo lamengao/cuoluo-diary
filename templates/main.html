@@ -90,40 +90,47 @@
   </div>
   <div class="goog-splitpane-second-container" id="viewpane">
     <div id="doc" class="hidden">
-      <div id="doc-header">
+      <div id="doc-header" class="mainheader">
         <h1 id="header-title">
           <span class="docpath"><span class="path"></span><span class="path-arrow goog-inline-block hidden">&nbsp;</span></span>
           <span class="text goog-inline-block goog-control"></span>
           <div id="edit-name" class="goog-inline-block hidden"><input type="text" id="editname" size="30"></div>
         </h1>
       </div>
-      <div id="doc-container">
+      <div id="doc-container" class="maincontainer">
         <div id="editortoolbar" class="lightbg toolbar"></div>
         <div id="editorarea"></div>
       </div>
-      <div id="doc-footer"></div>
+      <div id="doc-footer" class="mainfooter"></div>
     </div><!-- #doc end -->
     <div id="docslist" class="hidden">
-      <div id="docslist-header">
+      <div id="docslist-header" class="mainheader">
         <div id="docslist-title"><span class="text">Search results for: </span><em></em></div>
       </div>
-      <div id="docslist-container">
+      <div id="docslist-container" class="maincontainer">
         <div id="docslist-toolbar" class="lightbg toolbar">
           <span id="results-count"><span>Results: <b class="count">0</b> for <b class="query"></b>.</span></span>
         </div>
-        <ul id="doclist">
-          <li id="diary-20110609">
-            <span class="goog-inline-block doclist-icon day-icon-14"> </span>
-            <span class="goog-inline-block doclist-name">Thursday, June 09, 2011</span>
-          </li>
-          <li id="note-1">
-            <span class="goog-inline-block doclist-icon note-icon"> </span>
-            <span class="goog-inline-block doclist-name">wa haha yes ni hao</span>
-          </li>
-        </ul>
+        <ul id="doclist"></ul>
       </div>
-      <div id="docslist-footer"></div>
+      <div id="docslist-footer" class="mainfooter"></div>
     </div><!-- #docslist end -->
+    <div id="email" class="hidden">
+      <div id="email-header" class="mainheader"></div>
+      <div id="email-container" class="maincontainer">
+        <div class="email-field">
+          <label for="email-from">From:</label><span id="email-from"></span>
+        </div>
+        <div class="email-field">
+          <label for="email-to">To:</label><input type="text" name="email-to" id="email-to" value=""/>
+        </div>
+        <div class="email-field">
+          <label for="email-subject">Subject:</label><input type="text" name="email-subject" id="email-subject" value=""/>
+        </div>
+        <textarea id="email-body"></textarea>
+      </div>
+      <div id="email-footer" class="mainfooter"></div>
+    </div><!-- #email end -->
   </div>
   <div class="goog-splitpane-handle" id="splitpane-handle"></div>
 </div>
@@ -162,6 +169,8 @@ var _NOTES_LIST = {{ notes_list|safe }};
 <script type="text/javascript" src="/js/src/docslist.js"></script>
 <script type="text/javascript" src="/js/src/search.js"></script>
 <script type="text/javascript" src="/js/src/tasks.js"></script>
+<script type="text/javascript" src="/js/src/api/email.js"></script>
+<script type="text/javascript" src="/js/src/email.js"></script>
 <script type="text/javascript" src="/js/src/app.js"></script>
 {% else %}
 {% ifequal browser.name 'unknown' %}

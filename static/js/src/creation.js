@@ -128,7 +128,7 @@ cld.Creation.prototype.createNewNote = function() {
  * Create new Email.
  */
 cld.Creation.prototype.createNewEmail = function() {
-  alert('new email');
+  this.dispatchEvent(cld.Creation.EventType.NEW_EMAIL);
 };
 /**
  * Create new child note.
