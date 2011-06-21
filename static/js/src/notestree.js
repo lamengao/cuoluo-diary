@@ -14,6 +14,7 @@ goog.require('goog.date');
 goog.require('goog.events.EventHandler');
 goog.require('goog.events.EventTarget');
 goog.require('goog.object');
+goog.require('goog.string');
 goog.require('goog.ui.Button');
 goog.require('goog.ui.LinkButtonRenderer');
 
@@ -107,9 +108,10 @@ cld.NotesTree.prototype.createTreeNodeByItem = function(item) {
     return null;
   }
   var node = this.tree.createNode('');
-  node.setToolTip(item['title']);
+  var title = goog.string.unescapeEntities(item['title']);
+  node.setToolTip(title);
   node.setModel(item);
-  node.setText(item['title']);
+  node.setText(title);
   parentNode.add(node);
   cld.DocsTree.setNodeInMap(node);
   return node;

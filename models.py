@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #import logging
+import cgi
+import os
 import re
 import random
+os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+
+from google.appengine.dist import use_library
+use_library('django', '1.2')
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -237,7 +243,7 @@ class Note(db.Model):
 	def to_json(self, only_meta=False):
 		note = {}
 		note['id'] = self.id
-		note['title'] = self.title
+		note['title'] = cgi.escape(self.title)
 		note['created'] = self.created.isoformat() + '+00:00'
 		note['last_modified'] = self.last_modified.isoformat() + '+00:00'
 		if self.parent_id:

@@ -13,6 +13,7 @@ goog.require('cld.ui.AutoComplete.Search');
 goog.require('cld.ui.utils');
 goog.require('goog.events');
 goog.require('goog.events.EventTarget');
+goog.require('goog.string');
 
 
 /**
@@ -100,8 +101,9 @@ cld.Search.prototype.getSearchRows = function() {
         node.getModel()['status'] === 'trashed') {
       continue;
     }
+    var title = goog.string.unescapeEntities(node.getModel()['title']);
     searchRows
-      .push(this.makeSearchDocsRow('note', node.getModel()['title'], key));
+      .push(this.makeSearchDocsRow('note', title, key));
   }
   return searchRows;
 };

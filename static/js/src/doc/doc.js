@@ -20,6 +20,7 @@ goog.require('goog.events');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
 goog.require('goog.object');
+goog.require('goog.string');
 goog.require('goog.ui.Control');
 goog.require('goog.ui.ControlRenderer');
 goog.require('goog.ui.Menu');
@@ -320,6 +321,7 @@ cld.Doc.prototype.setTitle = function(type, title) {
   } else {
     var path = 'Notes';
     var toolTip = 'Click to edit';
+    title = goog.string.unescapeEntities(title);
   }
   this.dom_.setTextContent(this.pathSpan, path);
   this.dom_.setTextContent(this.titleTextSpan, title);
@@ -533,14 +535,16 @@ cld.Doc.prototype.onSavedSuccess_ = function(node, data) {
   if (isNew) {
     this.dispatchEvent(new cld.doc.Event('newDocCreated', node));
   }
-  var title = node.getModel()['title'];
+  if (node.getModel()['title']) {
+    var title = goog.string.unescapeEntities(node.getModel()['title']);
+  }
   if ('id' in node.getModel() && node.getText() !== title) {
     // note title renamed
     if (this.openingNode_ == node) {
-      this.setTitle('note', title);
+      this.setTitle('note', /** @type {string} */ (title));
       this.cancleRename();
     }
-    node.setText(title);
+    node.setText(/** @type {string} */ (title));
   }
   this.dispatchEvent(cld.api.Docs.EventType.LOADED);
   if (this.openingNode_ == node) {
@@ -570,7 +574,7 @@ cld.Doc.prototype.saveDoc_ = function(node) {
   if (this.docType === 'diary') {
     this.api.diary.update(xhr, nodeModel['date'], content);
   } else if (this.docType === 'note') {
-    var title = nodeModel['title'];
+    var title = goog.string.unescapeEntities(nodeModel['title']);
     if (this.isNew(node)) {
       var parentId = nodeModel['parent_id'];
       if (parentId) {

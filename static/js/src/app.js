@@ -130,9 +130,21 @@ cld.App.prototype.loaded = function() {
     listen(this, cld.DocsTree.EventType.NEW_DOC, this.onNewDoc_).
     listen(this, cld.DocsTree.EventType.NODE_NOT_FOUND, this.onNodeNotFound_).
     listen(this, cld.Today.EventType.GOTO_TODAY, this.onGotoToday_).
+    listen(this, cld.SplitPane.EventType.RESIZE, this.handleResize_);
+
+  // window event
+  this.handle.
     listen(this.dom_.getWindow(), goog.events.EventType.RESIZE,
       goog.bind(this.handleResize_, this)).
-    listen(this, cld.SplitPane.EventType.RESIZE, this.handleResize_);
+    //listen(this.dom_.getWindow(), 'beforeunload',
+      //goog.bind(this.onBeforeUnload_, this)).
+    listen(this.dom_.getWindow(), goog.events.EventType.UNLOAD,
+      function(e) {
+        this.dispose();
+      }, false, this);
+
+    this.dom_.getWindow().onbeforeunload =
+      goog.bind(this.onBeforeUnload_, this);
 
   var loadingEvents = [
     cld.api.Docs.EventType.LOADING,
@@ -175,6 +187,24 @@ cld.App.prototype.handleResize_ = function(e) {
   }
   if (this.email.isOpen()) {
     this.email.adjustFieldSize();
+  }
+};
+
+/**
+ * On befre unload event.
+ * @param {Event} e The event.
+ * @private
+ */
+cld.App.prototype.onBeforeUnload_ = function(e) {
+  e = e || this.dom_.getWindow().event;
+
+  if (this.doc.getOpeningNode() && this.doc.isModified()) {
+    var msg = 'This document has unsaved changes.' +
+              'Do you want to leave the page and discard your changes?';
+    if (e) {
+      e.returnValue = msg;
+    }
+    return msg;
   }
 };
 

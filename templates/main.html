@@ -8,8 +8,12 @@
   <meta charset="utf-8" />
   <title>Cuoluo Diary</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+{% if develop %}
   <link href="{{ '/css/closureui.css'|addfilemtime }}" rel="stylesheet" type="text/css" />
   <link href="{{ '/css/cld.dev.css'|addfilemtime }}" rel="stylesheet" type="text/css" />
+{% else %}
+  <link href="{{ '/css/cld.min.css'|addfilemtime }}" rel="stylesheet" type="text/css" />
+{% endif %}
   <link rel="shortcut icon" href="{{ '/images/favicon.ico'|addfilemtime }}" />
 </head>
 <body>
