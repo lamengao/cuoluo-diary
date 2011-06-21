@@ -24,7 +24,7 @@ cld.Tasks = function(opt_domHelper) {
 cld.Tasks.URL = 'https://mail.google.com/tasks/ig?pli=1';
 
 /** @type {string} */
-cld.Tasks.loginTesterImg = 'http://goo.gl/4WlPU';
+cld.Tasks.loginTesterImg = 'https://bit.ly/m9PaPq';
 
 /**
  * Test use whether loggin to gmail, if logged in load the iframe
