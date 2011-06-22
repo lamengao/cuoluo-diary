@@ -71,7 +71,7 @@ class User(db.Model):
 		if q == '':
 			return result
 		for content in self.contents:
-			if content.text.find(q) != -1:
+			if content.text and content.text.find(q) != -1:
 				if content.type == 'diary':
 					result['diaries'].append(content.doc_key)
 				elif content.type == 'note':

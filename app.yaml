@@ -77,3 +77,4 @@ skip_files:
 
 builtins:
 - datastore_admin: on
+- remote_api: on
