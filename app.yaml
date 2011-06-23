@@ -54,6 +54,10 @@ handlers:
   script: test.py
   #login: required
 
+- url: /monitor
+  script: monitor.py
+  login: admin
+
 - url: .*
   script: main.py
   secure: always
