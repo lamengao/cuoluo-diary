@@ -177,13 +177,13 @@ cld.DocsList.prototype.handleDocSelect_ = function(e) {
   var event = {};
   event.type = cld.DocsList.EventType.DOC_SELECT;
   event.docType = id.split('-')[0];
-  var key = id.split('-')[1];
   if (event.docType === 'diary') {
+    var key = id.split('-')[1];
     event.key = key.substr(0, 4) + '/' +
                 key.substr(4, 2) + '/' +
                 key.substr(6);
   } else {
-    event.key = key;
+    event.key = id.substr(5);
   }
   this.dispatchEvent(event);
 };
