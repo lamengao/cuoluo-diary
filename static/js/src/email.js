@@ -126,6 +126,9 @@ cld.Email.prototype.send_ = function(e) {
   if (body == '' && !confirm(cld.Email.TEXT.SEND_NO_BODY)) {
     return;
   }
+  if (subject == '' && !confirm(cld.Email.TEXT.SEND_NO_SUBJECT)) {
+    return;
+  }
   var emails = [];
   var emailAddresses = goog.format.EmailAddress.parseList(addresses);
   for (var i = 0; i < emailAddresses.length; i++) {
@@ -217,5 +220,6 @@ cld.Email.TEXT = {
            'Please make sure that all addresses are properly formed.',
   SENT: 'Your message has been sent.',
   SEND_NO_BODY: 'Send this message without text in the body?',
+  SEND_NO_SUBJECT: 'Send message without a subject?',
   EMPTY_ADD: 'Please specify at least one recipient.'
 };
