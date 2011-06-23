@@ -48,7 +48,7 @@ handlers:
   #login: required
 
 - url: /settings
-  script: settings.py
+  script: setting.py
   
 - url: /test
   script: test.py

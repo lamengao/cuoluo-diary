@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import time
+import logging
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
 from google.appengine.dist import use_library
@@ -277,8 +278,14 @@ class EmailHandler(webapp.RequestHandler):
 			return
 		sender = self.user.email
 		to = self.json['to']
-		subject = self.json.get('subject', '')
-		body = self.json.get('body', '')
+		if 'subject' not in self.json or self.json['subject'] == '':
+			subject = ' '
+		else:
+			subject = self.json['subject']
+		if 'body' not in self.json or self.json['body'] == '':
+			body = ' '
+		else:
+			body = self.json['body']
 		mail.send_mail(sender=sender, to=to, subject=subject, body=body)
 
 

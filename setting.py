@@ -64,7 +64,7 @@ class MainHandler(webapp.RequestHandler):
 		self.redirect("/")
 
 
-application = webapp.WSGIApplication([('/settings', MainHandler)], debug=True)
+application = webapp.WSGIApplication([('/setting', MainHandler)], debug=True)
 
 def main():
 	run_wsgi_app(application)
