@@ -171,6 +171,7 @@ class Diary(db.Model):
 		if user.is_saved():
 			db.put([diary.content, diary])
 		else:
+			Counter.update_counter('users')
 			db.put([user, diary.content, diary])
 		return diary
 
@@ -282,6 +283,7 @@ class Note(db.Model):
 		if user.is_saved():
 			db.put([note.content, note])
 		else:
+			Counter.update_counter('users')
 			db.put([user, note.content, note])
 		return note
 
