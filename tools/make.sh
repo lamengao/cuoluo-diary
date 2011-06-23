@@ -45,4 +45,4 @@ cd /Users/yibing/developer/projects/GAE/cldiary/newyear/tools
 	--compiler_flags="--warning_level=VERBOSE" \
 	--compiler_jar=/Users/yibing/developer/libs/closuretools/compiler/compiler.jar > ../static/js/cld.min.js
 
-./minicss.py
+#./minicss.py

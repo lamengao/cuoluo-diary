@@ -12,6 +12,7 @@ goog.require('goog.events');
 goog.require('goog.events.EventHandler');
 goog.require('goog.events.EventTarget');
 goog.require('goog.object');
+goog.require('goog.style');
 goog.require('goog.ui.Button');
 goog.require('goog.ui.LinkButtonRenderer');
 
@@ -159,7 +160,7 @@ cld.DocsTree.getTokenByNode = function(node) {
 /**
  * Get node key
  * @param {!goog.ui.tree.BaseNode} node The node.
- * @return {string} The key
+ * @return {string} The key.
  */
 cld.DocsTree.getNodeKey = function(node) {
   var key = '';
@@ -179,10 +180,10 @@ cld.DocsTree.getNodeKey = function(node) {
  */
 cld.DocsTree.getNodeType = function(node) {
   var model = node.getModel();
-  if ('id' in model) {
-    return 'note';
+  if (model && 'date' in model) {
+    return 'diary';
   }
-  return 'diary';
+  return 'note';
 };
 
 /**
@@ -196,6 +197,13 @@ cld.DocsTree.selectNode = function(node) {
     parentNode = parentNode.getParent();
   }
   node.select();
+  var type = cld.DocsTree.getNodeType(node);
+  if (type === 'note') {
+    type = 'notes';
+  }
+  var treeContentId = type + '-tree-content';
+  goog.style.scrollIntoContainerView(node.getElement(),
+    goog.dom.getElement(treeContentId));
 };
 
 /**
