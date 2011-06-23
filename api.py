@@ -279,7 +279,7 @@ class EmailHandler(webapp.RequestHandler):
 		sender = self.user.email
 		to = self.json['to']
 		if 'subject' not in self.json or self.json['subject'] == '':
-			subject = ' '
+			subject = '(no subject)'
 		else:
 			subject = self.json['subject']
 		if 'body' not in self.json or self.json['body'] == '':
