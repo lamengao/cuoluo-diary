@@ -20,6 +20,7 @@ cld.api.Search = function(et) {
   if (et) {
     this.setParentEventTarget(et);
   }
+  this.apiDocs = new cld.api.Docs(this);
 };
 goog.inherits(cld.api.Search, goog.events.EventTarget);
 
@@ -37,7 +38,7 @@ cld.api.Search.BASE_URL = '/api/search?q=';
  * @param {Function=} onTimeout timeout callback.
  */
 cld.api.Search.prototype.search = function(q, onSuccess, onError, onTimeout) {
-  var xhr = cld.api.Docs.newXhrIo(onSuccess, onError, onTimeout);
+  var xhr = this.apiDocs.newXhrIo(onSuccess, onError, onTimeout);
   q = encodeURIComponent(q);
   var url = cld.api.Search.BASE_URL + q;
   xhr.send(url);

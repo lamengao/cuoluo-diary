@@ -68,6 +68,7 @@ em {font-weight: bold;}
 .loadingstatusbox{padding: 3px; margin-left: -35px; border: 2px solid #fff1a8; border-top: 0px; top: 0;}
 #mbox{padding:0 7px;border: 3px solid transparent;line-height:16px;top:70px;margin-left:-168px}
 #undolink{margin-left:8px}
+.errormsg{background: #FDD; border-color: #FDD}
 /* @end */
 
 /* @group gb */

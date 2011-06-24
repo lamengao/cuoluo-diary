@@ -51,7 +51,7 @@ cld.api.Docs.POST_HEADER = {'Content-Type': 'application/json'};
  */
 cld.api.Docs.newXhrIo = function(onSuccess, onError, onTimeout) {
   var xhr = new goog.net.XhrIo();
-  xhr.setTimeoutInterval(10000);
+  xhr.setTimeoutInterval(20000);
   var successStatusCode = [200, 201, 202, 204, 304];
   goog.events.listenOnce(xhr, goog.net.EventType.COMPLETE, function(e) {
     var xhr = /** @type {goog.net.XhrIo} */ (e.target);
@@ -83,6 +83,27 @@ cld.api.Docs.newXhrIo = function(onSuccess, onError, onTimeout) {
   });
 
   return xhr;
+};
+
+/**
+ * Create a new XhrIo and listen event and bind the callback.
+ * @param {Function=} onSuccess Success callback.
+ * @param {Function=} onError Error callback.
+ * @param {Function=} onTimeout timeout callback.
+ * @return {goog.net.XhrIo} XhrIo.
+ */
+cld.api.Docs.prototype.newXhrIo = function(onSuccess, onError, onTimeout) {
+  if (!goog.isDef(onError)) {
+    onError = goog.bind(function(e) {
+        this.dispatchEvent(cld.api.Docs.EventType.ERROR);
+    }, this);
+  }
+  if (!goog.isDef(onTimeout)) {
+    onTimeout = goog.bind(function(e) {
+        this.dispatchEvent(cld.api.Docs.EventType.ERROR_TIMEOUT);
+    }, this);
+  }
+  return cld.api.Docs.newXhrIo(onSuccess, onError, onTimeout);
 };
 
 /**
@@ -141,12 +162,14 @@ cld.api.Docs.prototype.trash = function(xhr, url) {
  */
 cld.api.Docs.prototype.restore = function(xhr, url) {
   var json = {};
-  json['status'] = 'private'
+  json['status'] = 'private';
   xhr.send(url, 'PUT', goog.json.serialize(json));
 };
 
 /** @enum {string} */
 cld.api.Docs.EventType = {
   LOADING: goog.events.getUniqueId('doc_loading'),
-  LOADED: goog.events.getUniqueId('doc_loaded')
+  LOADED: goog.events.getUniqueId('doc_loaded'),
+  ERROR_TIMEOUT: goog.events.getUniqueId('error_timeout'),
+  ERROR: goog.events.getUniqueId('error')
 };

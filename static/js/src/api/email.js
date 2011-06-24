@@ -20,6 +20,7 @@ cld.api.Email = function(et) {
   if (et) {
     this.setParentEventTarget(et);
   }
+  this.apiDocs = new cld.api.Docs(this);
 };
 goog.inherits(cld.api.Email, goog.events.EventTarget);
 
@@ -40,7 +41,7 @@ cld.api.Email.BASE_URL = '/api/email';
  */
 cld.api.Email.prototype.send = function(to, subject, body,
                                         onSuccess, onError, onTimeout) {
-  var xhr = cld.api.Docs.newXhrIo(onSuccess, onError, onTimeout);
+  var xhr = this.apiDocs.newXhrIo(onSuccess, onError, onTimeout);
   var url = cld.api.Email.BASE_URL;
   var json = {};
   json['to'] = to;
