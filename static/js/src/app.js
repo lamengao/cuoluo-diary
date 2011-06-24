@@ -124,6 +124,10 @@ cld.App.prototype.loaded = function() {
     listen(this, cld.Email.EventType.DISCARD, this.onEmailDiscard_).
     listen(this, cld.Email.EventType.SENT, this.onEmailSent_);
 
+  // Api error events
+  this.handle.
+    listen(this, cld.api.Docs.EventType.ERROR, this.onApiError_).
+    listen(this, cld.api.Docs.EventType.ERROR_TIMEOUT, this.onApiTimeout_);
 
   this.handle.
     listen(this.history, goog.history.EventType.NAVIGATE, this.navCallback_).
@@ -557,6 +561,24 @@ cld.App.prototype.onEmailSent_ = function(e) {
   this.controller(backto);
   cld.message.hiddenLoading();
   cld.message.simpleShow(cld.Email.TEXT.SENT, 8);
+};
+
+/**
+ * Api timout
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onApiTimeout_ = function(e) {
+  cld.message.error('timeout');
+};
+
+/**
+ * Api error
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onApiError_ = function(e) {
+  cld.message.error('error');
 };
 
 /**

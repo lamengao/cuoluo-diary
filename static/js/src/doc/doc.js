@@ -73,6 +73,7 @@ cld.Doc = function(app) {
   this.initTitleControl_();
 
   this.api = {};
+  this.api.Docs = new cld.api.Docs(this);
   this.api.diary = new cld.api.Diary(this);
   this.api.notes = new cld.api.Notes(this);
 
@@ -463,7 +464,7 @@ cld.Doc.prototype.onDocLoadSuccess_ = function(data) {
  * Load doc content and show it.
  */
 cld.Doc.prototype.loadAndShowDocContent = function() {
-  var xhr = cld.api.Docs.newXhrIo(goog.bind(this.onDocLoadSuccess_, this));
+  var xhr = this.api.Docs.newXhrIo(goog.bind(this.onDocLoadSuccess_, this));
   if (this.docType === 'diary') {
     this.api.diary.get(xhr, this.nodeModel['date']);
   } else if (this.docType === 'note') {
@@ -579,7 +580,7 @@ cld.Doc.prototype.saveDoc_ = function(node) {
   var nodeModel = node.getModel();
   var content = nodeModel['content'];
   var successCallback = goog.bind(this.onSavedSuccess_, this, node);
-  var xhr = cld.api.Docs.newXhrIo(successCallback);
+  var xhr = this.api.Docs.newXhrIo(successCallback);
   if (this.docType === 'diary') {
     this.api.diary.update(xhr, nodeModel['date'], content);
   } else if (this.docType === 'note') {
@@ -718,7 +719,7 @@ cld.Doc.prototype.onRestoredSuccess_ = function(node) {
 cld.Doc.prototype.restoreDoc = function(node) {
   var nodeModel = node.getModel();
   var successCallback = goog.bind(this.onRestoredSuccess_, this, node);
-  var xhr = cld.api.Docs.newXhrIo(successCallback);
+  var xhr = this.api.Docs.newXhrIo(successCallback);
   if (this.docType === 'diary') {
     this.api.diary.restore(xhr, nodeModel['date']);
   } else if (this.docType === 'note') {
@@ -734,7 +735,7 @@ cld.Doc.prototype.restoreDoc = function(node) {
 cld.Doc.prototype.deleteDocInternal = function(node) {
   var nodeModel = node.getModel();
   var successCallback = goog.bind(this.onDeletedSuccess_, this, node);
-  var xhr = cld.api.Docs.newXhrIo(successCallback);
+  var xhr = this.api.Docs.newXhrIo(successCallback);
   if (this.docType === 'diary') {
     this.api.diary.trash(xhr, nodeModel['date']);
   } else if (this.docType === 'note') {

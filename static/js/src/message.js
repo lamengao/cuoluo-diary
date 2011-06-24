@@ -34,6 +34,7 @@ cld.message.showLoading = function(opt_msg) {
  * hidden loading message.
  */
 cld.message.hiddenLoading = function() {
+  goog.dom.classes.remove(cld.message.loadingElement, 'errormsg');
   goog.dom.classes.add(cld.message.loadingElement, 'hidden');
 };
 
@@ -87,11 +88,12 @@ cld.message.createUndoLink = function() {
     goog.ui.LinkButtonRenderer.getInstance());
   lb.render(cld.message.msgElement);
   var el = lb.getElement();
-  el.id = "undolink";
+  el.id = 'undolink';
 };
 
 /**
  * return the single undo link button.
+ * @return {goog.ui.Button} the undo link.
  */
 cld.message.getUndoLink = function() {
   if (cld.message.undoLink) {
@@ -112,11 +114,34 @@ cld.message.hidden = function() {
   goog.dom.classes.add(cld.message.msgElement, 'hidden');
 };
 
+/**
+ * show error message.
+ * @param {string} type The error type.
+ * @param {string=} opt_msg The error msg.
+ */
+cld.message.error = function(type, opt_msg) {
+  cld.message.hiddenLoading();
+  var msg = cld.message.TEXT.SERVER_ERROR;
+  if (type === 'error') {
+    msg = cld.message.TEXT.API_ERROR;
+  } else if (type === 'timeout') {
+    msg = cld.message.TEXT.API_TIMEOUT;
+  }
+  goog.dom.classes.add(cld.message.loadingElement, 'errormsg');
+  cld.message.showLoading(msg);
+  setTimeout(function() {
+    cld.message.hiddenLoading();
+  }, 8 * 1000);
+};
+
 /** @enum {string} */
 cld.message.TEXT = {
   LOADING: 'Loading...',
   DIARY_DELETED: 'The diary has been moved to the trash',
   NOTE_DELETED: 'The note has been moved to the trash',
   NODE_NOT_FOUND: 'The document that you requested no longer exists.',
-  SERVER_ERROR: 'The server encountered an error. Please try again later.'
+  SERVER_ERROR: 'The server encountered an error. Please try again later.',
+  API_ERROR: 'Oops...an error occurred. Please try again in a few seconds.',
+  API_TIMEOUT: 'Unable to reach Cuoluo Diary. ' +
+               'Please check your internet connection.'
 };
