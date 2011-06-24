@@ -33,25 +33,25 @@ font-size:100%;
   font-family: 'Vollkorn';
   font-style: italic;
   font-weight: bold;
-  src: local('Vollkorn Bold Italic'), local('Vollkorn-BoldItalic'), url('http://themes.googleusercontent.com/font?kit=KNiAlx6phRqXCwnZZG51JKtyUVIKlQBJdfjufOujkg0&text') format('woff');
+  src: local('Vollkorn Bold Italic'), local('Vollkorn-BoldItalic'), url('https://themes.googleusercontent.com/font?kit=KNiAlx6phRqXCwnZZG51JKtyUVIKlQBJdfjufOujkg0&text') format('woff');
 }
 @font-face {
   font-family: 'Vollkorn';
   font-style: italic;
   font-weight: normal;
-  src: local('Vollkorn Italic'), local('Vollkorn-Italic'), url('http://themes.googleusercontent.com/font?kit=Oiz0tNwvC-Nd29SBQWfWTH24HHLNtlTrI02aO9A8tK8&text') format('woff');
+  src: local('Vollkorn Italic'), local('Vollkorn-Italic'), url('https://themes.googleusercontent.com/font?kit=Oiz0tNwvC-Nd29SBQWfWTH24HHLNtlTrI02aO9A8tK8&text') format('woff');
 }
 @font-face {
   font-family: 'Vollkorn';
   font-style: normal;
   font-weight: bold;
-  src: local('Vollkorn Bold'), local('Vollkorn-Bold'), url('http://themes.googleusercontent.com/font?kit=wMZpbUtcCo9GUabw9JODeuVGu2aPe47OCGXGXP4W9sc&text') format('woff');
+  src: local('Vollkorn Bold'), local('Vollkorn-Bold'), url('https://themes.googleusercontent.com/font?kit=wMZpbUtcCo9GUabw9JODeuVGu2aPe47OCGXGXP4W9sc&text') format('woff');
 }
 @font-face {
   font-family: 'Vollkorn';
   font-style: normal;
   font-weight: normal;
-  src: local('Vollkorn Regular'), local('Vollkorn-Regular'), url('http://themes.googleusercontent.com/font?kit=BCFBp4rt5gxxFrX6F12DKiD4i3kEMkPDRbZVAX_DCSs&text') format('woff');
+  src: local('Vollkorn Regular'), local('Vollkorn-Regular'), url('https://themes.googleusercontent.com/font?kit=BCFBp4rt5gxxFrX6F12DKiD4i3kEMkPDRbZVAX_DCSs&text') format('woff');
 }
 /* @end */
 
