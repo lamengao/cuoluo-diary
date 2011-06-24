@@ -207,13 +207,11 @@ cld.DiaryTree.prototype.getAfterNode_ = function(node, parentNode) {
   var afterNode = null;
   var date = node.getModel()['date'];
   var children = parentNode.getChildren();
-  if (children.length) {
-    for (var i = 0; i < children.length; i++) {
-      var child = children[i];
-      if (child.getModel()['date'] > date) {
-        afterNode = child;
-        break;
-      }
+  for (var i = 0; i < children.length; i++) {
+    var child = children[i];
+    if (child.getModel()['date'] > date) {
+      afterNode = child;
+      break;
     }
   }
   return afterNode;

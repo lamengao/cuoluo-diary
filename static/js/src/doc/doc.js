@@ -21,6 +21,7 @@ goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
 goog.require('goog.object');
 goog.require('goog.string');
+goog.require('goog.style');
 goog.require('goog.ui.Control');
 goog.require('goog.ui.ControlRenderer');
 goog.require('goog.ui.Menu');
@@ -47,6 +48,7 @@ cld.Doc = function(app) {
 
   this.element = this.dom_.getElement('doc');
   this.elHeader = this.dom_.getElement('doc-header');
+  this.elContainer = this.dom_.getElement('doc-container');
   this.elFooter = this.dom_.getElement('doc-footer');
   this.elToolbar = /** @type {!Element} */
     (this.dom_.getElement('editortoolbar'));
@@ -66,6 +68,8 @@ cld.Doc = function(app) {
   this.elEditName = this.dom_.getElement('edit-name');
   this.editNameInput = this.dom_.getElement('editname');
 
+  goog.style.setUnselectable(this.elTitle, true);
+  goog.style.setUnselectable(this.elContainer, true);
   this.initTitleControl_();
 
   this.api = {};

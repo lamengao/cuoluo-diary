@@ -90,8 +90,11 @@ cld.NotesTree.itemsMap = {};
  * @return {goog.ui.tree.BaseNode} The new item.
  */
 cld.NotesTree.prototype.createTreeNodeByItem = function(item) {
-  var parentId = item['parent_id'];
   var id = item['id'];
+  if ('notes:' + id in cld.DocsTree.allNodes) {
+    return cld.DocsTree.allNodes['notes:' + id];
+  }
+  var parentId = item['parent_id'];
   var parentNode;
   if (parentId === 0) {
     parentNode = this.tree;
@@ -113,8 +116,25 @@ cld.NotesTree.prototype.createTreeNodeByItem = function(item) {
   node.setModel(item);
   node.setText(title);
   parentNode.add(node);
+  //parentNode.add(node, this.getAfterNode_(node, parentNode));
   cld.DocsTree.setNodeInMap(node);
   return node;
+};
+
+/**
+ * Find the node for parentNode.add(node, before).
+ * @param {goog.ui.tree.BaseNode} node The node will be add.
+ * @param {goog.ui.tree.BaseNode} parentNode The node's parent.
+ * @return {goog.ui.tree.BaseNode} The node's after node.
+ * @private
+ */
+cld.NotesTree.prototype.getAfterNode_ = function(node, parentNode) {
+  var afterNode = null;
+  var children = parentNode.getChildren();
+  for (var i = 0; i < children.length; i++) {
+    var child = children[i];
+  }
+  return afterNode;
 };
 
 /**
