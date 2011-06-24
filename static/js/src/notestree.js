@@ -115,8 +115,8 @@ cld.NotesTree.prototype.createTreeNodeByItem = function(item) {
   node.setToolTip(title);
   node.setModel(item);
   node.setText(title);
-  parentNode.add(node);
-  //parentNode.add(node, this.getAfterNode_(node, parentNode));
+  //parentNode.add(node);
+  parentNode.add(node, this.getAfterNode_(node, parentNode));
   cld.DocsTree.setNodeInMap(node);
   return node;
 };
@@ -133,6 +133,10 @@ cld.NotesTree.prototype.getAfterNode_ = function(node, parentNode) {
   var children = parentNode.getChildren();
   for (var i = 0; i < children.length; i++) {
     var child = children[i];
+    if (child.getText() > node.getText()) {
+      afterNode = child;
+      break;
+    }
   }
   return afterNode;
 };
@@ -143,6 +147,16 @@ cld.NotesTree.prototype.getAfterNode_ = function(node, parentNode) {
  */
 cld.NotesTree.prototype.createNew = function(e) {
   this.createNewInternal();
+};
+
+/**
+ * reset the node position
+ * @param {goog.ui.tree.BaseNode} node The node.
+ */
+cld.NotesTree.prototype.resetPosition = function(node) {
+  var parentNode = /** @type {goog.ui.tree.BaseNode} */ (node.getParent());
+  parentNode.add(node, this.getAfterNode_(node, parentNode));
+  cld.DocsTree.selectNode(node);
 };
 
 /**
@@ -166,7 +180,8 @@ cld.NotesTree.prototype.createNewInternal = function(opt_referNode, opt_type) {
   // add new node at first or last? that's a question.
   //parentNode.addChildAt(node, index);
   parentNode.expand();
-  parentNode.add(node);
+  //parentNode.add(node);
+  parentNode.add(node, this.getAfterNode_(node, parentNode));
   cld.DocsTree.selectNode(node);
 };
 

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #import logging
 import cgi
-import os
+#import os
 import re
 import random
 #os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
@@ -202,7 +202,8 @@ class Note(db.Model):
 				return parent + '/' + self.id
 
 	def set_title(self, title):
-		self.title = title.strip()
+		#self.title = title.strip()
+		self.title = title
 		return self
 
 	def set_status(self, status):
