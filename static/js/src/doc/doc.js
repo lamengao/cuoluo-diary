@@ -68,7 +68,7 @@ cld.Doc = function(app) {
   this.elEditName = this.dom_.getElement('edit-name');
   this.editNameInput = this.dom_.getElement('editname');
 
-  goog.style.setUnselectable(this.elTitle, true);
+  goog.style.setUnselectable(this.pathSpan, true);
   goog.style.setUnselectable(this.elContainer, true);
   this.initTitleControl_();
 
@@ -549,6 +549,11 @@ cld.Doc.prototype.onSavedSuccess_ = function(node, data) {
       this.cancleRename();
     }
     node.setText(/** @type {string} */ (title));
+    // adjust node position
+    this.dispatchEvent({
+        type: cld.doc.EventType.RENAMED,
+        node: node
+    });
   }
   this.dispatchEvent(cld.api.Docs.EventType.LOADED);
   if (this.openingNode_ == node) {
@@ -750,8 +755,7 @@ cld.Doc.prototype.renameDoc = function() {
   if (!this.editNameButton) {
     this.createEditNameButtons_();
   }
-  var title = this.dom_.getTextContent(this.titleTextSpan);
-  this.editNameInput.value = title;
+  this.editNameInput.value = this.openingNode_.getText();
   goog.dom.classes.add(this.titleTextSpan, 'hidden');
   goog.dom.classes.remove(this.elEditName, 'hidden');
   this.editNameInput.focus();
@@ -767,8 +771,8 @@ cld.Doc.prototype.renameInternal = function() {
   if (!goog.style.isElementShown(this.elEditName)) {
     return;
   }
-  var title = goog.string.trim(this.editNameInput.value);
-  if (title == goog.string.trim(this.openingNode_.getText())) {
+  var title = this.editNameInput.value;
+  if (title == this.openingNode_.getText()) {
     this.cancleRename();
     return;
   }

@@ -93,6 +93,7 @@ cld.App.prototype.loaded = function() {
     listen(this, cld.doc.EventType.DISCARD_NEW_NOTE, this.onDiscardNewNote_).
     listen(this, cld.doc.EventType.DELETED, this.onDocDeleted_).
     listen(this, cld.doc.EventType.RESTORED, this.onDocRestored_).
+    listen(this, cld.doc.EventType.RENAMED, this.onDocRenamed_).
     listen(this, cld.ui.TreeControl.EventType.NODE_CHANGED, function(e) {
         this.diaryTree.updateEmptyArea();
         this.notesTree.updateEmptyArea();
@@ -194,6 +195,7 @@ cld.App.prototype.handleResize_ = function(e) {
  * On befre unload event.
  * @param {Event} e The event.
  * @private
+ * @return {string|undefined} the msg.
  */
 cld.App.prototype.onBeforeUnload_ = function(e) {
   e = e || this.dom_.getWindow().event;
@@ -370,6 +372,16 @@ cld.App.prototype.onDocRestored_ = function(e) {
   var node = /** @type {!goog.ui.tree.BaseNode} */ (e.node);
   cld.DocsTree.restore(node);
   cld.message.hiddenLoading();
+};
+
+/**
+ * Doc renamed and adjust the node position
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onDocRenamed_ = function(e) {
+  var node = /** @type {!goog.ui.tree.BaseNode} */ (e.node);
+  this.notesTree.resetPosition(node);
 };
 
 /**
