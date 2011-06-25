@@ -74,6 +74,7 @@ cld.message.show = function(msg, isResumable, undoHandle, opt_timeout) {
   }
   var timeout = opt_timeout || 0;
   if (timeout) {
+    // TODO: use goog.async.Delay
     setTimeout(function() {
       cld.message.hidden();
     }, timeout * 1000);
