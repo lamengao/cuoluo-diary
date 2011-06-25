@@ -267,11 +267,11 @@ class Note(db.Model):
 		parent_note = Note.get_by_key_name(key_name)
 		if parent_note is None or parent_note.status == 'trashed':
 			return False
-		parent_path = parent_note.path
 		if self.is_saved() and self.path in parent_note.parents:
 			return False
 		self.parent_id = parent_id
-		self.parents = parent_note.parents + [parent_path]
+		#parent_path = parent_note.path
+		#self.parents = parent_note.parents + [parent_path]
 		return True
 
 	@staticmethod
