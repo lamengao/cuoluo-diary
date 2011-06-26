@@ -52,7 +52,11 @@ handlers:
   
 - url: /test
   script: test.py
-  #login: required
+  login: admin
+
+- url: /mapreduce(/.*)?
+  script: $PYTHON_LIB/google/appengine/ext/mapreduce/main.py
+  login: admin
 
 - url: /monitor
   script: monitor.py

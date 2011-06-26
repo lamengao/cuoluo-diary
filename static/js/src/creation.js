@@ -11,7 +11,6 @@ goog.require('cld.ui.utils');
 
 goog.require('goog.events');
 goog.require('goog.events.EventTarget');
-goog.require('goog.ui.Dialog');
 goog.require('goog.ui.Menu');
 goog.require('goog.ui.MenuButton');
 goog.require('goog.ui.MenuItem');

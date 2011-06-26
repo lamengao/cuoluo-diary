@@ -90,11 +90,13 @@ cld.Doc.prototype.createActionsMenu_ = function() {
   var items = [
     //this.refreshMenuItem = new goog.ui.MenuItem('Refresh'),
     this.deleteMenuItem = new goog.ui.MenuItem('Delete'),
-    this.renameMenuItem = new goog.ui.MenuItem('Rename')
+    this.renameMenuItem = new goog.ui.MenuItem('Rename'),
+    this.moveToMenuItem = new goog.ui.MenuItem('Move To')
   ];
   //this.refreshMenuItem.setId('refreshmenuitem');
   this.deleteMenuItem.setId('deletemenuitem');
   this.renameMenuItem.setId('renamemenuitem');
+  this.moveToMenuItem.setId('movetomenuitem');
   goog.array.forEach(items, function(item) {
       this.menu.addItem(item);
   }, this);
@@ -110,6 +112,8 @@ cld.Doc.prototype.createActionsMenu_ = function() {
         this.deleteDoc();
       } else if (id == 'renamemenuitem') {
         this.renameDoc();
+      } else if (id == 'movetomenuitem') {
+        this.readyToMove();
       }
   }, false, this);
 };
@@ -494,8 +498,10 @@ cld.Doc.prototype.updateButtons = function(onoff) {
   // update action button
   if (this.docType === 'diary') {
     this.renameMenuItem.setEnabled(false);
+    this.moveToMenuItem.setEnabled(false);
   } else if (this.docType === 'note') {
     this.renameMenuItem.setEnabled(true);
+    this.moveToMenuItem.setEnabled(true);
   }
   if (this.isNew()) {
     this.actionsButton.setEnabled(false);
@@ -783,6 +789,54 @@ cld.Doc.prototype.renameInternal = function() {
   this.setNodeModel('modified', true);
   this.dispatchEvent(cld.api.Docs.EventType.LOADING);
   this.saveDoc_(this.openingNode_);
+};
+
+/**
+ * Ready to move show dialog.
+ */
+cld.Doc.prototype.readyToMove = function() {
+  var docType = this.docType;
+  var node = this.getOpeningNode();
+  this.dispatchEvent({
+      type: cld.doc.EventType.READY_TO_MOVE,
+      docType: docType,
+      node: node
+  });
+};
+
+/**
+ * Move doc to new parent.
+ * @param {string} id The doc id.
+ * @param {string|number} parentId The new parentId.
+ */
+cld.Doc.prototype.moveDocTo = function(id, parentId) {
+  var xhr = this.api.Docs.newXhrIo(goog.bind(this.onDocMoved_,
+                                             this,
+                                             id,
+                                             parentId));
+  this.api.notes.moveTo(xhr, id, parentId);
+};
+
+/**
+ * Move doc success callback.
+ * @param {string} id The doc id.
+ * @param {string|number} parentId The new parentId.
+ * @param {Object} data The node model.
+ * @private
+ */
+cld.Doc.prototype.onDocMoved_ = function(id, parentId, data) {
+  var node = cld.DocsTree.allNodes['notes:' + id];
+  if (parentId) {
+    var newParentNode = cld.DocsTree.allNodes['notes:' + parentId];
+  } else {
+    var newParentNode = node.getTree();
+  }
+  this.updateNodeModel(data, node);
+  this.dispatchEvent({
+      type: cld.doc.EventType.MOVED,
+      id: id,
+      parentId: parentId
+  });
 };
 
 /**

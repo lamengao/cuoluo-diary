@@ -16,5 +16,7 @@ cld.doc.EventType = {
   DELETED: goog.events.getUniqueId('deleted'),
   RESTORED: goog.events.getUniqueId('restored'),
   RENAMED: goog.events.getUniqueId('renamed'),
-  BACKTO: goog.events.getUniqueId('backto')
+  BACKTO: goog.events.getUniqueId('backto'),
+  READY_TO_MOVE: goog.events.getUniqueId('ready_to_move'),
+  MOVED: goog.events.getUniqueId('moved')
 };

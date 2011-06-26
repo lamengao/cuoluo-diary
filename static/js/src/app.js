@@ -94,6 +94,9 @@ cld.App.prototype.loaded = function() {
     listen(this, cld.doc.EventType.DELETED, this.onDocDeleted_).
     listen(this, cld.doc.EventType.RESTORED, this.onDocRestored_).
     listen(this, cld.doc.EventType.RENAMED, this.onDocRenamed_).
+    listen(this, cld.doc.EventType.READY_TO_MOVE, this.onReadyToMove_).
+    listen(this, cld.DocsTree.EventType.MOVETO, this.onMoveDocTo_).
+    listen(this, cld.doc.EventType.MOVED, this.onDocMoved_).
     listen(this, cld.ui.TreeControl.EventType.NODE_CHANGED, function(e) {
         this.diaryTree.updateEmptyArea();
         this.notesTree.updateEmptyArea();
@@ -410,6 +413,44 @@ cld.App.prototype.onDocDeleted_ = function(e) {
   }, 60);
 };
 
+/**
+ * Move doc node to.
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onReadyToMove_ = function(e) {
+  var node = /** @type {!goog.ui.tree.BaseNode} */ (e.node);
+  var type = /** @type {string} */ (e.docType);
+  if (type === 'diary') {
+    this.diaryTree.moveTo(node);
+  } else if (type === 'note') {
+    this.notesTree.moveTo(node);
+  }
+};
+
+/**
+ * Move doc node to.
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onMoveDocTo_ = function(e) {
+  var id = /** @type {string} */ (e.id);
+  var parentId = /** @type {string} */ (e.parentId);
+  cld.message.showLoading();
+  this.doc.moveDocTo(id, parentId);
+};
+
+/**
+ * Doc moved successful.
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onDocMoved_ = function(e) {
+  var id = /** @type {string} */ (e.id);
+  var parentId = /** @type {string} */ (e.parentId);
+  this.notesTree.moveNode(id, parentId);
+  cld.message.hiddenLoading();
+};
 
 /**
  * Handle goto today event, when click the today button.

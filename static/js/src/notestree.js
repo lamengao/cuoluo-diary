@@ -202,6 +202,23 @@ cld.NotesTree.prototype.getNewNode = function(opt_title) {
 };
 
 /**
+ * Move node.
+ * @param {string} id The node id.
+ * @param {string|number} parentId The new parentId.
+ */
+cld.NotesTree.prototype.moveNode = function(id, parentId) {
+  var node = cld.DocsTree.allNodes['notes:' + id];
+  if (parentId) {
+    var newParentNode = cld.DocsTree.allNodes['notes:' + parentId];
+  } else {
+    var newParentNode = node.getTree();
+  }
+  node.getTree().select();
+  newParentNode.add(node, this.getAfterNode_(node, newParentNode));
+  cld.DocsTree.selectNode(node);
+};
+
+/**
  * handle for tree selected node changed.
  * @param {goog.events.Event} e The event.
  * @private
