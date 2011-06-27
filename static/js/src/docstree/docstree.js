@@ -292,10 +292,14 @@ cld.DocsTree.prototype.moveTo = function(node) {
         return;
       }
       var newParentNode = dialog.getModel()['tree'].getSelectedItem();
+      var parentId = newParentNode.getModel()['id'];
+      if (parentId == node.getParent().getModel()['id']) {
+        return;
+      }
       this.dispatchEvent({
           type: cld.DocsTree.EventType.MOVETO,
           id: node.getModel()['id'],
-          parentId: newParentNode.getModel()['id']
+          parentId: parentId
       });
   });
 };
@@ -316,7 +320,7 @@ cld.DocsTree.prototype.makeMoveToDialog_ = function(node) {
                                                 dialog.getContentElement());
   var tree = this.getTreeClone(node);
   tree.render(treeWrapper);
-  dialog.setModel({tree: tree});
+  dialog.setModel({'tree': tree});
 
   return dialog;
 };
@@ -331,7 +335,7 @@ cld.DocsTree.prototype.getTreeClone = function(exclude) {
   tree.setShowLines(false);
   tree.setIsUserCollapsible(false);
   // root node's id = 0
-  tree.setModel({id: 0});
+  tree.setModel({'id': 0});
 
   var originTree = this.tree;
   var getChildrenClone = function(origin, target) {
@@ -348,7 +352,7 @@ cld.DocsTree.prototype.getTreeClone = function(exclude) {
       newNode.setText(child.getText());
       target.add(newNode);
       var id = child.getModel()['id'];
-      newNode.setModel({id: id});
+      newNode.setModel({'id': id});
       getChildrenClone(child, newNode);
     }
   };

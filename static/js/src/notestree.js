@@ -49,6 +49,7 @@ goog.inherits(cld.NotesTree, cld.DocsTree);
  */
 cld.NotesTree.prototype.initTree = function() {
   var tree = this.tree = new cld.ui.NotesTreeControl('root');
+  tree.setModel({'id': 0});
   tree.render(this.elTreeContent);
   cld.DocsTree.allNodes['notes:root'] = tree;
 
@@ -213,8 +214,19 @@ cld.NotesTree.prototype.moveNode = function(id, parentId) {
   } else {
     var newParentNode = node.getTree();
   }
+  this.moveNodeByNode(node, newParentNode);
+};
+
+/**
+ * Move node by node.
+ * @param {goog.ui.tree.BaseNode} node The node will be move.
+ * @param {goog.ui.tree.BaseNode} newParent The node's new parent.
+ */
+cld.NotesTree.prototype.moveNodeByNode = function(node, newParent) {
   node.getTree().select();
-  newParentNode.add(node, this.getAfterNode_(node, newParentNode));
+  // hack for goog.ui.TreeControl bug.
+  newParent.expand();
+  newParent.add(node, this.getAfterNode_(node, newParent));
   cld.DocsTree.selectNode(node);
 };
 

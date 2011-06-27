@@ -270,11 +270,11 @@ class Note(db.Model):
 		if self.is_saved() and self.path in parent_note.parents:
 			return False
 		self.parent_id = parent_id
-		parent_path = parent_note.path
-		if parent_note.parents:
-			self.parents = parent_note.parents + [parent_path]
-		else:
-			self.parents = [parent_path]
+		#parent_path = parent_note.path
+		#if parent_note.parents:
+			#self.parents = parent_note.parents + [parent_path]
+		#else:
+			#self.parents = [parent_path]
 		return True
 
 	@staticmethod

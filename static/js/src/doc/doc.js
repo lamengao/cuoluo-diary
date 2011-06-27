@@ -808,34 +808,42 @@ cld.Doc.prototype.readyToMove = function() {
  * Move doc to new parent.
  * @param {string} id The doc id.
  * @param {string|number} parentId The new parentId.
+ * @param {boolean=} isMoveBack Whether is move back.
  */
-cld.Doc.prototype.moveDocTo = function(id, parentId) {
-  var xhr = this.api.Docs.newXhrIo(goog.bind(this.onDocMoved_,
-                                             this,
-                                             id,
-                                             parentId));
-  this.api.notes.moveTo(xhr, id, parentId);
-};
-
-/**
- * Move doc success callback.
- * @param {string} id The doc id.
- * @param {string|number} parentId The new parentId.
- * @param {Object} data The node model.
- * @private
- */
-cld.Doc.prototype.onDocMoved_ = function(id, parentId, data) {
+cld.Doc.prototype.moveDocTo = function(id, parentId, isMoveBack) {
   var node = cld.DocsTree.allNodes['notes:' + id];
   if (parentId) {
     var newParentNode = cld.DocsTree.allNodes['notes:' + parentId];
   } else {
     var newParentNode = node.getTree();
   }
+  var xhr = this.api.Docs.newXhrIo(goog.bind(this.onDocMoved_,
+                                             this,
+                                             node,
+                                             newParentNode,
+                                             node.getParent(),
+                                             !!isMoveBack));
+  this.api.notes.moveTo(xhr, id, parentId);
+};
+
+/**
+ * Move doc success callback.
+ * @param {goog.ui.tree.BaseNode} node The moved node.
+ * @param {goog.ui.tree.BaseNode} newParent The new parent node.
+ * @param {goog.ui.tree.BaseNode} oldParent The old parent node.
+ * @param {boolean} isMoveBack Whether is move back.
+ * @param {Object} data The node model.
+ * @private
+ */
+cld.Doc.prototype.onDocMoved_ = function(node, newParent,
+                                         oldParent, isMoveBack, data) {
   this.updateNodeModel(data, node);
   this.dispatchEvent({
       type: cld.doc.EventType.MOVED,
-      id: id,
-      parentId: parentId
+      node: node,
+      newParent: newParent,
+      oldParent: oldParent,
+      isMoveBack: isMoveBack
   });
 };
 

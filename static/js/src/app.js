@@ -129,6 +129,7 @@ cld.App.prototype.loaded = function() {
 
   // Api error events
   this.handle.
+    listen(this, cld.api.Docs.EventType.NOT_LOGGED_IN, this.onNotLoggedIn_).
     listen(this, cld.api.Docs.EventType.ERROR, this.onApiError_).
     listen(this, cld.api.Docs.EventType.ERROR_TIMEOUT, this.onApiTimeout_);
 
@@ -446,10 +447,28 @@ cld.App.prototype.onMoveDocTo_ = function(e) {
  * @private
  */
 cld.App.prototype.onDocMoved_ = function(e) {
-  var id = /** @type {string} */ (e.id);
-  var parentId = /** @type {string} */ (e.parentId);
-  this.notesTree.moveNode(id, parentId);
+  var node = /** @type {!goog.ui.tree.BaseNode} */ (e.node);
+  var newParent = /** @type {!goog.ui.tree.BaseNode} */ (e.newParent);
+  var oldParent = /** @type {!goog.ui.tree.BaseNode} */ (e.oldParent);
+  var id = node.getModel()['id'];
+  var oldParentId = oldParent.getModel()['id'];
+  this.notesTree.moveNodeByNode(node, newParent);
   cld.message.hiddenLoading();
+  if (e.isMoveBack) {
+    return;
+  }
+  if (newParent == node.getTree()) {
+    var title = ' "My Notes".';
+  } else {
+    var title = ' "' + newParent.getText() + '".';
+  }
+  var text = 'The note has been moved to' + title;
+  var moveBack = goog.bind(function(e) {
+      cld.message.hidden();
+      cld.message.showLoading();
+      this.doc.moveDocTo(id, oldParentId, true);
+  }, this);
+  cld.message.show(text, true, moveBack, 60);
 };
 
 /**
@@ -620,6 +639,16 @@ cld.App.prototype.onApiTimeout_ = function(e) {
  */
 cld.App.prototype.onApiError_ = function(e) {
   cld.message.error('error');
+};
+
+/**
+ * The user not logged in, redirect to login page.
+ * @param {goog.events.Event} e The event.
+ * @private
+ */
+cld.App.prototype.onNotLoggedIn_ = function(e) {
+  //goog.global['location'].href = '/';
+  cld.message.error('notLoggedIn');
 };
 
 /**
