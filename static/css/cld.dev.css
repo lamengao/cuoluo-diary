@@ -366,3 +366,10 @@ background-position: -144px 0;
 .mainfooter .emailbutton{margin-top:4px}
 #sendbutton, #btmsendbutton{font-weight:bold;margin-right:10px}
 /* @end */
+
+/* @group move doc to */
+div.moveto.modal-dialog{}
+.moveto .modal-dialog-content{position:relative;width:400px;height:247px}
+.moveto .goog-tree-root{position:relative}
+.treewrapper{height:100%;overflow:auto;border: 1px solid #CCC;}
+/* @end */

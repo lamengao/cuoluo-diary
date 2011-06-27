@@ -14,6 +14,7 @@ goog.require('goog.events.EventTarget');
 goog.require('goog.object');
 goog.require('goog.style');
 goog.require('goog.ui.Button');
+goog.require('goog.ui.Dialog');
 goog.require('goog.ui.LinkButtonRenderer');
 
 
@@ -280,6 +281,87 @@ cld.DocsTree.restore = function(node) {
 };
 
 /**
+ * Change node's parent.
+ * @param {!goog.ui.tree.BaseNode} node The node will be moved.
+ */
+cld.DocsTree.prototype.moveTo = function(node) {
+  var dialog = this.makeMoveToDialog_(node);
+  dialog.setVisible(true);
+  this.handle.listen(dialog, goog.ui.Dialog.EventType.SELECT, function(e) {
+      if (e.key === 'cancel') {
+        return;
+      }
+      var newParentNode = dialog.getModel()['tree'].getSelectedItem();
+      var parentId = newParentNode.getModel()['id'];
+      if (parentId == node.getParent().getModel()['id']) {
+        return;
+      }
+      this.dispatchEvent({
+          type: cld.DocsTree.EventType.MOVETO,
+          id: node.getModel()['id'],
+          parentId: parentId
+      });
+  });
+};
+
+/**
+ * Create and init move to dialog.
+ * @param {goog.ui.tree.BaseNode} node The node will be moved.
+ * @private
+ * @return {goog.ui.Dialog} The new move to dialog.
+ */
+cld.DocsTree.prototype.makeMoveToDialog_ = function(node) {
+  var dialog = new goog.ui.Dialog();
+  dialog.setTitle('Choose New Parent Note');
+  dialog.setContent('<div class="treewrapper"></div>');
+  dialog.setDisposeOnHide(true);
+  goog.dom.classes.add(dialog.getDialogElement(), 'moveto');
+  var treeWrapper = this.dom_.getElementByClass('treewrapper',
+                                                dialog.getContentElement());
+  var tree = this.getTreeClone(node);
+  tree.render(treeWrapper);
+  dialog.setModel({'tree': tree});
+
+  return dialog;
+};
+
+/**
+ * @param {goog.ui.tree.BaseNode=} exclude The exclude node
+ * will be not clone.
+ * @return {cld.ui.NotesTreeControl} the tree clone.
+ */
+cld.DocsTree.prototype.getTreeClone = function(exclude) {
+  var tree = new cld.ui.NotesTreeControl('My Notes');
+  tree.setShowLines(false);
+  tree.setIsUserCollapsible(false);
+  // root node's id = 0
+  tree.setModel({'id': 0});
+
+  var originTree = this.tree;
+  var getChildrenClone = function(origin, target) {
+    var children = origin.getChildren();
+    if (children.length === 0) {
+      return;
+    }
+    for (var i = 0; i < children.length; i++) {
+      var child = children[i];
+      if (exclude && exclude == child) {
+        continue;
+      }
+      var newNode = target.getTree().createNode();
+      newNode.setText(child.getText());
+      target.add(newNode);
+      var id = child.getModel()['id'];
+      newNode.setModel({'id': id});
+      getChildrenClone(child, newNode);
+    }
+  };
+  getChildrenClone(originTree, tree);
+  return tree;
+};
+
+
+/**
  * handle for tree select node changed.
  * @param {goog.events.Event} e The event.
  * @private
@@ -301,5 +383,6 @@ cld.DocsTree.EventType = {
   NEW_DOC: goog.events.getUniqueId('new_doc'),
   FIRST_DIARY: goog.events.getUniqueId('first_diary'),
   NODE_CHANGED: goog.events.getUniqueId('node_changed'),
-  NODE_NOT_FOUND: goog.events.getUniqueId('node_not_found')
+  NODE_NOT_FOUND: goog.events.getUniqueId('node_not_found'),
+  MOVETO: goog.events.getUniqueId('moveto')
 };

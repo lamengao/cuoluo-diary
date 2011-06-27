@@ -86,6 +86,16 @@ cld.api.Notes.prototype.update = function(xhr, id, title, content, parentId) {
 };
 
 /**
+ * Move doc to.
+ * @param {goog.net.XhrIo} xhr The listened events xhr.
+ * @param {string} id The note id.
+ * @param {string|number} parentId The note's parent id if any.
+ */
+cld.api.Notes.prototype.moveTo = function(xhr, id, parentId) {
+  this.update(xhr, id, undefined, undefined, parentId);
+};
+
+/**
  * Trash or delete a doc.
  * @param {goog.net.XhrIo} xhr The listened events xhr.
  * @param {string} id The note id.

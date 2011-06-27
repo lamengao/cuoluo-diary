@@ -73,11 +73,11 @@ cld.api.Docs.newXhrIo = function(onSuccess, onError, onTimeout) {
       if (goog.isDef(onTimeout)) {
         onTimeout();
       } else if (goog.isDef(onError)) {
-        onError();
+        onError(e);
       }
     } else if (goog.isDef(onError)) {
       // Some other error occurred.
-      onError();
+      onError(e);
     }
     xhr.dispose();
   });
@@ -95,7 +95,13 @@ cld.api.Docs.newXhrIo = function(onSuccess, onError, onTimeout) {
 cld.api.Docs.prototype.newXhrIo = function(onSuccess, onError, onTimeout) {
   if (!goog.isDef(onError)) {
     onError = goog.bind(function(e) {
-        this.dispatchEvent(cld.api.Docs.EventType.ERROR);
+        var xhr = /** @type {goog.net.XhrIo} */ (e.target);
+        if (xhr.getStatus() == 403) {
+          // the current user is not logged in.
+          this.dispatchEvent(cld.api.Docs.EventType.NOT_LOGGED_IN);
+        } else {
+          this.dispatchEvent(cld.api.Docs.EventType.ERROR);
+        }
     }, this);
   }
   if (!goog.isDef(onTimeout)) {
@@ -171,5 +177,6 @@ cld.api.Docs.EventType = {
   LOADING: goog.events.getUniqueId('doc_loading'),
   LOADED: goog.events.getUniqueId('doc_loaded'),
   ERROR_TIMEOUT: goog.events.getUniqueId('error_timeout'),
-  ERROR: goog.events.getUniqueId('error')
+  ERROR: goog.events.getUniqueId('error'),
+  NOT_LOGGED_IN: goog.events.getUniqueId('not_logged_in')
 };

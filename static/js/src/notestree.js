@@ -49,6 +49,7 @@ goog.inherits(cld.NotesTree, cld.DocsTree);
  */
 cld.NotesTree.prototype.initTree = function() {
   var tree = this.tree = new cld.ui.NotesTreeControl('root');
+  tree.setModel({'id': 0});
   tree.render(this.elTreeContent);
   cld.DocsTree.allNodes['notes:root'] = tree;
 
@@ -199,6 +200,34 @@ cld.NotesTree.prototype.getNewNode = function(opt_title) {
   model['title'] = title;
   node.setModel(model);
   return node;
+};
+
+/**
+ * Move node.
+ * @param {string} id The node id.
+ * @param {string|number} parentId The new parentId.
+ */
+cld.NotesTree.prototype.moveNode = function(id, parentId) {
+  var node = cld.DocsTree.allNodes['notes:' + id];
+  if (parentId) {
+    var newParentNode = cld.DocsTree.allNodes['notes:' + parentId];
+  } else {
+    var newParentNode = node.getTree();
+  }
+  this.moveNodeByNode(node, newParentNode);
+};
+
+/**
+ * Move node by node.
+ * @param {goog.ui.tree.BaseNode} node The node will be move.
+ * @param {goog.ui.tree.BaseNode} newParent The node's new parent.
+ */
+cld.NotesTree.prototype.moveNodeByNode = function(node, newParent) {
+  node.getTree().select();
+  // hack for goog.ui.TreeControl bug.
+  newParent.expand();
+  newParent.add(node, this.getAfterNode_(node, newParent));
+  cld.DocsTree.selectNode(node);
 };
 
 /**

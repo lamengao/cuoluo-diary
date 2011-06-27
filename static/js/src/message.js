@@ -127,6 +127,8 @@ cld.message.error = function(type, opt_msg) {
     msg = cld.message.TEXT.API_ERROR;
   } else if (type === 'timeout') {
     msg = cld.message.TEXT.API_TIMEOUT;
+  } else if (type === 'notLoggedIn') {
+    msg = cld.message.TEXT.NOT_LOGGED_IN;
   }
   goog.dom.classes.add(cld.message.loadingElement, 'errormsg');
   cld.message.showLoading(msg);
@@ -144,5 +146,7 @@ cld.message.TEXT = {
   SERVER_ERROR: 'The server encountered an error. Please try again later.',
   API_ERROR: 'Oops...an error occurred. Please try again in a few seconds.',
   API_TIMEOUT: 'Unable to reach Cuoluo Diary. ' +
-               'Please check your internet connection.'
+               'Please check your internet connection.',
+  NOT_LOGGED_IN: 'Your connection to Cuoluo Diary has expired. ' +
+                 'Please log in again.'
 };

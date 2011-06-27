@@ -5,10 +5,6 @@ import cgi
 #import os
 import re
 import random
-#os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-
-from google.appengine.dist import use_library
-use_library('django', '1.2')
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -261,6 +257,10 @@ class Note(db.Model):
 		"""if parent_id is valid, 
 		auto set the parent_id and parents fields
 		"""
+		if not parent_id:
+			self.parent_id = ''
+			self.parents = []
+			return True
 		if self.id == parent_id:
 			return False
 		key_name = self.owner.id + '.' + parent_id
@@ -271,7 +271,10 @@ class Note(db.Model):
 			return False
 		self.parent_id = parent_id
 		#parent_path = parent_note.path
-		#self.parents = parent_note.parents + [parent_path]
+		#if parent_note.parents:
+			#self.parents = parent_note.parents + [parent_path]
+		#else:
+			#self.parents = [parent_path]
 		return True
 
 	@staticmethod
