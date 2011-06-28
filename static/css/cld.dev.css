@@ -159,6 +159,7 @@ div.toolbarbutton{margin:4px}
 .goog-zippy-expanded .zippy-arrow{background-position: 0 -16px;}
 .goog-zippy-expanded .zippy-arrow:hover{background-position: -12px -16px;}
 .zippy-menubutton{background-position: 0 -40px;margin:4px 4px 0 0 }
+.zippy-menubutton:hover, .zippy-menubutton-open{background-position: -12px -40px;}
 .content .empty{color:#666;width:100%;margin-top:20%;text-align:center;font-size:12px;position:absolute;z-index:5}
 .empty .msg{margin-bottom:10px}
 .goog-tree-root{width:100%;position:absolute;top:0;left:0;}
@@ -372,4 +373,9 @@ div.moveto.modal-dialog{}
 .moveto .modal-dialog-content{position:relative;width:400px;height:247px}
 .moveto .goog-tree-root{position:relative}
 .treewrapper{height:100%;overflow:auto;border: 1px solid #CCC;}
+/* @end */
+
+/* @group section popup menu */
+.section-menu-button .goog-menuitem {padding: 3px 20px 3px 18px;}
+.section-menu-button .goog-menuitem-highlight, .section-menu-button .goog-menuitem-hover {border:0}
 /* @end */

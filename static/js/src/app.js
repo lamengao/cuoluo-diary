@@ -7,12 +7,14 @@
 goog.provide('cld.App');
 
 goog.require('cld.Creation');
+goog.require('cld.DiarySectionPopupMenu');
 goog.require('cld.DiaryTree');
 goog.require('cld.Doc');
 goog.require('cld.DocsList');
 goog.require('cld.DocsTree');
 goog.require('cld.DocsTree.EventType');
 goog.require('cld.Email');
+goog.require('cld.NotesSectionPopupMenu');
 goog.require('cld.NotesTree');
 goog.require('cld.Search');
 goog.require('cld.SplitPane');
@@ -680,6 +682,12 @@ cld.App.prototype.install = function(opt_app) {
   this.today = new cld.Today(app);
   this.diaryTree = new cld.DiaryTree(app);
   this.notesTree = new cld.NotesTree(app);
+
+  this.diaryPopupMenu = new cld.DiarySectionPopupMenu(app,
+                                                      this.diaryTree.tree);
+  this.notesPopupMenu = new cld.NotesSectionPopupMenu(app,
+                                                      this.notesTree.tree);
+
   this.search = new cld.Search(app);
   this.search.initAutoComplete();
 

@@ -499,7 +499,8 @@
   list-style: none;
   margin: 0;
   /* 28px on the left for icon or checkbox; 7em on the right for shortcut. */
-  padding: 4px 7em 4px 28px;
+  /*padding: 4px 7em 4px 28px;*/
+  padding: 4px 20px 4px 28px;
   white-space: nowrap;
 }
 
@@ -519,7 +520,8 @@
 
 .goog-menuitem-content {
   color: #000;
-  font: normal 13px Arial, sans-serif;
+  /*font: normal 13px Arial, sans-serif;*/
+  font: normal 12px Arial, sans-serif;
 }
 
 /* State: disabled. */
