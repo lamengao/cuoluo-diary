@@ -73,7 +73,7 @@
 
 .modal-dialog-title-close {
   /* Client apps may override the URL at which they serve the sprite. */
-  background: #e0edfe url(//ssl.gstatic.com/editor/editortoolbar.png) no-repeat -528px 0;
+  background: #e0edfe url(/images/editortoolbar.png) no-repeat -528px 0;
   cursor: default;
   height: 15px;
   position: absolute;
@@ -1383,7 +1383,7 @@
 .goog-toolbar-menu-button-dropdown {
   width: 7px;
   /* Client apps may override the URL at which they serve the sprite. */
-  background: url(//ssl.gstatic.com/editor/editortoolbar.png) no-repeat -388px 0;
+  background: url(/images/editortoolbar.png) no-repeat -388px 0;
   vertical-align: middle;
 }
 
@@ -1504,7 +1504,7 @@
 
 .goog-palette-cell-selected .goog-palette-colorswatch {
   /* Client apps may override the URL at which they serve the sprite. */
-  background: url(//ssl.gstatic.com/editor/editortoolbar.png) no-repeat -368px 0;
+  background: url(/images/editortoolbar.png) no-repeat -368px 0;
   border: 1px solid #333;
   color: #fff;
   font-weight: bold;
@@ -1561,7 +1561,7 @@ div.tr_bubble {
 .tr_bubble_closebox {
   position: absolute;
   cursor: default;
-  background: url(//ssl.gstatic.com/editor/bubble_closebox.gif) top left no-repeat;
+  background: url(/images/bubble_closebox.gif) top left no-repeat;
   padding: 0;
   margin: 0;
   width: 10px;
@@ -1679,7 +1679,7 @@ div.tr_multi_bubble div.tr_bubble_panel {
 .tr-icon {
   width: 16px;
   height: 16px;
-  background: url(//ssl.gstatic.com/editor/editortoolbar.png) no-repeat;
+  background: url(/images/editortoolbar.png) no-repeat;
   vertical-align: middle;
 }
 
