@@ -575,7 +575,7 @@ cld.Doc.prototype.onSavedSuccess_ = function(node, data) {
  * @param {goog.events.Event} e toggle event.
  */
 cld.Doc.prototype.saveDoc = function(e) {
-  if (this.saveButton.getCaption() === 'Saving') {
+  if (this.saveButton.getCaption() === 'Saving' || !this.isModified()) {
     return;
   }
   this.changeSaveButtonState('Saving');

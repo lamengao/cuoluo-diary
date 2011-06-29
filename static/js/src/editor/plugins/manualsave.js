@@ -36,7 +36,7 @@ cld.editor.plugins.ManualSave.COMMAND = 'manualSave';
  */
 cld.editor.plugins.ManualSave.prototype.handleKeyboardShortcut = function(
     e, key, isModifierPressed) {
-  if (isModifierPressed && key == 's') {
+  if (isModifierPressed && key === 's') {
     this.fieldObject.dispatchEvent('manualsave');
     return true;
   }

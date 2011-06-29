@@ -6,7 +6,7 @@
 
 goog.provide('cld.Editor');
 
-goog.require('cld.editor.plugins.ManualSave');
+//goog.require('cld.editor.plugins.ManualSave');
 goog.require('goog.Timer');
 goog.require('goog.editor.Command');
 goog.require('goog.editor.Field');
@@ -56,7 +56,7 @@ goog.inherits(cld.Editor, goog.events.EventTarget);
  * Register plugins for editor field.
  */
 cld.Editor.prototype.registerPlugins = function() {
-  this.field.registerPlugin(new cld.editor.plugins.ManualSave());
+  //this.field.registerPlugin(new cld.editor.plugins.ManualSave());
   this.field.registerPlugin(new goog.editor.plugins.BasicTextFormatter());
   this.field.registerPlugin(new goog.editor.plugins.RemoveFormatting());
   //this.field.registerPlugin(new goog.editor.plugins.UndoRedo());
