@@ -78,6 +78,8 @@ cld.Doc = function(app) {
   this.api.notes = new cld.api.Notes(this);
 
   this.initBackToLink_();
+
+  this.handle.listen(this.editor, 'manualsave', goog.bind(this.saveDoc, this));
 };
 goog.inherits(cld.Doc, goog.events.EventTarget);
 
@@ -573,6 +575,9 @@ cld.Doc.prototype.onSavedSuccess_ = function(node, data) {
  * @param {goog.events.Event} e toggle event.
  */
 cld.Doc.prototype.saveDoc = function(e) {
+  if (this.saveButton.getCaption() === 'Saving') {
+    return;
+  }
   this.changeSaveButtonState('Saving');
   this.saveDoc_(this.openingNode_);
 };
