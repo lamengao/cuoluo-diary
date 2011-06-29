@@ -2,7 +2,7 @@
 <head> 
 <title>Cuoluo Diary - Settings</title> 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link href="/static/css/settings.css" rel="stylesheet" type="text/css" />
+<link href="{{ '/css/settings.css'|addfilemtime }}" rel="stylesheet" type="text/css" />
 <link rel="shortcut icon" href="/favicon.ico" />
 <script type="text/javascript">
 var _timezone = '{{ timezone }}',
@@ -12,21 +12,7 @@ _dateformat = '{{ dateformat }}';
 
 <body>
 
-<div id="cldtop">
-	<div id="gbar">
-		<a class="gb1" href="//diary.cuoluo.com/" target="_blank">Home</a>
-		<a class="gb1 active" href="/">Diary</a>
-		<a class="gb1" href="//groups.google.com/group/cuoluo-diary" target="_blank">Discuss</a>
-		<a class="gb1" href="//diary.cuoluo.com/help" target="_blank">Help</a>
-		<a class="gb1" href="https://spreadsheets.google.com/viewform?formkey=dEZnZkZPM2RLYWlRaXlCTDItVGpsUUE6MQ" target="_blank">Feedback</a>
-	</div>
-	<div id="ghead">
-		<div id="guser">
-				<b>{{ email }}</b> | <a href="#settings" onclick="return false;">Settings</a>	| <a href="/logout">Sign out</a>
-		</div>
-		<div style="left:0" class="gbh"></div><div style="right:0" class="gbh"></div>
-	</div>
-</div>
+<div id="gb"><div id="gbw"><div id="gbz"><span class="gbtcb"></span><ol class="gbtc"><li class="gbt"><a href="http://diary.cuoluo.com" class="gbzt" target="_blank"><span class="gbtb2"></span><span class="gbts">Home</span></a></li><li class="gbt"><a class="gbzt gbz0l gbp1" href="/"><span class="gbtb2"></span><span class="gbts">Diary</span></a></li><li class="gbt"><a target="_blank" class="gbzt" href="https://groups.google.com/group/cuoluo-diary"><span class="gbtb2"></span><span class="gbts">Discuss</span></a></li><li class="gbt"><a href="http://diary.cuoluo.com/help" class="gbzt" target="_blank"><span class="gbtb2"></span><span class="gbts">Help</span></a></li><li class="gbt"><a target="_blank" href="https://spreadsheets.google.com/viewform?formkey=dEZnZkZPM2RLYWlRaXlCTDItVGpsUUE6MQ" id="gb_1" class="gbzt"><span class="gbtb2"></span><span class="gbts">Feedback</span></a></li></ol></div><div id="gbg"><h2 class="gbxx">Account Options</h2><span class="gbtcb"></span><ol class="gbtc"><li class="gbt"><a onclick="return false;" class="gbgt" id="gbg4" href="/" aria-haspopup="true" aria-owns="gbd4"><span class="gbtb2"></span><span id="gbgs4" class="gbts gbtsa"><span id="gbi4"><span id="gbi4m1">test@example.com</span></span></span></a></li><li class="gbt gbtb"><span class="gbts"></span></li><li class="gbt" onclick="this.className=(this.className=='gbt')?'gbt gbto':'gbt'"><a onclick="return false;" aria-owns="gbd5" aria-haspopup="true" title="Settings" href="/settings" id="gbg5" class="gbgt"><span class="gbtb2"></span><span class="gbts" id="gbgs5"><span id="gbi5"></span></span></a><div class="gbm" id="gbd5" aria-owner="gbg5"><div class="gbmc"><ol class="gbmcc"><li class="gbkc gbmtc"><a class="gbmt" href="/settings">Diary settings</a></li><li class="gbmtc"><div class="gbmt gbmh"></div></li><li class="gbkc gbmtc"><a href="/logout" class="gbmt">Sign out</a></li><li class="gbmtc"><div class="gbmt gbmh"></div></li></ol></div></div></li></ol></div></div><div id="gbx3"></div><div id="gbx4"></div></div>
 <div id="loading-area" class="message-area hidden"><div class="message-area-inner message-area-text-container"><span class="message-area-text" id="loading-area-text">Loading...</span></div><div class="message-area-inner message-area-bottom-1"></div><div class="message-area-inner message-area-bottom-2"></div><div class="message-area-inner message-area-bottom-3"></div></div>
 
 <div id="header">
