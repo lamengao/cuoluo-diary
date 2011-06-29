@@ -14,10 +14,9 @@ goog.require('goog.editor.Plugin');
  * @extends {goog.editor.Plugin}
  */
 cld.editor.plugins.ManualSave = function() {
-  goog.editor.Plugin.call(this);
+  goog.base(this);
 };
 goog.inherits(cld.editor.plugins.ManualSave, goog.editor.Plugin);
-
 
 /** @inheritDoc */
 cld.editor.plugins.ManualSave.prototype.getTrogClassId = function() {

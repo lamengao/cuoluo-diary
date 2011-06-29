@@ -6,12 +6,13 @@
 
 goog.provide('cld.Editor');
 
-//goog.require('cld.editor.plugins.ManualSave');
+goog.require('cld.editor.plugins.ManualSave');
 goog.require('goog.Timer');
 goog.require('goog.editor.Command');
 goog.require('goog.editor.Field');
 //goog.require('goog.editor.SeamlessField');
-goog.require('goog.editor.plugins.BasicTextFormatter');
+goog.require('cld.editor.plugins.BasicTextFormatter');
+//goog.require('goog.editor.plugins.BasicTextFormatter');
 goog.require('goog.editor.plugins.EnterHandler');
 //goog.require('goog.editor.plugins.HeaderFormatter');
 goog.require('goog.editor.plugins.LinkBubble');
@@ -56,8 +57,9 @@ goog.inherits(cld.Editor, goog.events.EventTarget);
  * Register plugins for editor field.
  */
 cld.Editor.prototype.registerPlugins = function() {
-  //this.field.registerPlugin(new cld.editor.plugins.ManualSave());
-  this.field.registerPlugin(new goog.editor.plugins.BasicTextFormatter());
+  this.field.registerPlugin(new cld.editor.plugins.ManualSave());
+  //this.field.registerPlugin(new goog.editor.plugins.BasicTextFormatter());
+  this.field.registerPlugin(new cld.editor.plugins.BasicTextFormatter());
   this.field.registerPlugin(new goog.editor.plugins.RemoveFormatting());
   //this.field.registerPlugin(new goog.editor.plugins.UndoRedo());
   this.field.registerPlugin(new goog.editor.plugins.ListTabHandler());
@@ -66,7 +68,6 @@ cld.Editor.prototype.registerPlugins = function() {
   //this.field.registerPlugin(new goog.editor.plugins.HeaderFormatter());
   this.field.registerPlugin(new goog.editor.plugins.LinkDialogPlugin());
   this.field.registerPlugin(new goog.editor.plugins.LinkBubble());
-
 };
 
 /**
