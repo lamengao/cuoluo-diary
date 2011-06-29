@@ -40,6 +40,7 @@ cld.App = function() {
   goog.events.EventTarget.call(this);
 
   this.dom_ = goog.dom.getDomHelper();
+
   this.history = new goog.History();
 
   /**
@@ -60,6 +61,8 @@ cld.App = function() {
   this.tasksZippy =
     new cld.Zippy('tasks-title', 'tasks-container', this.dom_);
   this.tasks = new cld.Tasks(this.dom_);
+
+  this.gbarAction();
 };
 goog.inherits(cld.App, goog.events.EventTarget);
 goog.addSingletonGetter(cld.App);
@@ -669,6 +672,25 @@ cld.App.prototype.beforeOpenDoc = function() {
   this.email.hidden();
   this.search.cleanInput();
   cld.message.hidden();
+};
+
+/**
+ * Hidden gbar menu when click other place.
+ */
+cld.App.prototype.gbarAction = function() {
+  var gbMenu = this.dom_.getElement('gbd5');
+  var a = this.dom_.getElement('gbg5');
+  var li = a.parentNode;
+  this.handle.listen(this.dom_.getDocument(), goog.events.EventType.CLICK,
+   function(e) {
+     if (goog.dom.contains(a, e.target)) {
+       goog.dom.classes.toggle(li, 'gbto');
+       e.preventDefault();
+       e.stopPropagation();
+     } else if (!goog.dom.classes.has(e.target, 'gbmt')) {
+       goog.dom.classes.remove(li, 'gbto');
+     }
+   }, false, this);
 };
 
 /**
