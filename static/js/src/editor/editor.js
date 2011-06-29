@@ -6,13 +6,15 @@
 
 goog.provide('cld.Editor');
 
+goog.require('cld.editor.plugins.ManualSave');
 goog.require('goog.Timer');
 goog.require('goog.editor.Command');
 goog.require('goog.editor.Field');
 //goog.require('goog.editor.SeamlessField');
-goog.require('goog.editor.plugins.BasicTextFormatter');
+goog.require('cld.editor.plugins.BasicTextFormatter');
+//goog.require('goog.editor.plugins.BasicTextFormatter');
 goog.require('goog.editor.plugins.EnterHandler');
-goog.require('goog.editor.plugins.HeaderFormatter');
+//goog.require('goog.editor.plugins.HeaderFormatter');
 goog.require('goog.editor.plugins.LinkBubble');
 goog.require('goog.editor.plugins.LinkDialogPlugin');
 goog.require('goog.editor.plugins.ListTabHandler');
@@ -20,6 +22,7 @@ goog.require('goog.editor.plugins.ListTabHandler');
 goog.require('goog.editor.plugins.RemoveFormatting');
 goog.require('goog.editor.plugins.SpacesTabHandler');
 //goog.require('goog.editor.plugins.UndoRedo');
+
 goog.require('goog.events');
 goog.require('goog.events.EventTarget');
 goog.require('goog.ui.editor.DefaultToolbar');
@@ -37,6 +40,7 @@ cld.Editor = function(toolbar, editorArea) {
 
   goog.editor.Field.DELAYED_CHANGE_FREQUENCY = 100;
   this.field = new goog.editor.Field(editorArea);
+  this.field.setParentEventTarget(this);
   //this.field = new goog.editor.SeamlessField(editorArea);
   this.registerPlugins();
 
@@ -53,13 +57,15 @@ goog.inherits(cld.Editor, goog.events.EventTarget);
  * Register plugins for editor field.
  */
 cld.Editor.prototype.registerPlugins = function() {
-  this.field.registerPlugin(new goog.editor.plugins.BasicTextFormatter());
+  this.field.registerPlugin(new cld.editor.plugins.ManualSave());
+  //this.field.registerPlugin(new goog.editor.plugins.BasicTextFormatter());
+  this.field.registerPlugin(new cld.editor.plugins.BasicTextFormatter());
   this.field.registerPlugin(new goog.editor.plugins.RemoveFormatting());
   //this.field.registerPlugin(new goog.editor.plugins.UndoRedo());
   this.field.registerPlugin(new goog.editor.plugins.ListTabHandler());
   this.field.registerPlugin(new goog.editor.plugins.SpacesTabHandler());
   this.field.registerPlugin(new goog.editor.plugins.EnterHandler());
-  this.field.registerPlugin(new goog.editor.plugins.HeaderFormatter());
+  //this.field.registerPlugin(new goog.editor.plugins.HeaderFormatter());
   this.field.registerPlugin(new goog.editor.plugins.LinkDialogPlugin());
   this.field.registerPlugin(new goog.editor.plugins.LinkBubble());
 };
