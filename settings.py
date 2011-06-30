@@ -10,6 +10,7 @@ from google.appengine.api import users
 
 from models import User
 
+template.register_template_library('templatetags.filters')
 
 def login_required(handler_method):
 	"""A decorator to validate request for /settings"""
