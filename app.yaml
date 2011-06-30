@@ -64,7 +64,7 @@ handlers:
 
 - url: .*
   script: main.py
-  secure: always
+  #secure: always
 
 
 skip_files:
