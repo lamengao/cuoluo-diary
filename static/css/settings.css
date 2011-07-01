@@ -162,7 +162,7 @@ font-size:100%;
 #loading-area-text{padding:0 5px}
 
 /* @group header */
-#header{height:95px}
+#header{height:95px;background: none repeat scroll 0 0 #F1F1F1;}
 #logo {cursor: pointer; position: absolute; top: 32px; left: 10px; }
 .cuoluo{font-size:28px;font-weight:bold;text-shadow: 2px 2px 2px #aaa;margin-right:8px;font-family: 'Vollkorn', serif;}
 .cuoluo .c{color:#1851ce}
