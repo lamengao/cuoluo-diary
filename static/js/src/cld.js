@@ -10,6 +10,7 @@ goog.require('goog.History');
 goog.require('goog.editor.Command');
 goog.require('goog.editor.Plugin');
 //goog.require('goog.editor.Field');
+goog.require('goog.editor.plugins.AbstractDialogPlugin');
 goog.require('goog.editor.plugins.BasicTextFormatter');
 //goog.require('goog.editor.plugins.EnterHandler');
 //goog.require('goog.editor.plugins.LinkBubble');

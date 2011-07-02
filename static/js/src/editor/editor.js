@@ -6,12 +6,13 @@
 
 goog.provide('cld.Editor');
 
+goog.require('cld.editor.plugins.BasicTextFormatter');
+goog.require('cld.editor.plugins.ImageDialogPlugin');
 goog.require('cld.editor.plugins.ManualSave');
 goog.require('goog.Timer');
 goog.require('goog.editor.Command');
 goog.require('goog.editor.Field');
 //goog.require('goog.editor.SeamlessField');
-goog.require('cld.editor.plugins.BasicTextFormatter');
 //goog.require('goog.editor.plugins.BasicTextFormatter');
 goog.require('goog.editor.plugins.EnterHandler');
 //goog.require('goog.editor.plugins.HeaderFormatter');
@@ -43,9 +44,8 @@ cld.Editor = function(toolbar, editorArea) {
   this.field.setParentEventTarget(this);
   //this.field = new goog.editor.SeamlessField(editorArea);
   this.registerPlugins();
+  this.initToolbar(toolbar);
 
-  this.toolbar = goog.ui.editor.DefaultToolbar.makeToolbar(cld.Editor.buttons,
-    /** @type {!Element} */ (goog.dom.getElement(toolbar)));
 
   // Hook the toolbar into the field.
   this.toolbarController =
@@ -68,6 +68,52 @@ cld.Editor.prototype.registerPlugins = function() {
   //this.field.registerPlugin(new goog.editor.plugins.HeaderFormatter());
   this.field.registerPlugin(new goog.editor.plugins.LinkDialogPlugin());
   this.field.registerPlugin(new goog.editor.plugins.LinkBubble());
+  this.field.registerPlugin(new cld.editor.plugins.ImageDialogPlugin());
+};
+
+/**
+ * Make image button and ceate editor toolbar.
+ * @param {string} toolbar The toolbar element id.
+ */
+cld.Editor.prototype.initToolbar = function(toolbar) {
+  var imageButton = this.makeImageButton_();
+  var buttons = [
+    goog.editor.Command.FONT_FACE,
+    goog.editor.Command.FONT_SIZE,
+    goog.editor.Command.BOLD,
+    goog.editor.Command.ITALIC,
+    goog.editor.Command.UNDERLINE,
+    goog.editor.Command.FONT_COLOR,
+    goog.editor.Command.BACKGROUND_COLOR,
+    imageButton,
+    goog.editor.Command.LINK,
+    //goog.editor.Command.UNDO,
+    //goog.editor.Command.REDO,
+    goog.editor.Command.UNORDERED_LIST,
+    goog.editor.Command.ORDERED_LIST,
+    goog.editor.Command.INDENT,
+    goog.editor.Command.OUTDENT,
+    goog.editor.Command.JUSTIFY_LEFT,
+    goog.editor.Command.JUSTIFY_CENTER,
+    goog.editor.Command.JUSTIFY_RIGHT,
+    //goog.editor.Command.SUBSCRIPT,
+    //goog.editor.Command.SUPERSCRIPT,
+    goog.editor.Command.STRIKE_THROUGH,
+    goog.editor.Command.REMOVE_FORMAT
+  ];
+
+  this.toolbar = goog.ui.editor.DefaultToolbar.makeToolbar(buttons,
+    /** @type {!Element} */ (goog.dom.getElement(toolbar)));
+};
+
+/**
+ * @return {!goog.ui.Button} A toolbar button for insert image.
+ * @private
+ */
+cld.Editor.prototype.makeImageButton_ = function() {
+  return goog.ui.editor.ToolbarFactory.makeButton(
+    cld.editor.plugins.ImageDialogPlugin.COMMAND,
+    'Insert Image', '', 'tr-icon tr-img');
 };
 
 /**
@@ -148,30 +194,3 @@ cld.Editor.prototype.stopListenChangeEvent = function() {
   }
 };
 
-/**
- * Specify the buttons to add to the toolbar, using built in default buttons.
- * @type {!Array}
- */
-cld.Editor.buttons = [
-  goog.editor.Command.FONT_FACE,
-  goog.editor.Command.FONT_SIZE,
-  goog.editor.Command.BOLD,
-  goog.editor.Command.ITALIC,
-  goog.editor.Command.UNDERLINE,
-  goog.editor.Command.FONT_COLOR,
-  goog.editor.Command.BACKGROUND_COLOR,
-  goog.editor.Command.LINK,
-  //goog.editor.Command.UNDO,
-  //goog.editor.Command.REDO,
-  goog.editor.Command.UNORDERED_LIST,
-  goog.editor.Command.ORDERED_LIST,
-  goog.editor.Command.INDENT,
-  goog.editor.Command.OUTDENT,
-  goog.editor.Command.JUSTIFY_LEFT,
-  goog.editor.Command.JUSTIFY_CENTER,
-  goog.editor.Command.JUSTIFY_RIGHT,
-  //goog.editor.Command.SUBSCRIPT,
-  //goog.editor.Command.SUPERSCRIPT,
-  goog.editor.Command.STRIKE_THROUGH,
-  goog.editor.Command.REMOVE_FORMAT
-];
