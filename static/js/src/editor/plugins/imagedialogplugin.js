@@ -21,6 +21,13 @@ goog.require('goog.ui.editor.AbstractDialog.EventType');
  */
 cld.editor.plugins.ImageDialogPlugin = function() {
   goog.base(this, cld.editor.plugins.ImageDialogPlugin.COMMAND);
+
+  /**
+   * Event handler for this object.
+   * @type {goog.events.EventHandler}
+   * @private
+   */
+  this.eventHandler_ = new goog.events.EventHandler(this);
 };
 goog.inherits(cld.editor.plugins.ImageDialogPlugin,
     goog.editor.plugins.AbstractDialogPlugin);
@@ -30,6 +37,10 @@ goog.inherits(cld.editor.plugins.ImageDialogPlugin,
  * @type {string}
  */
 cld.editor.plugins.ImageDialogPlugin.COMMAND = 'cldImagePluginCommand';
+
+/** @inheritDoc */
+cld.editor.plugins.ImageDialogPlugin.prototype.getTrogClassId =
+  goog.functions.constant('ImageDialogPlugin');
 
 /**
  * Creates a new instance of the dialog and registers a listener for
@@ -41,8 +52,9 @@ cld.editor.plugins.ImageDialogPlugin.COMMAND = 'cldImagePluginCommand';
  */
 cld.editor.plugins.ImageDialogPlugin.prototype.createDialog = function(dom) {
   var dialog = new cld.editor.ImageDialog(dom);
-  dialog.addEventListener(goog.ui.editor.AbstractDialog.EventType.OK,
-    this.handleOK_, false, this);
+  this.eventHandler_.
+      listen(dialog, goog.ui.editor.AbstractDialog.EventType.OK,
+          this.handleOk_);
   return dialog;
 };
 
