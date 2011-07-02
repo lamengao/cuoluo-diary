@@ -46,10 +46,6 @@ cld.editor.ImageDialog.prototype.createDialogControl = function() {
       this.buildTabOnTheWeb_());
   this.tabPane_.render(content);
   return builder.build();
-
-
-  //this.eventHandler_.listen(this.tabPane_, goog.ui.Component.EventType.SELECT,
-      //this.onChangeTab_);
 };
 
 /** @inheritDoc */
@@ -143,7 +139,8 @@ cld.editor.ImageDialog.prototype.onUrlInputChange_ = function() {
     this.imagePreview_.removeChild(this.previewImage_);
   }
   this.previewImage_.src = this.getImageUrl_();
-  goog.dom.classes.remove(this.previewNote_, 'hidden');
+  //goog.dom.classes.remove(this.previewNote_, 'hidden');
+  goog.style.showElement(this.previewNote_, true);
   this.syncOkButton_();
 };
 
@@ -158,7 +155,8 @@ cld.editor.ImageDialog.prototype.makePreviewImage_ = function() {
   this.previewImage_ = this.dom.createDom(goog.dom.TagName.IMG);
   this.eventHandler_.listen(this.previewImage_,
       goog.events.EventType.LOAD, function(e) {
-        goog.dom.classes.add(this.previewNote_, 'hidden');
+        //goog.dom.classes.add(this.previewNote_, 'hidden');
+        goog.style.showElement(this.previewNote_, false);
         this.fitImageSize_();
         this.imagePreview_.insertBefore(this.previewImage_, this.previewNote_);
         this.isValidImage_ = true;

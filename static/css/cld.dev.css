@@ -472,7 +472,7 @@ div.moveto.modal-dialog{}
 	text-align: center;
 	margin-top:5px;
 }
-.image-preview p:last-child{
+.image-preview p{
 	font-size:10px;
 	margin:13px 0;
 }
