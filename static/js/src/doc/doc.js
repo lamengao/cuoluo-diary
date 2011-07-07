@@ -428,6 +428,13 @@ cld.Doc.prototype.open = function(node) {
     this.showLoading();
     this.loadAndShowDocContent();
   }
+
+  if (node.getModel() && 'scrolltop' in node.getModel()) {
+    var scrollTop = node.getModel()['scrolltop'];
+  } else {
+    var scrollTop = 0;
+  }
+  this.editor.setScrollTop(scrollTop);
 };
 
 /**
@@ -867,6 +874,9 @@ cld.Doc.prototype.clearActions = function() {
   } else if (this.isNew() && this.docType === 'note') {
     // new note and not save, discard it
     this.dispatchEvent(new cld.doc.Event('discard', this.openingNode_));
+  }
+  if (this.nodeModel) {
+    this.updateNodeModel({'scrolltop': this.editor.getScrollTop()});
   }
 };
 
