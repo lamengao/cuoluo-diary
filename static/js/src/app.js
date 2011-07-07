@@ -60,7 +60,6 @@ cld.App = function() {
   /** @type {cld.Zippy} */
   this.tasksZippy =
     new cld.Zippy('tasks-title', 'tasks-container', this.dom_);
-  this.tasks = new cld.Tasks(this.dom_);
 
   this.gbarAction();
 };
@@ -705,16 +704,18 @@ cld.App.prototype.install = function(opt_app) {
   this.diaryTree = new cld.DiaryTree(app);
   this.notesTree = new cld.NotesTree(app);
 
-  this.diaryPopupMenu = new cld.DiarySectionPopupMenu(app,
-                                                      this.diaryTree.tree);
-  this.notesPopupMenu = new cld.NotesSectionPopupMenu(app,
-                                                      this.notesTree.tree);
+  this.diaryPopupMenu =
+    new cld.DiarySectionPopupMenu(app, this.diaryTree.tree);
+  this.notesPopupMenu =
+    new cld.NotesSectionPopupMenu(app, this.notesTree.tree);
 
   this.search = new cld.Search(app);
   this.search.initAutoComplete();
 
   this.docsList = new cld.DocsList(cld.App.getInstance());
   this.email = new cld.Email(cld.App.getInstance());
+
+  this.tasks = new cld.Tasks(this.dom_);
 
   this.loaded();
 };

@@ -148,6 +148,26 @@ cld.Editor.prototype.makeUneditable = function() {
 };
 
 /**
+ * @return {number} The iframe scrollTop.
+ */
+cld.Editor.prototype.getScrollTop = function() {
+  if (this.field.isUneditable()) {
+    return 0;
+  }
+  return this.field.getElement().scrollTop;
+};
+
+/**
+ * @param {number} scrollTop The number.
+ */
+cld.Editor.prototype.setScrollTop = function(scrollTop) {
+  if (this.field.isUneditable()) {
+    return;
+  }
+  this.field.getElement().scrollTop = scrollTop;
+};
+
+/**
  * Start listen the change event.
  * @param {Function} handlerChange The change callback.
  */
