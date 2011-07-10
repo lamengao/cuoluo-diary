@@ -562,7 +562,7 @@ cld.Doc.prototype.onSavedSuccess_ = function(node, data) {
     // note title renamed
     if (this.openingNode_ == node) {
       this.setTitle('note', /** @type {string} */ (title));
-      this.cancleRename();
+      this.cancelRename();
     }
     node.setText(/** @type {string} */ (title));
     // adjust node position
@@ -636,8 +636,8 @@ cld.Doc.prototype.createEditNameButtons_ = function() {
   }
   this.editNameButton = cld.ui.utils.newButton('OK');
   this.editNameButton.render(this.elEditName);
-  this.editNameCancleButton = cld.ui.utils.newButton('Cancle');
-  this.editNameCancleButton.render(this.elEditName);
+  this.editNameCancelButton = cld.ui.utils.newButton('Cancel');
+  this.editNameCancelButton.render(this.elEditName);
 
   var keyHandler = new goog.events.KeyHandler(this.editNameInput);
 
@@ -652,22 +652,22 @@ cld.Doc.prototype.createEditNameButtons_ = function() {
       }, false, this).
     listen(this.editNameInput, goog.events.EventType.BLUR,
       function(e) {
-        //this.cancleRename();
+        //this.cancelRename();
       }, false, this).
     listen(this.editNameButton, goog.ui.Component.EventType.ACTION,
       function(e) {
         this.renameInternal();
       }, false, this).
-    listen(this.editNameCancleButton, goog.ui.Component.EventType.ACTION,
+    listen(this.editNameCancelButton, goog.ui.Component.EventType.ACTION,
       function(e) {
-        this.cancleRename();
+        this.cancelRename();
       }, false, this);
 };
 
 /**
- * Cancle the rename action.
+ * Cancel the rename action.
  */
-cld.Doc.prototype.cancleRename = function() {
+cld.Doc.prototype.cancelRename = function() {
   goog.dom.classes.add(this.elEditName, 'hidden');
   goog.dom.classes.remove(this.titleTextSpan, 'hidden');
 };
@@ -779,7 +779,7 @@ cld.Doc.prototype.renameDoc = function() {
   goog.dom.classes.remove(this.elEditName, 'hidden');
   this.editNameInput.focus();
   this.editNameButton.setEnabled(true);
-  this.editNameCancleButton.setEnabled(true);
+  this.editNameCancelButton.setEnabled(true);
 };
 
 /**
@@ -792,11 +792,11 @@ cld.Doc.prototype.renameInternal = function() {
   }
   var title = this.editNameInput.value;
   if (title == this.openingNode_.getText()) {
-    this.cancleRename();
+    this.cancelRename();
     return;
   }
   this.editNameButton.setEnabled(false);
-  this.editNameCancleButton.setEnabled(false);
+  this.editNameCancelButton.setEnabled(false);
   this.setNodeModel('title', title);
   this.setNodeModel('modified', true);
   this.dispatchEvent(cld.api.Docs.EventType.LOADING);
@@ -866,7 +866,7 @@ cld.Doc.prototype.clearActions = function() {
   if (!this.openingNode_) {
     return;
   }
-  this.cancleRename();
+  this.cancelRename();
   // if current node not save, save it now
   this.stopSaveTimer_();
   if (this.isModified()) {

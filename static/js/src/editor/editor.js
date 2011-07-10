@@ -113,7 +113,7 @@ cld.Editor.prototype.initToolbar = function(toolbar) {
 cld.Editor.prototype.makeImageButton_ = function() {
   return goog.ui.editor.ToolbarFactory.makeButton(
     cld.editor.plugins.ImageDialogPlugin.COMMAND,
-    'Insert Image', '', 'tr-icon tr-img');
+    'Insert Image', '', 'tr-icon tr-image');
 };
 
 /**
