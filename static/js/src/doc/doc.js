@@ -565,6 +565,7 @@ cld.Doc.prototype.onSavedSuccess_ = function(node, data) {
       this.cancelRename();
     }
     node.setText(/** @type {string} */ (title));
+    node.setToolTip(/** @type {string} */ (title));
     // adjust node position
     this.dispatchEvent({
         type: cld.doc.EventType.RENAMED,
