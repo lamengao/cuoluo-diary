@@ -89,6 +89,30 @@ em {font-weight: bold;}
 .gbrtl .gbm{-moz-box-shadow:1px 1px 1px #ccc}
 .gbto .gbm{visibility:visible;top:29px !important}
 #gbs{top:29px !important}
+#gbd1, #gbd1 .gbmc {
+	height: 190px;
+	width: 400px;
+}
+#gbd1{
+	left: auto;
+	/*right: -138px;*/
+	/*top: 32px;*/
+	visibility: hidden;
+}
+.gbto #gbd1{
+	visibility: visible;
+}
+.gbmsg {
+	/*display: none;*/
+	position: absolute;
+	/*top: 0;*/
+	background: none repeat scroll 0 0 #FFFFFF;
+	display: block;
+	text-align: center;
+	top: 30%;
+	width: 100%;
+	z-index: 3;
+}
 #gbz .gbm{left:0}
 #gbg .gbm{right:0}
 .gbmc{background:#fff;position:relative;z-index:2;zoom:1}
@@ -108,7 +132,7 @@ em {font-weight: bold;}
 .gbtb2{display:block;border-top:2px solid transparent}
 .gbto .gbzt .gbtb2,.gbto .gbgt .gbtb2{border-top-width:0}
 .gbtb .gbts{background:url(//ssl.gstatic.com/gb/images/b_8d5afc09.png);_background:url(//ssl.gstatic.com/gb/images/b8_3615d64d.png);background-position:-27px -22px;border:0;font-size:0;padding:29px 0 0;*padding:27px 0 0;width:1px}
-.gbzt-hvr,.gbzt:hover,.gbzt:focus,.gbgt-hvr,.gbgt:hover,.gbgt:focus{background-color:#4c4c4c;background-image:none;_background-image:none;background-position:0 -102px;background-repeat:repeat-x;outline:none;text-decoration:none !important}
+.gbzt-hvr,.gbzt:hover,.gbzt:focus,.gbgt-hvr,.gbgt:hover{background-color:#4c4c4c;background-image:none;_background-image:none;background-position:0 -102px;background-repeat:repeat-x;outline:none;text-decoration:none !important}
 .gbpdjs .gbto .gbm{min-width:99%}
 .gbz0l .gbtb2{border-top-color:#dd4b39!important}
 #gbi4s,#gbi4s1{font-weight:bold}
@@ -223,10 +247,11 @@ div.toolbarbutton{margin:4px}
 /* @group navpanelist */
 #navpanelist li{line-height: 21px;padding-left:10px;cursor: pointer;overflow:hidden;white-space: nowrap;}
 #navpanelist li:hover{background-color:#e3e9ff}
-#navpanelist .text, #tasks .caption{float:left}
-#navpanelist .icon, #tasks .icon { margin: 2px 0 0 3px; width: 16px; height: 16px; float: left;}
+#navpanelist .text, #apps .caption{float:left}
+#navpanelist .icon, #apps .icon { margin: 2px 0 0 3px; width: 16px; height: 16px; float: left;}
 /*#navpanelist .trash .icon{background:url("/images/icons_19.png") no-repeat;background-position: -96px 0;}*/
-#tasks .icon{background:url(/images/1304729777-tasks.png) no-repeat;}
+#apps .icon{background:url(/images/1304729777-tasks.png) no-repeat;}
+#apps .loading{padding-left:10px;margin-top:15px;color:#666}
 /* @end */
 
 /* @group tree */
@@ -289,10 +314,15 @@ div.toolbarbutton{margin:4px}
 
 /* @group tasks */
 #tasks-container{overflow:hidden}
-#tasks .loading{padding-left:10px;margin-top:15px;color:#666}
-#relogin{position:relative;padding-left:10px;top:-20px;background-color:#FFF;}
+#relogin{
+	padding-left:10px;
+	background-color:#FFF;
+	position: absolute;
+	top: 5%;
+	display:none;
+}
 #relogin p{font-weight:bold;margin-bottom:10px}
-#tasksiframe {position:absolute;height:100%;width:100%;top:0;background-color:#FFF}
+#tasksiframe {position:absolute;height:100%;width:100%;top:0;background-color:#FFF;z-index: 9;}
 /* @end */
 
 /* @group main */
@@ -480,4 +510,9 @@ div.moveto.modal-dialog{}
 	font-size:13px;
 	margin:0;
 }
+/* @end */
+
+/* @group apps */
+#appsmanagerlink{margin:15px 0 0 10px;}
+
 /* @end */

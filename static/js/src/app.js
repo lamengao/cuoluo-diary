@@ -6,6 +6,7 @@
 
 goog.provide('cld.App');
 
+goog.require('cld.Apps');
 goog.require('cld.Creation');
 goog.require('cld.DiarySectionPopupMenu');
 goog.require('cld.DiaryTree');
@@ -58,8 +59,8 @@ cld.App = function() {
   this.notesZippy =
     new cld.Zippy('notes-tree-header', 'notes-tree-content', this.dom_);
   /** @type {cld.Zippy} */
-  this.tasksZippy =
-    new cld.Zippy('tasks-title', 'tasks-container', this.dom_);
+  this.appsZippy =
+    new cld.Zippy('apps-title', 'apps-container', this.dom_);
 
   this.gbarAction();
 };
@@ -200,6 +201,9 @@ cld.App.prototype.handleResize_ = function(e) {
   }
   if (this.email.isOpen()) {
     this.email.adjustFieldSize();
+  }
+  if (this.tasks) {
+    this.tasks.setWrapFitHeight();
   }
 };
 
@@ -677,17 +681,22 @@ cld.App.prototype.beforeOpenDoc = function() {
  * Hidden gbar menu when click other place.
  */
 cld.App.prototype.gbarAction = function() {
-  var gbMenu = this.dom_.getElement('gbd5');
-  var a = this.dom_.getElement('gbg5');
-  var li = a.parentNode;
+  //var gbMenu = this.dom_.getElement('gbd5');
   this.handle.listen(this.dom_.getDocument(), goog.events.EventType.CLICK,
    function(e) {
-     if (goog.dom.contains(a, e.target)) {
-       goog.dom.classes.toggle(li, 'gbto');
-       e.preventDefault();
-       e.stopPropagation();
-     } else if (!goog.dom.classes.has(e.target, 'gbmt')) {
-       goog.dom.classes.remove(li, 'gbto');
+     var ids = ['gbg5', 'gbg1'];
+     for (var i = 0; i < ids.length; i++) {
+       var a = this.dom_.getElement(ids[i]);
+       var li = a.parentNode;
+       if (goog.dom.contains(a, e.target)) {
+         goog.dom.classes.toggle(li, 'gbto');
+         goog.dom.classes.toggle(a, 'gbgt-hvr');
+         e.preventDefault();
+         e.stopPropagation();
+       } else if (!goog.dom.getAncestorByClass(e.target, 'gbmc')) {
+         goog.dom.classes.remove(li, 'gbto');
+         goog.dom.classes.remove(a, 'gbgt-hvr');
+       }
      }
    }, false, this);
 };
@@ -716,6 +725,7 @@ cld.App.prototype.install = function(opt_app) {
   this.email = new cld.Email(cld.App.getInstance());
 
   this.tasks = new cld.Tasks(this.dom_);
+  this.apps = new cld.Apps(app);
 
   this.loaded();
 };
