@@ -258,11 +258,11 @@ cld.Doc.prototype.setEditorAreaHeight = function() {
   var toolbarHeight = getHeight('editortoolbar', this.dom_);
   el.style.paddingTop = toolbarHeight + 'px';
 
-  if (goog.userAgent.WEBKIT) {
+  /*if (goog.userAgent.WEBKIT) {
     var containerHeight = getHeight('doc-container', this.dom_);
     var elEditorArea = this.dom_.getElement('editorarea');
     elEditorArea.style.height = (containerHeight - toolbarHeight) + 'px';
-  }
+  }*/
 };
 
 /**
