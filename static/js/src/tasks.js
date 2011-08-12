@@ -61,10 +61,11 @@ cld.Tasks.prototype.loginTester = function() {
  * @private
  */
 cld.Tasks.prototype.showTasksIframe_ = function() {
-  var html = '<iframe id="tasksiframe" name="tasksiframe" frameborder="0"' +
-             'src="' + cld.Tasks.URL + '"></iframe>';
-  var df = this.dom_.htmlToDocumentFragment(html);
-  this.dom_.append(/** @type {!Node} */ (this.elContainer), df);
+  var iframe = this.dom_.createDom('iframe', {'id':'tasksiframe',
+                                            'name':'tasksiframe',
+                                            'frameborder':'0',
+                                            'src': cld.Tasks.URL});
+  this.dom_.append(/** @type {!Node} */ (this.elContainer), iframe);
 };
 
 /**
