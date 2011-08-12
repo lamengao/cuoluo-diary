@@ -59,6 +59,12 @@ class LoginHandler(webapp.RequestHandler):
 		self.redirect(users.create_login_url('/'))
 
 
+class TasksLoginHandler(webapp.RequestHandler):
+	def get(self):
+		self.redirect(users.create_login_url(
+			'https://mail.google.com/tasks/ig?pli=1'))
+
+
 def getBrowserDetails(userAgent):
 	result = {}
 	# Regexp for most used "User-Agent"s built using "http://www.useragentstring.com/"
@@ -88,6 +94,7 @@ def getBrowserDetails(userAgent):
 
 application = webapp.WSGIApplication([('/', MainHandler),
 									  ('/login', LoginHandler),
+									  ('/taskslogin', TasksLoginHandler),
 									  ('/logout', LogoutHandler)
 									  ],
 									  debug=True)
