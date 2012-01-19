@@ -61,8 +61,7 @@ class LoginHandler(webapp.RequestHandler):
 
 class TasksLoginHandler(webapp.RequestHandler):
 	def get(self):
-		self.redirect(users.create_login_url(
-			'https://mail.google.com/tasks/ig?pli=1'))
+		self.redirect(users.create_login_url('https://mail.google.com/tasks/ig'))
 
 
 def getBrowserDetails(userAgent):
