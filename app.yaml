@@ -18,6 +18,10 @@ handlers:
   static_files: static/google14971f16491890db.html
   upload: static/google14971f16491890db.html
 
+- url: /weblukerverif.html
+  static_files: static/weblukerverif.html
+  upload: static/weblukerverif.html
+
 - url: /images/date
   static_dir: static/images/date
 
