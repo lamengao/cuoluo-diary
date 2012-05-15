@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import logging
 import os
 import re
 
@@ -34,12 +35,14 @@ class MainHandler(webapp.RequestHandler):
 		template_values['notes_list'] = user.get_notes_list()
 		if is_prod:
 			template_values['develop'] = False
-		elif self.request.get("d") == 'true':
+		elif self.request.get("d"):
 			template_values['develop'] = True
 		elif self.request.get("e") == 'true':
 			template_values['develop'] = True
 		else:
 			template_values['develop'] = False
+		logging.info(self.request.get("d"))
+		logging.info(template_values['develop'])
 		template_values['browser'] = getBrowserDetails(
 			self.request.headers['User-Agent'])
 		self.response.out.write(template.render(path, template_values))

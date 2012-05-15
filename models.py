@@ -62,12 +62,13 @@ class User(db.Model):
 
 	def search_contents(self, q=''):
 		result = {}
-		result['diaries'] = [];
-		result['notes'] = [];
+		result['diaries'] = []
+		result['notes'] = []
 		if q == '':
 			return result
+		q_lower = q.lower()
 		for content in self.contents:
-			if content.text and content.text.find(q) != -1:
+			if content.text and content.text.lower().find(q_lower) != -1:
 				if content.type == 'diary':
 					result['diaries'].append(content.doc_key)
 				elif content.type == 'note':
