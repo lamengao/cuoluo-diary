@@ -56,12 +56,12 @@ class User(db.Model):
         user = users.get_current_user()
         if user is None:
             return None
-        if 'yibing@cuoluo.com' == user.email():
-            user_id = '115680706968923119637'
-        elif 'xuyan@cuoluo.com' == user.email():
-            user_id = '108038034624975513101'
-        else:
-            user_id = user.user_id()
+        #if 'yibing@cuoluo.com' == user.email():
+            #user_id = '115680706968923119637'
+        #elif 'xuyan@cuoluo.com' == user.email():
+            #user_id = '108038034624975513101'
+        #else:
+        user_id = user.user_id()
         u = User.get_by_key_name(user_id)
         if u is None:
             # notice: the new user **NOT** insert(put) to datastore here
