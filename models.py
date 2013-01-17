@@ -57,7 +57,7 @@ class User(db.Model):
         if user is None:
             return None
         if 'yibing@cuoluo.com' == user.email():
-            user_id = '118323293119604531630'
+            user_id = '115680706968923119637'
         else:
             user_id = user.user_id()
         u = User.get_by_key_name(user_id)
