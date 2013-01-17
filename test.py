@@ -19,12 +19,12 @@ from models import User, Diary, Note
 class TestHandler(webapp.RequestHandler):
     def get(self):
         user = models.User.get_current_user()
-        if not user:
-            self.response.out.write('nonono')
-            return
-        elif user.email != 'yibing@cuoluo.com' and user.email != 'xuyan@cuoluo.com':
-            self.response.out.write('nonono')
-            return
+        #if not user:
+            #self.response.out.write('nonono')
+            #return
+        #elif user.email != 'yibing@cuoluo.com' and user.email != 'xuyan@cuoluo.com':
+            #self.response.out.write('nonono')
+            #return
         ori_user = User.get_by_key_name('115680706968923119637')
         new_user = User.get_by_key_name('108038034624975513101')
         # get ori diaries
