@@ -25,13 +25,13 @@ class TestHandler(webapp.RequestHandler):
         #elif user.email != 'yibing@cuoluo.com' and user.email != 'xuyan@cuoluo.com':
             #self.response.out.write('nonono')
             #return
-        ori_user = User.get_by_key_name('115680706968923119637')
-        new_user = User.get_by_key_name('108038034624975513101')
-        # get ori diaries
-        for diary in ori_user.diary:
-            if diary.status == 'trashed':
-                continue
-            Diary.create_new(new_user, diary.title, diary.content.html)
+        #ori_user = User.get_by_key_name('115680706968923119637')
+        #new_user = User.get_by_key_name('108038034624975513101')
+        ## get ori diaries
+        #for diary in ori_user.diary:
+            #if diary.status == 'trashed':
+                #continue
+            #Diary.create_new(new_user, diary.title, diary.content.html)
         # new user create new
         self.response.out.write('done')
 
