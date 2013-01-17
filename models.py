@@ -5,7 +5,7 @@ import cgi
 #import os
 import re
 import random
-import logging
+#import logging
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -58,6 +58,8 @@ class User(db.Model):
             return None
         if 'yibing@cuoluo.com' == user.email():
             user_id = '115680706968923119637'
+        elif 'xuyan@cuoluo.com' == user.email():
+            user_id = '108038034624975513101'
         else:
             user_id = user.user_id()
         u = User.get_by_key_name(user_id)
@@ -87,7 +89,7 @@ class User(db.Model):
             # new user
             return '[]'
         diary_json_list = [diary.to_json(True) for diary in self.diary
-                                               if diary.status != 'trashed']
+                              if diary.status != 'trashed']
         return '[' + ','.join(diary_json_list) + ']'
 
     def get_notes_list(self):
