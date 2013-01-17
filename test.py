@@ -13,40 +13,45 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
 from django.utils import simplejson as json
 
+from models import User, Diary, Note
+
+
 class TestHandler(webapp.RequestHandler):
-	def get(self):
-		#user = models.User.get_current_user()
-		#if not user:
-			#self.redirect(users.create_login_url("/testscript"))
-			#return
-		##namespace_manager.set_namespace('newyear')
-		#if not user.is_saved():
-			#user.put()
-		#namespace = namespace_manager.get_namespace()
-		#self.response.out.write('<a href="%s">sign out</a><br> %s <br>' % (users.create_logout_url("/testscript"),user.GAccount))
-		#self.response.out.write('namespace: %s <br>' % namespace)
-		#self.response.out.write('author.GAccount.user_id: %s <br>' % user.GAccount.__dict__)
-		cssfile = os.path.join(os.path.dirname(__file__), 'staticsymbol', 'css', 'cld.dev.css')
-		filestat = os.stat(cssfile)
-		self.response.out.write('namespace: %s <br>' % filestat.st_mtime)
+    def get(self):
+        user = models.User.get_current_user()
+        if not user:
+            self.response.out.write('nonono')
+            return
+        elif user.email != 'yibing@cuoluo.com' and user.email != 'xuyan@cuoluo.com':
+            self.response.out.write('nonono')
+            return
+        ori_user = User.get_by_key_name('115680706968923119637')
+        new_user = User.get_by_key_name('108038034624975513101')
+        # get ori diaries
+        for diary in ori_user.diary:
+            if diary.status == 'trashed':
+                continue
+            Diary.create_new(new_user, diary.title, diary.content.html)
+        # new user create new
+        self.response.out.write('done')
 
 
 class TestScriptHandler(webapp.RequestHandler):
-	def get(self):
-		user = users.get_current_user()
-		if user:
-			self.response.out.write(user.email() + '<br/>')
-			self.response.out.write(user.user_id())
-		else:
-			self.response.out.write('not loging')
+    def get(self):
+        user = users.get_current_user()
+        if user:
+            self.response.out.write(user.email() + '<br/>')
+            self.response.out.write(user.user_id())
+        else:
+            self.response.out.write('not loging')
 
 
 def main():
-	application = webapp.WSGIApplication([
-		('/testscript', TestScriptHandler),
-		('/test', TestHandler)
-		], debug=True)
-	run_wsgi_app(application)
+    application = webapp.WSGIApplication([
+        ('/testscript', TestScriptHandler),
+        ('/test', TestHandler)
+        ], debug=True)
+    run_wsgi_app(application)
 
 if __name__ == '__main__':
-	main()
+    main()
