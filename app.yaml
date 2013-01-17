@@ -1,5 +1,5 @@
 application: cuoluodiary
-version: stackoverflow
+version: issue
 runtime: python
 api_version: 1
 
