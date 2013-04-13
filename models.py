@@ -60,7 +60,8 @@ class User(db.Model):
             #tobe = 'mehwishshams@gmail.com'
             #tobe = 'stvblvs@gmail.com'
             #tobe = 'denny224@gmail.com'
-            tobe = 'alensena@msn.com'
+            #tobe = 'alensena@msn.com'
+            tobe = 'jazziepooh93@gmail.com'
             gqlstr = "WHERE GAccount = USER('%s')" % tobe
             u = User.gql(gqlstr).get()
             if not u:
