@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-import os
+#import os
 
 import models
 
-from google.appengine.api import namespace_manager
-from google.appengine.ext import db
+#from google.appengine.api import namespace_manager
+#from google.appengine.ext import db
 from google.appengine.api import users
 from google.appengine.ext import webapp
-from google.appengine.ext.webapp.util import run_wsgi_app
-from google.appengine.ext.webapp import template
-from django.utils import simplejson as json
+#from google.appengine.ext.webapp.util import run_wsgi_app
+#from google.appengine.ext.webapp import template
+#from django.utils import simplejson as json
 
-from models import User, Diary, Note
+#from models import User, Diary, Note
 
 
 class TestHandler(webapp.RequestHandler):
@@ -46,12 +46,11 @@ class TestScriptHandler(webapp.RequestHandler):
             self.response.out.write('not loging')
 
 
-def main():
-    application = webapp.WSGIApplication([
-        ('/testscript', TestScriptHandler),
-        ('/test', TestHandler)
-        ], debug=True)
-    run_wsgi_app(application)
+app = webapp.WSGIApplication([('/testscript', TestScriptHandler),
+                              ('/test', TestHandler)], debug=True)
 
-if __name__ == '__main__':
-    main()
+#def main():
+    #run_wsgi_app(application)
+
+#if __name__ == '__main__':
+    #main()
