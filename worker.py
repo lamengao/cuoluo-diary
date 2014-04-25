@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 import logging
 import os
+import gzip
+import StringIO
 
 import lib.cloudstorage as gcs
 
@@ -31,14 +33,17 @@ class ArchiveHandler(webapp.RequestHandler):
         bucket_name = os.environ.get('BUCKET_NAME', default_bucket_name)
         user_id = self.request.headers['X-AppEngine-TaskName'].split('-')[0]
         user = User.get_by_key_name(user_id)
+        stringio = StringIO.StringIO()
+        gzip_file = gzip.GzipFile(fileobj=stringio, mode='w')
+        gzip_file.write('Hello World')
+        gzip_file.close()
         bucket = '/' + bucket_name
-        filename = bucket + '/gcsfiletest.txt'
-        gcs_file = gcs.open(filename,
-                            'w',
-                            content_type='text/plain',
+        filename = bucket + '/gcsfiletest.gz'
+        gcs_file = gcs.open(filename, 'w',
+                            content_type='application/gzip',
                             options={'x-goog-meta-foo': 'foo',
                                      'x-goog-meta-bar': 'bar'})
-        gcs_file.write('wahahahahahahhaha\n')
+        gcs_file.write(stringio.getvalue())
         gcs_file.close()
         logging.info(user.email)
         logging.info(bucket_name)
