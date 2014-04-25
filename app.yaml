@@ -56,8 +56,12 @@ handlers:
   script: api.app
   #login: required
 
-- url: /settings
+- url: /settings/?.*
   script: settings.app
+
+- url: /worker/.*
+  script: worker.app
+  login: admin
   
 - url: /test
   script: test.app
@@ -66,6 +70,9 @@ handlers:
 #- url: /mapreduce(/.*)?
   #script: $PYTHON_LIB/google/appengine/ext/mapreduce/main.py
   #login: admin
+- url: /remoteapi.*
+  script: google.appengine.ext.remote_api.handler.application
+  login: admin
 
 - url: /monitor
   script: monitor.app

@@ -4,6 +4,20 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="{{ '/css/settings.css'|addfilemtime }}" rel="stylesheet" type="text/css" />
 <link rel="shortcut icon" href="/favicon.ico" />
+<style>
+  button.button-main {
+    font-size: 14px;
+  }
+  button[disabled] {
+    color: #999;
+  }
+  .archive {
+    font-size: 16px;
+  }
+  .hidden {
+    display: none;
+  }
+</style>
 <script type="text/javascript">
 var _timezone = '{{ timezone }}',
 _dateformat = '{{ dateformat }}';
@@ -41,13 +55,16 @@ _dateformat = '{{ dateformat }}';
 						</select>
         			</td>
         		</tr>
-        		<tr class="last"><th><h3 class="normalSize">Date format:</h3></th><td colspan="2"><select id="cldDateFormat" name="cldDateFormat"><option value="MDY">12/31/2010</option><option value="DMY">31/12/2010</option><option value="YMD" selected="">2010-12-31</option></select></td></tr>
+        		<tr><th><h3 class="normalSize">Date format:</h3></th><td colspan="2"><select id="cldDateFormat" name="cldDateFormat"><option value="MDY">12/31/2010</option><option value="DMY">31/12/2010</option><option value="YMD" selected="">2010-12-31</option></select></td></tr>
+            <tr class="last archive"><th><h3 class="normalSize">Your data archive</h3></th><td colspan="2"><button id="archivebtn" class="button-main">Request your archive</button></td></tr>
+            <tr class="last archive hidden archiveinfo"><th><h3 class="normalSize"></h3></th><td colspan="2">A link will be emailed to you when your archive is ready. This may take a little while, so please be patient.</td></tr>
+            <tr class="last archive hidden archivewarning"><th><h3 class="normalSize"></h3></th><td colspan="2">Your data already archived, please request tomorrow.</td></tr>
 			</tbody>
 		</table>
 	</div>
 	</form>
 </div>
-<div class="privacy-policy">&copy;2011 Cuoluo - <a target="_blank" href="https://groups.google.com/group/cuoluo-diary">Discuss</a> - <a target="_blank" href="#">Help</a></div>
+<div class="privacy-policy">&copy;2014 Cuoluo - <a target="_blank" href="https://groups.google.com/group/cuoluo-diary">Discuss</a> - <a target="_blank" href="#">Help</a></div>
 <script type="text/javascript">
 function cancelSetting(){
   window.location = '/';
@@ -74,6 +91,23 @@ function cancelSetting(){
 		}
 	}
 })();
+</script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>
+$(function() {
+  $archiveButton = $('#archivebtn');
+  $archiveButton.click(function(e) {
+    $(this).prop('disabled', true);
+    e.preventDefault();
+    $.post('/settings/archive', function(data) {
+      if (data === '1') {
+        $('tr.archiveinfo').removeClass('hidden');
+      } else {
+        $('tr.archivewarning').removeClass('hidden');
+      }
+    });
+  });
+});
 </script>
 </body>
 </html>

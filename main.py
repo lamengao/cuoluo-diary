@@ -50,11 +50,22 @@ class MainHandler(webapp.RequestHandler):
 
 class LogoutHandler(webapp.RequestHandler):
     def get(self):
+        try:
+            is_dev = os.environ['SERVER_SOFTWARE'].startswith('Dev')
+        except:
+            is_dev = False
+        url = "http://diary.cuoluo.com/"
         user = users.get_current_user()
-        if user:
-            self.redirect(users.create_logout_url("http://diary.cuoluo.com/"))
+        if not is_dev:
+            if user:
+                self.redirect(users.create_logout_url(url))
+            else:
+                self.redirect(url)
         else:
-            self.redirect('http://diary.cuoluo.com/')
+            if user:
+                self.redirect(users.create_logout_url("/"))
+            else:
+                self.redirect('/')
 
 
 class LoginHandler(webapp.RequestHandler):
@@ -102,9 +113,3 @@ app = webapp.WSGIApplication([('/', MainHandler),
                               ('/taskslogin', TasksLoginHandler),
                               ('/logout', LogoutHandler)
                               ], debug=True)
-
-#def main():
-    #run_wsgi_app(application)
-
-#if __name__ == '__main__':
-    #main()

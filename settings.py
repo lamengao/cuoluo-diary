@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+import time
 import zoneinfo
+#import logging
 
 from google.appengine.ext import webapp
 #from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
 from google.appengine.api import users
+from google.appengine.api import taskqueue
 
 from models import User
 
@@ -64,10 +67,30 @@ class MainHandler(webapp.RequestHandler):
         self.redirect("/")
 
 
-app = webapp.WSGIApplication([('/settings', MainHandler)], debug=True)
+class ArchiveHandler(webapp.RequestHandler):
+    @login_required
+    def get(self):
+        user_id = users.get_current_user().user_id()
+        taskname = user_id + '-' + str(int(time.time()) / 86400)
+        self.response.out.write(taskname)
 
-#def main():
-    #run_wsgi_app(application)
+    @login_required
+    def post(self):
+        user_id = users.get_current_user().user_id()
+        taskname = user_id + '-' + str(int(time.time()) / 86400)
+        taskname = user_id + '-' + str(int(time.time()))
+        try:
+            taskqueue.add(
+                queue_name='archive',
+                name=taskname,
+                url='/worker/archive',
+            )
+            self.response.out.write('1')
+        except taskqueue.TombstonedTaskError:
+            self.response.out.write('2')
 
-#if __name__ == '__main__':
-    #main()
+
+app = webapp.WSGIApplication([
+    ('/settings', MainHandler),
+    ('/settings/archive', ArchiveHandler),
+], debug=True)

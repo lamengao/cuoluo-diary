@@ -56,27 +56,21 @@ class User(db.Model):
         user = users.get_current_user()
         if user is None:
             return None
-        if 'yibing@cuoluo.com' == user.email():
-            #tobe = 'mehwishshams@gmail.com'
-            #tobe = 'stvblvs@gmail.com'
-            #tobe = 'denny224@gmail.com'
-            #tobe = 'alensena@msn.com'
-            #tobe = 'jazziepooh93@gmail.com'
-            #tobe = 'skebede85@gmail.com'
-            #tobe = 'mariam.odintsova@gmail.com'
-            #tobe = 'dian.oriza@gmail.com'
-            tobe = 'allsandwich1@gmail.com'
-            gqlstr = "WHERE GAccount = USER('%s')" % tobe
-            u = User.gql(gqlstr).get()
-            if not u:
-                user_id = user.user_id()
-            else:
-                user_id = u.id
-        else:
-            user_id = user.user_id()
-            u = User.get_by_key_name(user_id)
+        #if 'yibing@cuoluo.com' == user.email():
+            #tobe = 'allsandwich1@gmail.com'
+            #gqlstr = "WHERE GAccount = USER('%s')" % tobe
+            #u = User.gql(gqlstr).get()
+            #if not u:
+                #user_id = user.user_id()
+            #else:
+                #user_id = u.id
+        #else:
+            #user_id = user.user_id()
+            #u = User.get_by_key_name(user_id)
+        user_id = user.user_id()
+        u = User.get_by_key_name(user_id)
         if u is None:
-            # notice: the new user **NOT** insert(put) to datastore here
+            # Note: the new user **NOT** insert(put) to datastore here
             u = User(key_name=user_id)
         return u
 
