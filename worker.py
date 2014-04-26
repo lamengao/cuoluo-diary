@@ -93,7 +93,7 @@ def send_archive_email(to, download_url):
     path = os.path.join(os.path.dirname(__file__),
                         'templates', 'archive.email.txt')
     body = template.render(path, {'download_url': download_url}).encode('utf8')
-    sender = 'admin@cuoluo.com'
+    sender = 'Cuoluo Diary <admin@cuoluo.com>'
     subject = 'Your Cuoluo Diary download is ready'
     mail.send_mail(sender=sender, to=to, subject=subject, body=body)
 
