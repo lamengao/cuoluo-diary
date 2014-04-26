@@ -78,7 +78,6 @@ class ArchiveHandler(webapp.RequestHandler):
     def post(self):
         user_id = users.get_current_user().user_id()
         taskname = user_id + '-' + str(int(time.time()) / 86400)
-        taskname = user_id + '-' + str(int(time.time()))
         try:
             taskqueue.add(
                 queue_name='archive',
