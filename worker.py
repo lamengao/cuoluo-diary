@@ -1,14 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import logging
 import os
-import gzip
 import StringIO
+import zipfile
+import random
 
 import lib.cloudstorage as gcs
 
 from google.appengine.ext import webapp
+from google.appengine.ext.webapp import template
 from google.appengine.api import app_identity
+from google.appengine.api import mail
 
 from models import User
 
@@ -27,27 +31,71 @@ my_default_retry_params = gcs.RetryParams(initial_delay=0.2,
 gcs.set_default_retry_params(my_default_retry_params)
 
 
+def get_random_string(length=12,
+                      allowed_chars='abcdefghijklmnopqrstuvwxyz'
+                                    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'):
+    return ''.join(random.choice(allowed_chars) for i in range(length))
+
+
 class ArchiveHandler(webapp.RequestHandler):
+
     def post(self):
-        default_bucket_name = app_identity.get_default_gcs_bucket_name()
-        bucket_name = os.environ.get('BUCKET_NAME', default_bucket_name)
         user_id = self.request.headers['X-AppEngine-TaskName'].split('-')[0]
         user = User.get_by_key_name(user_id)
-        stringio = StringIO.StringIO()
-        gzip_file = gzip.GzipFile(fileobj=stringio, mode='w')
-        gzip_file.write('Hello World')
-        gzip_file.close()
+
+        default_bucket_name = app_identity.get_default_gcs_bucket_name()
+        bucket_name = os.environ.get('BUCKET_NAME', default_bucket_name)
         bucket = '/' + bucket_name
-        filename = bucket + '/gcsfiletest.gz'
+        filename = bucket + ('/archive/%s/cuoluodiary.archive.zip' %
+                             get_random_string(32))
+
+        path = os.path.join(os.path.dirname(__file__),
+                            'templates', 'archive.html')
+
+        stringio = StringIO.StringIO()
+        zipstream = zipfile.ZipFile(stringio, 'w')
+        # Archive diary
+        for diary in user.diary:
+            template_values = {
+                'title': diary.title,
+                'content': diary.content.html,
+                'trashed': diary.status == 'trashed'
+            }
+            filecontent = template.render(path, template_values).encode('utf8')
+            zipstream.writestr('cuoluodiary/diary/%s.html' % diary.title,
+                               filecontent)
+        # Archive notes
+        for note in user.notes:
+            template_values = {
+                'title': note.title,
+                'content': note.content.html,
+                'trashed': note.status == 'trashed'
+            }
+            filecontent = template.render(path, template_values).encode('utf8')
+            zipstream.writestr('cuoluodiary/note/%s.html' % note.title,
+                               filecontent)
+        zipstream.close()
+
         gcs_file = gcs.open(filename, 'w',
-                            content_type='application/gzip',
-                            options={'x-goog-meta-foo': 'foo',
-                                     'x-goog-meta-bar': 'bar'})
+                            content_type='application/zip',
+                            options={str('x-goog-acl'): 'public-read'})
         gcs_file.write(stringio.getvalue())
+        stringio.close()
         gcs_file.close()
-        logging.info(user.email)
-        logging.info(bucket_name)
-        logging.info(filename)
+
+        download_url = 'https://storage.cloud.google.com' + filename
+        send_archive_email(user.email, download_url)
+        logging.info(download_url)
+
+
+def send_archive_email(to, download_url):
+    """docstring for send_archive_email"""
+    path = os.path.join(os.path.dirname(__file__),
+                        'templates', 'archive.email.txt')
+    body = template.render(path, {'download_url': download_url}).encode('utf8')
+    sender = 'admin@cuoluo.com'
+    subject = 'Your Cuoluo Diary download is ready'
+    mail.send_mail(sender=sender, to=to, subject=subject, body=body)
 
 
 app = webapp.WSGIApplication([
