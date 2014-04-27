@@ -8,28 +8,18 @@ import zipfile
 import random
 
 import cloudstorage as gcs
-import httplib2 as httplib2
+#import httplib2 as httplib2
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.api import app_identity
 from google.appengine.api import mail
 
-from google.appengine.api import memcache
-from oauth2client.appengine import AppAssertionCredentials
-from apiclient import discovery
+#from google.appengine.api import memcache
+#from oauth2client.appengine import AppAssertionCredentials
+#from apiclient import discovery
 
 from models import User
-
-#scope = [
-    #'https://www.googleapis.com/auth/devstorage.full_control',
-    #'https://www.googleapis.com/auth/devstorage.read_only',
-    #'https://www.googleapis.com/auth/devstorage.read_write',
-#]
-scope = 'https://www.googleapis.com/auth/devstorage.full_control'
-credentials = AppAssertionCredentials(scope)
-http = credentials.authorize(httplib2.Http(memcache))
-service = discovery.build('storage', 'v1beta2', http=http)
 
 # Retry can help overcome transient urlfetch or GCS issues, such as timeouts.
 my_default_retry_params = gcs.RetryParams(initial_delay=0.2,
@@ -88,19 +78,19 @@ class ArchiveHandler(webapp.RequestHandler):
         gcs_file = gcs.open(filename, 'w',
                             content_type='application/zip',
                             options={
-                                str('x-goog-acl'): 'private',
+                                str('x-goog-acl'): 'bucket-owner-full-control',
                                 str('x-goog-meta-user'): user.email})
         gcs_file.write(stringio.getvalue())
         stringio.close()
         gcs_file.close()
 
         download_url = 'https://storage.cloud.google.com' + filename
-        set_archive_acl(bucket_name, object_name, user_id)
+        #set_archive_acl(bucket_name, object_name, user_id)
         send_archive_email(user.email, download_url)
         logging.info(download_url)
 
 
-def set_archive_acl(bucket_name, object_name, user_id):
+def set_archive_acl(service, bucket_name, object_name, user_id):
     req = service.objectAccessControls().insert(
         bucket=bucket_name,
         object=object_name,
