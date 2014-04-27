@@ -7,27 +7,35 @@ import StringIO
 import zipfile
 import random
 
-import lib.cloudstorage as gcs
+import cloudstorage as gcs
+import httplib2 as httplib2
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.api import app_identity
 from google.appengine.api import mail
 
+from google.appengine.api import memcache
+from oauth2client.appengine import AppAssertionCredentials
+from apiclient import discovery
+
 from models import User
+
+#scope = [
+    #'https://www.googleapis.com/auth/devstorage.full_control',
+    #'https://www.googleapis.com/auth/devstorage.read_only',
+    #'https://www.googleapis.com/auth/devstorage.read_write',
+#]
+scope = 'https://www.googleapis.com/auth/devstorage.full_control'
+credentials = AppAssertionCredentials(scope)
+http = credentials.authorize(httplib2.Http(memcache))
+service = discovery.build('storage', 'v1beta2', http=http)
 
 # Retry can help overcome transient urlfetch or GCS issues, such as timeouts.
 my_default_retry_params = gcs.RetryParams(initial_delay=0.2,
                                           max_delay=5.0,
                                           backoff_factor=2,
                                           max_retry_period=15)
-# All requests to GCS using the GCS client within current GAE request and
-# current thread will use this retry params as default. If a default is not
-# set via this mechanism, the library's built-in default will be used.
-# Any GCS client function can also be given a more specific retry params
-# that overrides the default.
-# Note: the built-in default is good enough for most cases. We override
-# retry_params here only for demo purposes.
 gcs.set_default_retry_params(my_default_retry_params)
 
 
@@ -45,9 +53,10 @@ class ArchiveHandler(webapp.RequestHandler):
 
         default_bucket_name = app_identity.get_default_gcs_bucket_name()
         bucket_name = os.environ.get('BUCKET_NAME', default_bucket_name)
-        bucket = '/' + bucket_name
-        filename = bucket + ('/archive/%s/cuoluodiary.archive.zip' %
-                             get_random_string(32))
+        bucket = '/' + bucket_name + '/'
+        object_name = ('archive/%s/cuoluodiary.archive.zip' %
+                       get_random_string(32))
+        filename = bucket + object_name
 
         path = os.path.join(os.path.dirname(__file__),
                             'templates', 'archive.html')
@@ -78,14 +87,25 @@ class ArchiveHandler(webapp.RequestHandler):
 
         gcs_file = gcs.open(filename, 'w',
                             content_type='application/zip',
-                            options={str('x-goog-acl'): 'public-read'})
+                            options={
+                                str('x-goog-acl'): 'private',
+                                str('x-goog-meta-user'): user.email})
         gcs_file.write(stringio.getvalue())
         stringio.close()
         gcs_file.close()
 
         download_url = 'https://storage.cloud.google.com' + filename
+        set_archive_acl(bucket_name, object_name, user_id)
         send_archive_email(user.email, download_url)
         logging.info(download_url)
+
+
+def set_archive_acl(bucket_name, object_name, user_id):
+    req = service.objectAccessControls().insert(
+        bucket=bucket_name,
+        object=object_name,
+        body={'entity': 'user-' + user_id, 'role': 'READER'})
+    req.execute()
 
 
 def send_archive_email(to, download_url):

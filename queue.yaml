@@ -2,4 +2,4 @@
 total_storage_limit: 120M
 queue:
 - name: archive
-  rate: 0/s
+  rate: 2/s

@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#import os
-#import sys
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), 'lib'))
 
 #os.environ['DJANGO_SETTINGS_MODULE'] = 'djangosettings'
 #for k in [k for k in sys.modules if k.startswith('django')]:
