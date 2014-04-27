@@ -106,7 +106,7 @@ def setacl_by_email(email, filename):
     try:
         result = urllib2.urlopen(url)
     except urllib2.URLError:
-        pass
+        result = False
     #result = urlfetch.fetch(url)
     logging.info(url)
     return result
