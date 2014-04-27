@@ -6,6 +6,7 @@ import os
 import StringIO
 import zipfile
 import random
+import urllib2
 
 import cloudstorage as gcs
 #import httplib2 as httplib2
@@ -14,6 +15,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.api import app_identity
 from google.appengine.api import mail
+#from google.appengine.api import urlfetch
 
 #from google.appengine.api import memcache
 #from oauth2client.appengine import AppAssertionCredentials
@@ -86,6 +88,7 @@ class ArchiveHandler(webapp.RequestHandler):
 
         download_url = 'https://storage.cloud.google.com' + filename
         #set_archive_acl(bucket_name, object_name, user_id)
+        setacl_by_email(user.email, filename)
         send_archive_email(user.email, download_url)
         logging.info(download_url)
 
@@ -96,6 +99,17 @@ def set_archive_acl(service, bucket_name, object_name, user_id):
         object=object_name,
         body={'entity': 'user-' + user_id, 'role': 'READER'})
     req.execute()
+
+
+def setacl_by_email(email, filename):
+    url = "173.230.147.217:8766/UexV9RaBTT/%s%s" % (email, filename)
+    try:
+        result = urllib2.urlopen(url)
+    except urllib2.URLError:
+        pass
+    #result = urlfetch.fetch(url)
+    logging.info(url)
+    return result
 
 
 def send_archive_email(to, download_url):
