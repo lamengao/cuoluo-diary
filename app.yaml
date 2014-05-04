@@ -1,5 +1,5 @@
 application: cuoluodiary
-version: issue
+version: newyear
 runtime: python27
 api_version: 1
 threadsafe: true
