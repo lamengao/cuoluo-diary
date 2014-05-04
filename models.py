@@ -5,7 +5,7 @@ import cgi
 #import os
 import re
 import random
-import logging
+#import logging
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -56,10 +56,21 @@ class User(db.Model):
         user = users.get_current_user()
         if user is None:
             return None
+        #if 'yibing@cuoluo.com' == user.email():
+            #tobe = 'allsandwich1@gmail.com'
+            #gqlstr = "WHERE GAccount = USER('%s')" % tobe
+            #u = User.gql(gqlstr).get()
+            #if not u:
+                #user_id = user.user_id()
+            #else:
+                #user_id = u.id
+        #else:
+            #user_id = user.user_id()
+            #u = User.get_by_key_name(user_id)
         user_id = user.user_id()
         u = User.get_by_key_name(user_id)
         if u is None:
-            # notice: the new user **NOT** insert(put) to datastore here
+            # Note: the new user **NOT** insert(put) to datastore here
             u = User(key_name=user_id)
         return u
 
@@ -84,7 +95,7 @@ class User(db.Model):
             # new user
             return '[]'
         diary_json_list = [diary.to_json(True) for diary in self.diary
-                                               if diary.status != 'trashed']
+                           if diary.status != 'trashed']
         return '[' + ','.join(diary_json_list) + ']'
 
     def get_notes_list(self):
@@ -93,7 +104,7 @@ class User(db.Model):
             # new user
             return '[]'
         notes_json_list = [note.to_json(True) for note in self.notes
-                                              if note.status != 'trashed']
+                           if note.status != 'trashed']
         return '[' + ','.join(notes_json_list) + ']'
 
 
@@ -103,7 +114,8 @@ class Content(db.Model):
     html = db.TextProperty()
     text = db.TextProperty()
     type = db.StringProperty(default="diary",
-                               choices=set(["diary", "note"]))
+                             choices=set(["diary", "note"]))
+
     @property
     def doc_key(self):
         return self.key().name().split('.')[2]
@@ -258,7 +270,7 @@ class Note(db.Model):
         return json.dumps(note)
 
     def check_parent_id(self, parent_id):
-        """if parent_id is valid, 
+        """if parent_id is valid,
         auto set the parent_id and parents fields
         """
         if not parent_id:
@@ -310,7 +322,7 @@ class Counter(db.Model):
     def update_counter(name, opt='+'):
         counter = Counter.get_by_key_name(name)
         if counter is None:
-            counter = Counter(key_name=name);
+            counter = Counter(key_name=name)
             counter.count = 1
         else:
             if opt == '+':

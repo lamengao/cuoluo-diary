@@ -1,7 +1,8 @@
 application: cuoluodiary
-version: newyear
-runtime: python
+version: issue
+runtime: python27
 api_version: 1
+threadsafe: true
 
 default_expiration: "3650d"
 
@@ -52,28 +53,38 @@ handlers:
   expiration: "10s"
 
 - url: /api/.*
-  script: api.py
+  script: api.app
   #login: required
 
-- url: /settings
-  script: settings.py
+- url: /settings/?.*
+  script: settings.app
+
+- url: /worker/.*
+  script: worker.app
+  login: admin
   
 - url: /test
-  script: test.py
+  script: test.app
   login: admin
 
-- url: /mapreduce(/.*)?
-  script: $PYTHON_LIB/google/appengine/ext/mapreduce/main.py
+#- url: /mapreduce(/.*)?
+  #script: $PYTHON_LIB/google/appengine/ext/mapreduce/main.py
+  #login: admin
+- url: /remoteapi.*
+  script: google.appengine.ext.remote_api.handler.application
   login: admin
 
 - url: /monitor
-  script: monitor.py
+  script: monitor.app
   login: admin
 
 - url: .*
-  script: main.py
+  script: main.app
   #secure: always
 
+libraries:
+- name: django
+  version: "1.2"
 
 skip_files:
   - ^static/.*\.jar
@@ -92,7 +103,7 @@ skip_files:
   
 
 builtins:
-- datastore_admin: on
+#- datastore_admin: on
 - remote_api: on
 
 admin_console:

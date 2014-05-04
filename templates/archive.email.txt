@@ -1,0 +1,4 @@
+We're happy to let you know that the archive you requested is now available for download. Your archive may contain sensitive content, so please keep that in mind before sharing it with anyone.
+
+click the link below to download:
+{{ download_url }}
