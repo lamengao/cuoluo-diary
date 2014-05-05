@@ -2,21 +2,21 @@
 # -*- coding: utf-8 -*-
 import logging
 import os
-import re
 
 from google.appengine.ext import webapp
 #from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
 from google.appengine.api import users
 
-from models import User
+from basehandler import BaseHandler
+#from models import User
 
 template.register_template_library('templatetags.filters')
 
 
-class MainHandler(webapp.RequestHandler):
+class MainHandler(BaseHandler):
     def get(self):
-        user = User.get_current_user()
+        user = self.get_current_user()
         if user is None:
             self.redirect(users.create_login_url("/"))
             return
@@ -43,12 +43,11 @@ class MainHandler(webapp.RequestHandler):
             template_values['develop'] = False
         logging.info(self.request.get("d"))
         logging.info(template_values['develop'])
-        template_values['browser'] = getBrowserDetails(
-            self.request.headers['User-Agent'])
+        template_values['browser'] = self.getBrowserDetails()
         self.response.out.write(template.render(path, template_values))
 
 
-class LogoutHandler(webapp.RequestHandler):
+class LogoutHandler(BaseHandler):
     def get(self):
         try:
             is_dev = os.environ['SERVER_SOFTWARE'].startswith('Dev')
@@ -68,44 +67,15 @@ class LogoutHandler(webapp.RequestHandler):
                 self.redirect('/')
 
 
-class LoginHandler(webapp.RequestHandler):
+class LoginHandler(BaseHandler):
     def get(self):
         self.redirect(users.create_login_url('/'))
 
 
-class TasksLoginHandler(webapp.RequestHandler):
+class TasksLoginHandler(BaseHandler):
     def get(self):
         url = 'https://mail.google.com/tasks/ig'
         self.redirect(users.create_login_url(url))
-
-
-def getBrowserDetails(userAgent):
-    result = {}
-    # Regexp for most used "User-Agent"s built using
-    # "http://www.useragentstring.com/"
-    browsersRegexps = [
-        ['Internet Explorer', 'MSIE (\S+)'],
-        ['Opera', 'Opera[ /](\S+)'],
-        ['Konqueror', 'KHTML/(\S+)'],
-        ['Firefox', 'Gecko/\S+ Firefox/(\S+)'],
-        ['Chrome',
-            'AppleWebKit/\S+ (KHTML, like Gecko) Chrome/(\S+) Safari/\S+'],
-        ['Safari', 'Version/\S+ Safari/(\S+)'],
-        ['Mozilla', 'Gecko/(\S+)'],
-        ['WebKit', 'AppleWebKit/(\S+)']
-    ]
-    # Search for the Browser that matches, if any
-    for browser in browsersRegexps:
-        compiledRegexp = re.compile(browser[1])
-        searchResult = compiledRegexp.search(userAgent)
-        if searchResult:
-            result['name'] = browser[0]
-            result['version'] = searchResult.group(1)
-            return result
-    # If nothing matches, return "unknown"
-    result['name'] = "unknown"
-    result['version'] = "unknown"
-    return result
 
 
 app = webapp.WSGIApplication([('/', MainHandler),

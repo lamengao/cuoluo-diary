@@ -52,22 +52,21 @@ class User(db.Model):
         return self.GAccount.email()
 
     @staticmethod
-    def get_current_user():
+    def get_current_user(testuser):
         user = users.get_current_user()
         if user is None:
             return None
-        #if 'yibing@cuoluo.com' == user.email():
-            #tobe = 'allsandwich1@gmail.com'
-            #gqlstr = "WHERE GAccount = USER('%s')" % tobe
-            #u = User.gql(gqlstr).get()
-            #if not u:
-                #user_id = user.user_id()
-            #else:
-                #user_id = u.id
-        #else:
-            #user_id = user.user_id()
-            #u = User.get_by_key_name(user_id)
-        user_id = user.user_id()
+        if users.is_current_user_admin() and testuser:
+            gqlstr = "WHERE GAccount = USER('%s')" % testuser
+            u = User.gql(gqlstr).get()
+            if not u:
+                user_id = user.user_id()
+            else:
+                user_id = u.id
+        else:
+            user_id = user.user_id()
+            u = User.get_by_key_name(user_id)
+        #user_id = user.user_id()
         u = User.get_by_key_name(user_id)
         if u is None:
             # Note: the new user **NOT** insert(put) to datastore here

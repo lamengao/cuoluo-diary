@@ -10,13 +10,15 @@ from google.appengine.api import mail
 #from google.appengine.api import memcache
 from django.utils import simplejson
 
-from models import User, Diary, Note
+from basehandler import BaseHandler
+#from models import User
+from models import Diary, Note
 
 
 def login_required(handler_method):
     """A decorator to validate request for /api/diary and /api/notes"""
     def check_login(self):
-        user = User.get_current_user()
+        user = self.get_current_user()
         if user is None:
             self.error(403)
             return
@@ -38,7 +40,7 @@ def json_verified(handler_method):
     return check_content
 
 
-class DiaryListHandler(webapp.RequestHandler):
+class DiaryListHandler(BaseHandler):
     '''URI: /api/diary'''
     user = None
 
@@ -52,7 +54,7 @@ class DiaryListHandler(webapp.RequestHandler):
 def diary_validated(handler_method):
     """A decorator to validate request for /api/diary/YYYYMMDD."""
     def check_request(self, url):
-        user = User.get_current_user()
+        user = self.get_current_user()
         if user is None:
             self.error(403)
             return
@@ -73,7 +75,7 @@ def diary_validated(handler_method):
     return check_request
 
 
-class DiaryHandler(webapp.RequestHandler):
+class DiaryHandler(BaseHandler):
     '''URI: /api/diary/YYYYMMDD'''
     user = None
     diary = None
@@ -133,7 +135,7 @@ class DiaryHandler(webapp.RequestHandler):
         return True
 
 
-class NotesListHandler(webapp.RequestHandler):
+class NotesListHandler(BaseHandler):
     '''URI: /api/notes'''
     user = None
     json = {}
@@ -162,7 +164,7 @@ class NotesListHandler(webapp.RequestHandler):
 def note_validated(handler_method):
     """A decorator to validate request for /api/note/id ."""
     def check_request(self, id):
-        user = User.get_current_user()
+        user = self.get_current_user()
         if user is None:
             self.error(403)
             return
@@ -183,7 +185,7 @@ def note_validated(handler_method):
     return check_request
 
 
-class NoteHandler(webapp.RequestHandler):
+class NoteHandler(BaseHandler):
     '''URI: /api/note/id'''
     user = None
     note = None
@@ -249,7 +251,7 @@ class NoteHandler(webapp.RequestHandler):
             self.note.remove()
 
 
-class SearchHandler(webapp.RequestHandler):
+class SearchHandler(BaseHandler):
     '''URI: /api/search'''
     @login_required
     def get(self):
@@ -261,7 +263,7 @@ class SearchHandler(webapp.RequestHandler):
         self.response.out.write(simplejson.dumps(result))
 
 
-class EmailHandler(webapp.RequestHandler):
+class EmailHandler(BaseHandler):
     '''URI: /api/email'''
     @json_verified
     @login_required
