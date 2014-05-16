@@ -52,7 +52,7 @@ class User(db.Model):
         return self.GAccount.email()
 
     @staticmethod
-    def get_current_user(testuser):
+    def get_current_user(testuser=None):
         user = users.get_current_user()
         if user is None:
             return None
