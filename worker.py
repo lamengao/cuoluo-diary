@@ -102,7 +102,8 @@ def set_archive_acl(service, bucket_name, object_name, user_id):
 
 
 def setacl_by_email(email, filename):
-    url = "http://173.230.147.217:8766/UexV9RaBTT/%s%s" % (email, filename)
+    #url = "http://173.230.147.217:8766/UexV9RaBTT/%s%s" % (email, filename)
+    url = "http://setacl.diary.cuoluo.com/UexV9RaBTT/%s%s" % (email, filename)
     result = urlfetch.fetch(url)
     logging.info(url)
     return result
