@@ -1,0 +1,8 @@
+mapreduce:
+#- name: Update note parents property
+  #mapper:
+    #input_reader: google.appengine.ext.mapreduce.input_readers.DatastoreInputReader
+    #handler: mapreduce.update_note_parents
+    #params:
+    #- name: entity_kind
+      #default: models.Note

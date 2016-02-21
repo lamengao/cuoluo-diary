@@ -1,0 +1,5 @@
+*.pyc
+*.sw[op]
+.idea/
+\.DS_Store
+#closure-library

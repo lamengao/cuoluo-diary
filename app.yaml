@@ -1,0 +1,104 @@
+application: cuoluo-diary-app
+version: latest
+runtime: python27
+api_version: 1
+threadsafe: true
+
+default_expiration: "3650d"
+
+derived_file_type:
+- python_precompiled
+
+handlers:
+- url: /favicon.ico
+  static_files: static/images/favicon.ico
+  upload: static/images/favicon.ico
+  mime_type: image/x-icon
+
+- url: /images/date
+  static_dir: static/images/date
+
+- url: /images/(\d+)/(.*)
+  static_files: static/images/\2
+  upload: static/images/.*
+
+- url: /images
+  static_dir: static/images
+
+- url: /js/src
+  static_dir: static/js/src
+  expiration: "0s"
+
+- url: /js/(\d+)/(.*)\.js
+  static_files: static/js/\2.js
+  upload: static/js/.*\.js
+
+- url: /css/(\d+)/(.*)\.css
+  static_files: static/css/\2.css
+  upload: static/css/.*\.css
+
+- url: /static
+  static_dir: static
+
+- url: /closure-library
+  static_dir: closure-library
+  expiration: "10s"
+
+- url: /api/.*
+  script: api.app
+  #login: required
+
+- url: /settings/?.*
+  script: settings.app
+
+- url: /worker/.*
+  script: worker.app
+  login: admin
+  
+- url: /test
+  script: test.app
+  login: admin
+
+#- url: /mapreduce(/.*)?
+  #script: $PYTHON_LIB/google/appengine/ext/mapreduce/main.py
+  #login: admin
+- url: /remoteapi.*
+  script: google.appengine.ext.remote_api.handler.application
+  login: admin
+
+- url: /monitor
+  script: monitor.app
+  login: admin
+
+- url: .*
+  script: main.app
+  #secure: always
+
+libraries:
+- name: django
+  version: "1.2"
+
+skip_files:
+  - ^static/.*\.jar
+  - ^\.git/.*
+  #- ^static\/js\/(?!cld\.min\.js).*
+  - ^static\/js\/src\/.*
+  - ^static/closurelibrary/.*
+  - ^static/images/.*Thumbs\.db
+  - ^tools/.*
+  - ^closure-library
+  - ^closure-library/.*
+  - ^(.*/)?.*\.py[co]
+  - ^(.*/)?.*\.sw[po]
+  - ^(.*/)?\.svn/.*
+  - ^(.*/)?\.git/.*
+  
+
+builtins:
+#- datastore_admin: on
+- remote_api: on
+
+admin_console:
+  pages:
+  - name: User Count
+    url: /monitor
