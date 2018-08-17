@@ -1,5 +1,5 @@
 application: cuoluodiary
-version: newyear
+version: donate
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -22,6 +22,10 @@ handlers:
 - url: /weblukerverif.html
   static_files: static/weblukerverif.html
   upload: static/weblukerverif.html
+
+- url: /donate
+  static_files: static/donate.html
+  upload: static/donate.html
 
 - url: /images/date
   static_dir: static/images/date
