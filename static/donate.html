@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Donate for Cuoluo Diary</title>
+  <style>
+    body, td, input, textarea, select, button {
+    font-family: Arial,Sans-serif;
+    }
+    body {
+      margin: 0;
+    }
+    h1, h2 {
+      margin: 0;
+    }
+    p {
+      line-height: 1.6em;
+    }
+    #header {
+      height: 66px;
+      background: #f1f1f1;
+    }
+    .cuoluo {
+    font-size: 28px;
+    font-weight: bold;
+    text-shadow: 2px 2px 2px #aaa;
+    margin-right: 8px;
+    font-family: 'Vollkorn',serif;
+    }
+    .cuoluo .c {
+    color: #1851ce;
+    }
+    .cuoluo .u {
+    color: #efba00;
+    }
+    .cuoluo .o {
+    color: #c61800;
+    }
+    .cuoluo .l {
+    color: #1ba823;
+    }
+    #logo {
+      padding: 10px;
+      margin: 0;
+    }
+    #logo .diary {
+      color: #2b4bc5;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    #logo a {
+      text-decoration: none;
+    }
+
+    #main {
+      max-width: 600px;
+      margin: 0 auto;
+      padding-top: 40px;
+      color: #2c3e50;
+    }
+    #about {
+      margin-top: 15px;
+    }
+    .channels a {
+      margin: 20px;
+      text-decoration: none;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .coin {
+      font-weight: 600;
+      color: #34495e;
+    }
+    .coin, .coin svg {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .coin svg {
+      margin-right: 5px;
+    }
+    .detail {
+      text-align: center;
+      display: none;
+    }
+    .detail:target {
+      display: block;
+    }
+    .detail p {
+      line-height: 1.6em;
+      padding: 0;
+      margin: 0;
+      font-weight: bold;
+    }
+    .detail img {
+      width: 200px;
+      margin-top: 10px;
+    }
+    .accept {
+      margin: 20px 0 0 0;
+    }
+  </style>
+</head>
+<body>
+<div id="header">
+  <h2 id="logo">
+    <a href="/">
+      <span class="cuoluo">
+        <span class="c">C</span><span class="u">u</span><span class="o">o</span>
+        <span class="l">l</span><span class="u">u</span><span class="o">o</span>
+      </span>
+      <span class="diary">Diary</span>
+    </a>
+  </h2>
+</div>
+
+<div id="main">
+  <h1>Donate to Cuoluo Diary</h1>
+  <p id="about">Cuoluo Diary is a private journal web app and completely free to use.
+    The web app was founded in 2010 by <a href="https://twitter.com/lamengao">Bing Yi</a>.
+    Your donation can help Cuoluo Diary keep running and develop new features, please consider contributing $5, $25, $50 or whatever you can afford.</p>
+
+  <p class="accept">We accept donations through these channels:</p>
+  <div class="channels">
+    <a href="https://www.paypal.me/cuoluo" target="_blank">
+      <img style="width:100px" src="data:image/png;base64,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" alt="" />
+    </a>
+
+    <a href="#btc" class="coin">
+      <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><circle fill="#FFAD02" cx="19" cy="19" r="19"></circle><path d="M24.7 19.68a3.63 3.63 0 0 0 1.47-2.06c.74-2.77-.46-4.87-3.2-5.6l.89-3.33a.23.23 0 0 0-.16-.28l-1.32-.35a.23.23 0 0 0-.28.15l-.89 3.33-1.75-.47.88-3.32a.23.23 0 0 0-.16-.28l-1.31-.35a.23.23 0 0 0-.28.15l-.9 3.33-3.73-1a.23.23 0 0 0-.27.16l-.36 1.33c-.03.12.04.25.16.28l.22.06a1.83 1.83 0 0 1 1.28 2.24l-1.9 7.09a1.83 1.83 0 0 1-2.07 1.33.23.23 0 0 0-.24.12l-.69 1.24a.23.23 0 0 0 0 .2c.02.07.07.12.14.13l3.67.99-.89 3.33c-.03.12.04.24.16.27l1.32.35c.12.03.24-.04.28-.16l.89-3.32 1.76.47-.9 3.33c-.02.12.05.24.16.27l1.32.35c.12.03.25-.04.28-.16l.9-3.32.87.23c2.74.74 4.83-.48 5.57-3.25.35-1.3-.05-2.6-.92-3.48zm-5.96-5.95l2.64.7a1.83 1.83 0 0 1 1.28 2.24 1.83 1.83 0 0 1-2.23 1.3l-2.64-.7.95-3.54zm1.14 9.8l-3.51-.95.95-3.54 3.51.94a1.83 1.83 0 0 1 1.28 2.24 1.83 1.83 0 0 1-2.23 1.3z" fill="#FFF"></path></g></svg>
+      BTC
+    </a>
+
+    <a href="#eth" class="coin">
+        <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 32 32"><g fill="none" fill-rule="evenodd"><ellipse cx="16" cy="16" fill="#6F7CBA" rx="16" ry="16"></ellipse><path fill="#FFF" d="M10.13 17.76c-.1-.15-.06-.2.09-.12l5.49 3.09c.15.08.4.08.56 0l5.58-3.08c.16-.08.2-.03.1.11L16.2 25.9c-.1.15-.28.15-.38 0l-5.7-8.13zm.04-2.03a.3.3 0 0 1-.13-.42l5.74-9.2c.1-.15.25-.15.34 0l5.77 9.19c.1.14.05.33-.12.41l-5.5 2.78a.73.73 0 0 1-.6 0l-5.5-2.76z"></path></g></svg>
+      ETH
+    </a>
+  </div>
+
+  <div class="detail" id="btc">
+    <p>Bitcoin Address: <br/>39VV41T4aw9WegG5uefetiEFMmCYyu1i9V</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQAQMAAAC6caSPAAAABlBMVEX///8AAABVwtN+AAACIUlEQVR4nO3bPW60QAwGYCOKLXMEjsLR4GgchSNsuQWKg//mB22UapEjvS6+D4Z5tjIj45kQN0FEX7ye/9Jk/802vg7dLBCQj5MXecxM4+X5Jr+4Ew3dLBCQnGSSp0+5keQ/Q54vhz7nQ16EoZsFApKdePK/6jJ+Dnnyg4D8HyKxfNNDpLwI7TIOAnIr8dC0fQqhLrn3PwoSEJAUpIkgj3PaWV1o8nt10c4CAUlI3oUu46Mmv5G3s0BAMpFIaX2uUQoS78Lt8T6wvQ8gIBmJxjmmN2PM9fBfWUkJWWsDBOQOUsqHrjl82HOvk0u+W4CAZCN6tZZGhYZ+3o1xt0c7o1vGQUDSkXPs1+ZwS/SDkEBAUhIrNWSd3jzh39TJ9j5wdJ1BQPIRy/Sm4tB+MkUXjqj2LjgKEhCQD5OatlS++B51mdZYKaoLAgHJS3a76J+vPiTTvKXmpTMISEbCHISs+8u2jNcvPrahiUFAMhOpgLUImeX+WVpuR0hd0uWHYwgEJCfx0nqz2nnxk8PXPTzfsGMGAbmDaOhJdk3VpqVG3dKs1xuBgGQkXXj3t6+TnU9FgoAkJNxE9C7okvy+80F1ZwQEJB3xZVxPt/ufMGvyX89bThyzQEBykkkS37ee2zPwZRmv70bdTAEBuZmUmL05LBN2IvKzPSAg6YnHXvY0/JCEBwhIYlIy3ZK/P2/ZbNjxAQKSlzTRJb+FXQ/tEAhIQvIDnWQ5tphV328AAAAASUVORK5CYII=" alt="" />
+  </div>
+
+  <div class="detail" id="eth">
+    <p>Ethereum Address: <br/>0xcef6C7e7D25213362d479a506Bc2c95Be0B3f8fd</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQAQMAAAC6caSPAAAABlBMVEX///8AAABVwtN+AAACRElEQVR4nO3cO27DMAwGYAYdMvYIOkqOZh0tR/ERPGYIwpovmQbSZHLKAj+Hxrb0ZaIF6pESpyCib+4nvq0X9LU+uBLf5fq06wUCcjjRdokLazd+0Hn92794iRY67XqBgNQkTToucpOTX66v8m7MRrZeICDViSR/J01+jW0YBwH5T4Si3UO/5d37AgJyBMntC02puojkflmQgICUICk2MtN0t+rivmZ9fzFJBAGpQZ6Fkjyyvw8QkD8mkdLSHiHVR/dVOJnx+fvA9j6AgFQkazSZ5flCBduYrcO4Jrp8TP5VQmwYBwE5lNjNgygyuVPUyexpK+GZnMZkEJBqZJZPL4olu216lzfsJBqnYRwEpBqxG68u5FlPi8PMGxmFCAhISeLtss+8S36Ji9zNUZAQeQ0DAlKP6E0f7X5wwmd8LMnfrLnZIl28BCAgHyFbJnNaUnN5i+YrCEhN8uREhCe/Lw43O7g200h+EJCShGT1V9NaN+ws2z3T9UWIk8NSM18YBKQo8fVkfzaNTPdVuFGQxOwPBKQm8a0PzfTFMt0LErJDFGx7eCAgHyRNNum8utDy4cw89vCceCwgIEXJLkadTLH1TPsxOXarQUCqkZTZ6edy24LwODnctmEcBKQgSXsacZVODufljN0kEQSkHGmS5ftVuHGYzfqmF+H628IdCMhhZMz4PLRv91NqubQGASlOJjl72cb/iJAffvojfr5hBwJShHhE8nvYmK3JrweLNUBAypIUQc7pmc7y7CfMHMM4CEg58gOiTogkN3bNIgAAAABJRU5ErkJggg==" alt="" />
+  </div>
+
+  <p>Thank you for your support!</p>
+</div>
+</body>
+</html>
